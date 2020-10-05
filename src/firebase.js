@@ -36,7 +36,7 @@ export const linkWithGoogle = () => {
         console.log("Error linking with google: " + error)
     });
 }
-
+//this is not working yet
 export const signInWithFacebook = () => {
     auth.signInWithPopup(facebookProvider).then(function(result) {
         history.push(`/main`);
