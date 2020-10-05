@@ -1,0 +1,65 @@
+.auth-flex-card {
+    margin: auto;
+    margin-top: 12vh;
+    width: 420px;
+    text-align: center;
+    background: rgba(224, 187, 66, 0.8);
+    border: solid rgb(32, 109, 145) 4px;
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+    gap: 10px;
+    padding: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.auth-h1 {
+    margin: 0px 0px 10px 0px;
+}
+.auth-h3 {
+    margin: 0px 0px 20px 0px;
+}
+.auth-p {
+    margin: 0px;
+    font-size: 16px;
+}
+.auth-input {
+    margin-bottom: 5px;
+}
+.auth-button {
+    color: white;
+    width: 160px;
+    height: 45px;
+    margin: 5px;
+    border: solid rgb(59, 87, 119) 3px;
+    border-radius: 5px;
+    background:  rgb(75, 112, 155);
+    font-size: 14px;
+    cursor: pointer;
+}
+.two-button-flex {
+    display: flex;
+    flex-direction: row;
+    place-items: center;
+    gap: 10px;
+}
+#sing-up-in-redirect {
+    font-size: 20px;
+    margin: -10px 0px 0px 0px;
+    border: none;
+    cursor: pointer;
+    background-color: Transparent;
+    outline: none;
+}
+#auth-error {
+    height: 25px;
+    color: red;
+}
+#auth-message {
+    height: 25px;
+    color: white;
+}
+#profile-image-big {
+    height: 200px;
+    width: 200px;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,301 @@
+{
+  "characters" : {
+    "不" : {
+      "chineseSimp" : "不",
+      "chineseTrad" : "不",
+      "english" : [ "no", "not", "" ],
+      "lastPract" : "2020-09-10T03:57:12.617Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "bù",
+      "tone" : "4"
+    },
+    "中" : {
+      "chineseSimp" : "中",
+      "chineseTrad" : "中",
+      "english" : [ "middle", "center", "" ],
+      "lastPract" : "2020-09-09T09:53:26.990Z",
+      "level" : 2,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "zhōng",
+      "tone" : "1"
+    },
+    "也" : {
+      "chineseSimp" : "也",
+      "chineseTrad" : "也",
+      "english" : [ "also", "too", "" ],
+      "lastPract" : "2020-09-10T03:57:29.826Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "yě",
+      "tone" : "3"
+    },
+    "人" : {
+      "chineseSimp" : "人",
+      "chineseTrad" : "人",
+      "english" : [ "person", "people", "" ],
+      "lastPract" : "2020-09-09T10:14:15.690Z",
+      "level" : 2,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "rén",
+      "tone" : "2"
+    },
+    "他" : {
+      "chineseSimp" : "他",
+      "chineseTrad" : "他",
+      "english" : [ "he", "him", "" ],
+      "lastPract" : "2020-09-15T11:50:45.014Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "tā",
+      "tone" : "1"
+    },
+    "你" : {
+      "chineseSimp" : "你",
+      "chineseTrad" : "你",
+      "english" : [ "you", "", "" ],
+      "lastPract" : "2020-09-10T03:57:38.278Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "nǐ",
+      "tone" : "3"
+    },
+    "再" : {
+      "chineseSimp" : "再",
+      "chineseTrad" : "再",
+      "english" : [ "again", "", "" ],
+      "lastPract" : "2020-09-10T03:57:34.475Z",
+      "level" : 2,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "zài",
+      "tone" : "4"
+    },
+    "嗎" : {
+      "chineseSimp" : "吗",
+      "chineseTrad" : "嗎",
+      "english" : [ "question tag", "", "" ],
+      "lastPract" : "2020-09-15T12:18:35.012Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "ma",
+      "tone" : "5"
+    },
+    "國" : {
+      "chineseSimp" : "国",
+      "chineseTrad" : "國",
+      "english" : [ "country", "", "" ],
+      "lastPract" : "2020-09-09T10:56:54.479Z",
+      "level" : 2,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "guó",
+      "tone" : "2"
+    },
+    "她" : {
+      "chineseSimp" : "她",
+      "chineseTrad" : "她",
+      "english" : [ "she", "her", "" ],
+      "lastPract" : "2020-09-15T11:51:57.663Z",
+      "level" : 4,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "tā",
+      "tone" : "1"
+    },
+    "好" : {
+      "chineseSimp" : "好",
+      "chineseTrad" : "好",
+      "english" : [ "good", "okay", "well" ],
+      "lastPract" : "2020-09-10T03:56:46.236Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "hǎo",
+      "tone" : "3"
+    },
+    "店" : {
+      "chineseSimp" : "店",
+      "chineseTrad" : "店",
+      "english" : [ "shop", "store", "" ],
+      "lastPract" : "2020-09-10T03:57:53.217Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "diàn",
+      "tone" : "4"
+    },
+    "我" : {
+      "chineseSimp" : "我",
+      "chineseTrad" : "我",
+      "english" : [ "I", "me", "" ],
+      "lastPract" : "2020-09-15T13:22:02.884Z",
+      "level" : 4,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "wǒ",
+      "tone" : "3"
+    },
+    "是" : {
+      "chineseSimp" : "是",
+      "chineseTrad" : "是",
+      "english" : [ "is", "are", "to be" ],
+      "lastPract" : "2020-09-15T11:52:02.601Z",
+      "level" : 4,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "shì",
+      "tone" : "4"
+    },
+    "樹" : {
+      "chineseSimp" : " 树",
+      "chineseTrad" : "樹",
+      "english" : [ "tree", "", "" ],
+      "lastPract" : "2020-09-10T03:58:06.212Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "shù",
+      "tone" : "4"
+    },
+    "水" : {
+      "chineseSimp" : "水",
+      "chineseTrad" : "水",
+      "english" : [ "water", "", "" ],
+      "lastPract" : "2020-09-15T12:16:04.411Z",
+      "level" : 1,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "shuǐ",
+      "tone" : "3"
+    },
+    "狗" : {
+      "chineseSimp" : "狗",
+      "chineseTrad" : "狗",
+      "english" : [ "dog", "", "" ],
+      "lastPract" : "2020-09-09T10:30:25.903Z",
+      "level" : 2,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "gǒu",
+      "tone" : "3"
+    },
+    "紅" : {
+      "chineseSimp" : "红",
+      "chineseTrad" : "紅",
+      "english" : [ "red", "", "" ],
+      "lastPract" : "2020-09-09T10:20:03.925Z",
+      "level" : 2,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "hóng",
+      "tone" : "2"
+    },
+    "美" : {
+      "chineseSimp" : "美",
+      "chineseTrad" : "美",
+      "english" : [ "beautiful", "beauty", "" ],
+      "lastPract" : "2020-09-15T13:22:09.082Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "měi",
+      "tone" : "3"
+    },
+    "船" : {
+      "chineseSimp" : "船",
+      "chineseTrad" : "船",
+      "english" : [ "boat", "ship", "" ],
+      "lastPract" : "2020-09-10T03:57:25.963Z",
+      "level" : 2,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "chuán",
+      "tone" : "2"
+    },
+    "藍" : {
+      "chineseSimp" : "蓝",
+      "chineseTrad" : "藍",
+      "english" : [ "blue", "", "" ],
+      "lastPract" : "2020-09-15T12:18:28.457Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "lán",
+      "tone" : "2"
+    },
+    "見" : {
+      "chineseSimp" : "见",
+      "chineseTrad" : "見",
+      "english" : [ "see", "to see", "" ],
+      "lastPract" : "2020-09-15T12:47:10.264Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "jiàn",
+      "tone" : "4"
+    },
+    "鐵" : {
+      "chineseSimp" : "铁",
+      "chineseTrad" : "鐵",
+      "english" : [ "iron", "", "" ],
+      "lastPract" : "2020-09-09T09:02:14.257Z",
+      "level" : 1,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "tiě",
+      "tone" : "3"
+    },
+    "門" : {
+      "chineseSimp" : "门",
+      "chineseTrad" : "門",
+      "english" : [ "door", "gate", "" ],
+      "lastPract" : "2020-09-10T03:57:19.288Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "mén",
+      "tone" : "2"
+    },
+    "飯" : {
+      "chineseSimp" : "饭",
+      "chineseTrad" : "飯",
+      "english" : [ "rice", "meal", "" ],
+      "lastPract" : "2020-09-09T10:56:43.496Z",
+      "level" : 2,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "fàn",
+      "tone" : "4"
+    },
+    "魚" : {
+      "chineseSimp" : "鱼",
+      "chineseTrad" : "魚",
+      "english" : [ "fish", "", "" ],
+      "lastPract" : "2020-09-15T12:17:07.407Z",
+      "level" : 1,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "yú",
+      "tone" : "2"
+    },
+    "鳥" : {
+      "chineseSimp" : "鸟",
+      "chineseTrad" : "鳥",
+      "english" : [ "bird", "", "" ],
+      "lastPract" : "2020-09-10T03:57:43.736Z",
+      "level" : 3,
+      "memoMean" : "",
+      "memoRead" : "",
+      "pinyin" : "niǎo",
+      "tone" : "3"
+    }
+  }
+}

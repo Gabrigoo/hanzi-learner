@@ -1,0 +1,56 @@
+.character-correct {
+    border: 2px solid green;
+    border-radius: 3px;
+    background: #76d127;
+}
+.character-incorrect {
+    border: 2px solid red;
+    border-radius: 3px;
+    background: #f55d45;
+}
+.character-standard {
+    border: 2px solid grey;
+    border-radius: 3px;
+    background: #b4a991;
+}
+.hint-box {
+    margin: 0px;
+    word-wrap: normal;
+
+}
+#mapped-character-div {
+    position: relative;
+    font-size: 20px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+#floating-div {
+    white-space: nowrap;
+    font-size: 14px;
+    position: absolute;
+    z-index: 1;
+    top: 40px;
+    left: 15px;
+    transform: translate(-50%);
+    text-align: left;
+    padding: 3px;
+    background: rgba(209, 196, 154, 1);
+    border: solid rgb(182, 149, 100) 2px;
+}
+#mapped-character {
+    margin: 0px;
+    padding: 1px 3px 1px 3px;
+}
+#mapped-character:hover {
+    cursor: pointer;
+}
+.arrow-up {
+        position: absolute;
+        left: 37%;
+        top: -14px;
+        width: 0; 
+        height: 0; 
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 12px solid rgb(182, 149, 100);
+}

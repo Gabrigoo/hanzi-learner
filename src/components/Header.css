@@ -1,0 +1,35 @@
+#header {
+    height: 50px;
+    position: fixed;
+    top: 0px;
+    z-index: 1;
+    width: 100vw;
+    background: rgba(224, 187, 66, 0.8);
+    border-bottom: solid rgb(32, 109, 145) 4px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 5px;
+    gap: 12px;
+}
+#profile-img {
+    cursor: pointer;
+    height: 100%;
+    margin-right: 10px;
+}
+#main-menu-icon {
+    cursor: pointer;
+    height: 36px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+}
+#sing-in-button, #sing-up-button {
+    font-size: 20px;
+    margin: 0px;
+    border: none;
+    cursor: pointer;
+    background-color: Transparent;
+    outline: none;
+}
