@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../axios-instance';
 import './Addition.css';
 import {TONES} from '../assets/tones';
@@ -18,6 +18,17 @@ const Addition = (props) => {
     const [data, setData] = useState(props.data)
     //set if already existing entry should be overwritten or not
     const [overwrite, setOverwrite] = useState(false);
+    // a message warning the user if character is already in db
+    const [message, setMessage] = useState("");
+
+    useEffect( () => {
+        if (data.includes(chineseTrad)) {
+            setMessage("Character is already in database!");
+        } else {
+            setMessage("");
+        }
+    }, [data, chineseTrad]);
+
     //handles state change
     const handleChange = (event) => {
         const {name, value} = event.currentTarget;
@@ -76,6 +87,18 @@ const Addition = (props) => {
             alert("Please use caution when overwriting data entries.")
         }
     }
+    // resets all input fields to empty string
+    const clearInput = (event) => {
+        event.preventDefault()
+        setChineseTrad("");
+        setChineseSimp("");
+        setEnglish1("");
+        setEnglish2("");
+        setEnglish3("");
+        setPinyin("");
+        setTone("");
+        setStage("");
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -98,14 +121,7 @@ const Addition = (props) => {
         .then(() => {
             console.log('PUT: Upload complete');
             setData(data.concat(chineseTrad));
-            setChineseTrad("");
-            setChineseSimp("");
-            setEnglish1("");
-            setEnglish2("");
-            setEnglish3("");
-            setPinyin("");
-            setTone("");
-            setStage("");
+            clearInput();
         }
         ).catch((error) => console.error("Error adding new entry: " + error))
         }
@@ -115,6 +131,9 @@ const Addition = (props) => {
         <div id="board">
             <form id="addition-grid-card" autoComplete="off" onSubmit={handleSubmit}>
                 <h1 className="add-h1">Add new entry</h1>
+                <div id="add-message">
+                    {message}
+                </div>
                 <label>Traditional chinese:
                     <input
                         className="hanzi-input" 
@@ -188,6 +207,9 @@ const Addition = (props) => {
                         type="submit" 
                         value="Submit">
                     </input>
+                    <button id="clear-button" onClick={clearInput}>
+                        Clear
+                    </button>
                 </div>
             </form>
         </div>
