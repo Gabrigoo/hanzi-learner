@@ -1,0 +1,22 @@
+#info-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: auto;
+}
+#chinese-trad-info {
+    margin: 10px 0px 5px 5px;
+    font-size: 50px;
+}
+.mean-info {
+    margin-right: 20px;;
+}
+.read-info {
+    margin-right: 5px;;
+}
+.horiz-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
