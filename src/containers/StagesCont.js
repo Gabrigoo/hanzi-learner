@@ -9,7 +9,7 @@ const StagesCont = () => {
     
     const currentUser = useContext(UserContext);
 
-    const highestStage = 4;
+    const highestStage = 5;
 
     const [token, setToken] = useState(localStorage.getItem('token'));
 

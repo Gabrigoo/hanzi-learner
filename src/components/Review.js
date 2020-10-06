@@ -232,166 +232,166 @@ const Review = (props) => {
 
         document.getElementById("meaning-input-box").focus();
     }
-        // go into summary when no characters left to review
-        if (typeof props.data[current] === 'undefined') {
-            return (
-            <div id="board">
-                <div className="card" id="summary-card">
-                    <p id="correct-label">Correct:</p>
-                        <div className="mapping-div" id="correct-map">
-                        {correctList.length === 0 ? "No items" :
-                        correctList.map((item, index) => 
-                        <Character
-                            data={props.data}
-                            character={item} 
-                            value='true' 
-                            key={item + index} />
-                        )}
-                        </div>
-                    <p id="incorrect-label">Incorrect:</p>
-                        <div className="mapping-div" id="incorrect-map">
-                        {inCorrectList.length === 0 ? "No items" :
-                        inCorrectList.map((item, index) => 
-                        <Character
-                            data={props.data}
-                            character={item}
-                            value='false' 
-                            key={item + index} />
-                        )}
-                        </div>
-                    <button 
-                        id="main-menu-button" 
-                        className="board-button" 
-                        onClick={mainMenu}
-                        >Back to Main
-                    </button>
-                </div>
+    // go into summary when no characters left to review
+    if (typeof props.data[current] === 'undefined') {
+        return (
+        <div id="board">
+            <div className="card" id="summary-card">
+                <p id="correct-label">Correct:</p>
+                    <div className="mapping-div" id="correct-map">
+                    {correctList.length === 0 ? "No items" :
+                    correctList.map((item, index) => 
+                    <Character
+                        data={props.data}
+                        character={item} 
+                        value='true' 
+                        key={item + index} />
+                    )}
+                    </div>
+                <p id="incorrect-label">Incorrect:</p>
+                    <div className="mapping-div" id="incorrect-map">
+                    {inCorrectList.length === 0 ? "No items" :
+                    inCorrectList.map((item, index) => 
+                    <Character
+                        data={props.data}
+                        character={item}
+                        value='false' 
+                        key={item + index} />
+                    )}
+                    </div>
+                <button 
+                    id="main-menu-button" 
+                    className="board-button" 
+                    onClick={mainMenu}
+                    >Back to Main
+                </button>
             </div>
-            )
-        // else review next character
-        } else {
-            return (
-                <div id="board">
-                    <div className="card" id="review-card">
-                        <button 
-                            id="summary-button" 
+        </div>
+        )
+    // else review next character
+    } else {
+        return (
+            <div id="board">
+                <div className="card" id="review-card">
+                    <button 
+                        id="summary-button" 
+                        className="board-button" 
+                        onClick={goToSummary}
+                        >Summary
+                    </button>
+                    <p id ="chinese-simplified-label">Simplified:</p>
+                    <h2 id="chinese-simplified">{props.data[current].chineseSimp}</h2>
+                    <h1 id ="chinese-traditional">{props.data[current].chineseTrad}</h1>
+                    <p id="correct">Correct:{' '}
+                        {correctNum} - {correctNum + incorrectNum > 0 ?
+                        Math.round(correctNum / (correctNum + incorrectNum)*100) : 0}%
+                    </p>
+                    <p id="incorrect">Incorrect: {' '}
+                        {incorrectNum} - {correctNum + incorrectNum > 0 ?
+                        Math.round(incorrectNum / (correctNum + incorrectNum)*100) : 0}%
+                    </p>
+                    <p id="remaining">Remanining:{' '}{remaningNum}</p>
+                    <label 
+                        id="meaning-input-box-label" 
+                        form="submit-button-form" 
+                        htmlFor="meaning-input-box"
+                        >Meaning:
+                    </label>
+                        <input 
+                            id="meaning-input-box" 
+                            form="submit-button-form" 
+                            type="text" 
+                            name="meaning" 
+                            value={meanInput} 
+                            onChange={handleChange}>
+                        </input>
+                    <label 
+                        id="reading-input-box-label" 
+                        form="submit-button-form" 
+                        htmlFor="reading-input-box-label"
+                        >Reading:
+                    </label>
+                        <input 
+                            id="reading-input-box" 
+                            form="submit-button-form" 
+                            type="text" 
+                            name="reading" 
+                            value={readInput} 
+                            onChange={handleChange}>
+                        </input>
+                    <form 
+                        id="submit-button-form" 
+                        autoComplete="off" 
+                        onSubmit={handleSubmit}>
+                            <input id="board-submit-button" 
                             className="board-button" 
-                            onClick={goToSummary}
-                            >Summary
-                        </button>
-                        <p id ="chinese-simplified-label">Simplified:</p>
-                        <h2 id="chinese-simplified">{props.data[current].chineseSimp}</h2>
-                        <h1 id ="chinese-traditional">{props.data[current].chineseTrad}</h1>
-                        <p id="correct">Correct:{' '}
-                            {correctNum} - {correctNum + incorrectNum > 0 ?
-                            Math.round(correctNum / (correctNum + incorrectNum)*100) : 0}%
+                            type="submit" 
+                            value={solutionSubmitted ? "Continue" : "Submit"} />
+                    </form>
+                    {!solutionSubmitted ? "" :
+                        <>
+                        <p id="meaning-solution">
+                            {props.data[current].english.filter(
+                                x => typeof x === 'string' && x.length > 0)
+                            .join(", ")}</p>
+                        <p id="reading-solution">
+                            {props.data[current].pinyin} (tone: {props.data[current].tone})
                         </p>
-                        <p id="incorrect">Incorrect: {' '}
-                            {incorrectNum} - {correctNum + incorrectNum > 0 ?
-                            Math.round(incorrectNum / (correctNum + incorrectNum)*100) : 0}%
-                        </p>
-                        <p id="remaining">Remanining:{' '}{remaningNum}</p>
-                        <label 
-                            id="meaning-input-box-label" 
-                            form="submit-button-form" 
-                            htmlFor="meaning-input-box"
-                            >Meaning:
+                        <label
+                            id="meaning-memonic-label"
+                            htmlFor="meaning-memonic-input"
+                            >Meaning memonic:
                         </label>
-                            <input 
-                                id="meaning-input-box" 
-                                form="submit-button-form" 
-                                type="text" 
-                                name="meaning" 
-                                value={meanInput} 
-                                onChange={handleChange}>
-                            </input>
-                        <label 
-                            id="reading-input-box-label" 
-                            form="submit-button-form" 
-                            htmlFor="reading-input-box-label"
-                            >Reading:
+                        <label
+                            id="reading-memonic-label"
+                            htmlFor="reading-memonic-input"
+                            >Reading memonic:
                         </label>
-                            <input 
-                                id="reading-input-box" 
-                                form="submit-button-form" 
-                                type="text" 
-                                name="reading" 
-                                value={readInput} 
-                                onChange={handleChange}>
-                            </input>
-                        <form 
-                            id="submit-button-form" 
-                            autoComplete="off" 
-                            onSubmit={handleSubmit}>
-                                <input id="board-submit-button" 
-                                className="board-button" 
-                                type="submit" 
-                                value={solutionSubmitted ? "Continue" : "Submit"} />
-                        </form>
-                        {!solutionSubmitted ? "" :
+                        {changeMemonic ?
                             <>
-                            <p id="meaning-solution">
-                                {props.data[current].english.filter(
-                                    x => typeof x === 'string' && x.length > 0)
-                                .join(", ")}</p>
-                            <p id="reading-solution">
-                                {props.data[current].pinyin} (tone: {props.data[current].tone})
-                            </p>
-                            <label
-                                id="meaning-memonic-label"
-                                htmlFor="meaning-memonic-input"
-                                >Meaning memonic:
-                            </label>
-                            <label
-                                id="reading-memonic-label"
-                                htmlFor="reading-memonic-input"
-                                >Reading memonic:
-                            </label>
-                            {changeMemonic ?
-                                <>
-                                    <textarea 
-                                        id="meaning-memonic-input"
-                                        className="memonic-textarea"
-                                        type="text"
-                                        name="meaning-memo"
-                                        value={newMeaningMemonic} 
-                                        onChange={handleChange}>
-                                    </textarea>
-                                    <textarea 
-                                        id="reading-memonic-input"
-                                        className="memonic-textarea"
-                                        type="text"
-                                        name="reading-memo"
-                                        value={newReadingMemonic} 
-                                        onChange={handleChange}>
-                                    </textarea>
-                                </>  
-                                :
-                                <>
-                                    <button
-                                        id="change-memo-button" 
-                                        className="board-button" 
-                                        onClick={switchChangeMemonics}
-                                        >Change memonics
-                                    </button>
-                                    <p id="meaning-memonic" className="memonic">
-                                        {props.reviewData[current].memoMean === "" ?
-                                        "Currently no meaning memonic added" :
-                                        props.reviewData[current].memoMean}
-                                    </p>
-                                    <p id="reading-memonic" className="memonic">
-                                        {props.reviewData[current].memoRead === "" ?
-                                        "Currently no reading memonic added" :
-                                        props.reviewData[current].memoRead}
-                                    </p>
-                                </>
-                            }
+                                <textarea 
+                                    id="meaning-memonic-input"
+                                    className="memonic-textarea"
+                                    type="text"
+                                    name="meaning-memo"
+                                    value={newMeaningMemonic} 
+                                    onChange={handleChange}>
+                                </textarea>
+                                <textarea 
+                                    id="reading-memonic-input"
+                                    className="memonic-textarea"
+                                    type="text"
+                                    name="reading-memo"
+                                    value={newReadingMemonic} 
+                                    onChange={handleChange}>
+                                </textarea>
+                            </>  
+                            :
+                            <>
+                                <button
+                                    id="change-memo-button" 
+                                    className="board-button" 
+                                    onClick={switchChangeMemonics}
+                                    >Change memonics
+                                </button>
+                                <p id="meaning-memonic" className="memonic">
+                                    {props.reviewData[current].memoMean === "" ?
+                                    "Currently no meaning memonic added" :
+                                    props.reviewData[current].memoMean}
+                                </p>
+                                <p id="reading-memonic" className="memonic">
+                                    {props.reviewData[current].memoRead === "" ?
+                                    "Currently no reading memonic added" :
+                                    props.reviewData[current].memoRead}
+                                </p>
                             </>
                         }
-                    </div>
+                        </>
+                    }
                 </div>
-            );
-        }
+            </div>
+        );
+    }
   };
 
 export default Review;

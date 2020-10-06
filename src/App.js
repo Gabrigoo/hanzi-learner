@@ -11,6 +11,7 @@ import PasswordReset from './components/Authentication/PasswordReset';
 import Header from './components/Header';
 import StagesCont from './containers/StagesCont';
 import LearnCont from './containers/LearnCont';
+import InfoPanel from './components/InfoPanel';
 
 
 class App extends React.Component {
@@ -28,6 +29,7 @@ class App extends React.Component {
           <Route path="/passwordReset" component={PasswordReset} />
           <Route path="/user" component={ProfilePage}/>
           <Route path="/stages" component={StagesCont}/>
+          <Route path="/info/:id" component={InfoPanel}/>
           <Redirect to="/main" />
       </Switch>
     )

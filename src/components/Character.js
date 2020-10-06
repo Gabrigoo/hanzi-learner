@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Character.css';
+import history from '../history';
 
 const Character = (props) => {
     // popup box when the user hovers above a character icon
@@ -11,6 +12,11 @@ const Character = (props) => {
     
     const handleBoxLeave = () => {
         setShowBox(false);
+    }
+
+    const handleClick = () => {
+        let path = '/info/' + props.character;
+        history.push(path);
     }
     //background color indicating correct and incorrect (or none)
     let backColor;
@@ -25,7 +31,7 @@ const Character = (props) => {
 
     return (
         <div id="mapped-character-div" onMouseEnter={handleBoxEnter} onMouseLeave={handleBoxLeave}>
-            <p className={backColor} id="mapped-character">{props.character}</p>
+            <p className={backColor} id="mapped-character" onClick={handleClick}>{props.character}</p>
             {showBox ? 
                 <div id="floating-div">
                     <div className="arrow-up"></div>
