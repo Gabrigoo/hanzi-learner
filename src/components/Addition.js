@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../axios-instance';
 import './Addition.css';
 import {TONES} from '../assets/tones';
 
@@ -88,8 +87,7 @@ const Addition = (props) => {
         }
     }
     // resets all input fields to empty string
-    const clearInput = (event) => {
-        event.preventDefault()
+    const clearInput = () => {
         setChineseTrad("");
         setChineseSimp("");
         setEnglish1("");
@@ -99,7 +97,7 @@ const Addition = (props) => {
         setTone("");
         setStage("");
     }
-
+    //handles uploading of character
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -109,21 +107,17 @@ const Addition = (props) => {
         else if (data.includes(chineseTrad) && overwrite === false) {
             alert("Entry already exists")
         } else {
-            axios.put("/main-data/characters/" + chineseTrad + ".json?auth=" + props.token,
-        {
-            chineseTrad: chineseTrad,
-            chineseSimp: chineseSimp,
-            english: [english_1.toLowerCase(), english_2.toLowerCase(), english_3.toLowerCase()],
-            pinyin: pinyin.toLowerCase(),
-            tone: tone,
-            stage: parseInt(stage),
-        })
-        .then(() => {
-            console.log('PUT: Upload complete');
+            let newObj= {
+                    chineseTrad: chineseTrad,
+                    chineseSimp: chineseSimp,
+                    english: [english_1.toLowerCase(), english_2.toLowerCase(), english_3.toLowerCase()],
+                    pinyin: pinyin.toLowerCase(),
+                    tone: tone,
+                    stage: parseInt(stage),
+                }
+            props.uploadNewCharacter(chineseTrad, newObj);           
             setData(data.concat(chineseTrad));
             clearInput();
-        }
-        ).catch((error) => console.error("Error adding new entry: " + error))
         }
     }
 

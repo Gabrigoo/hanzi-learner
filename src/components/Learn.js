@@ -1,39 +1,29 @@
 import React, { useState } from 'react';
-import axios from '../axios-instance';
 import './Learn.css';
-import history from '../history';
+import Strip from '../components/Strip';
 
 const Learn = (props) => {
 
-    const [remaningNum, setRemainingNum] = useState(props.newKeys.length)
     const [current, setCurrent] = useState(props.newKeys[0])
 
     const [meaningMemonic, setMeaningMemonic] = useState("");
     const [readingMemonic, setReadingMemonic] = useState("");
+    const [remaningNum, setRemainingNum] = useState(props.newKeys.length);
 
     const handleContinue = (event) => {
         event.preventDefault();
 
-        axios.put("/" + props.userId + "/characters/" + current + ".json?auth=" + props.token,
-        {
-            lastPract: new Date(),
-            level : 0,
-            memoMean: meaningMemonic,
-            memoRead: readingMemonic
-        })
-        .then(() => {
-            setCurrent(props.newKeys[props.newKeys.indexOf(current) + 1])
-            setMeaningMemonic("");
-            setReadingMemonic("");
-            setRemainingNum(remaningNum - 1);
-            console.log("PUT: new data uploaded")
-        }
-        ).catch((error) => console.error("Error uploading new data: " + error))
-        .finally(() => {
-            if (remaningNum === 0) {
-                history.push(`/learn`)
+        let newObj = {
+                lastPract: new Date(),
+                level : 0,
+                memoMean: meaningMemonic,
+                memoRead: readingMemonic
             }
-        })
+        props.putUserNewCharacter(current, newObj);
+        setCurrent(props.newKeys[props.newKeys.indexOf(current) + 1]);
+        setMeaningMemonic("");
+        setReadingMemonic("");
+        setRemainingNum(remaningNum - 1);
     }
 
     const handleChange = (event) => {
@@ -50,11 +40,11 @@ const Learn = (props) => {
                 break;
         }
       }
-    
-    if ((typeof props.data[current] === 'undefined')) {
+
+    if (remaningNum === 0) {
         return (
-            <div></div>
-        )
+            <Strip message = "No new characters to learn right now" backTrack={'/main'} timeout = {4000}/>
+        );
     } else {
         return (
             <div className="card" id="learn-card">

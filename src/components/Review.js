@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Character from './Character';
-import history from '../history';
 import './Review.css';
-import axios from '../axios-instance';
 import { similarity, editDistance } from '../assets/levenshtein_distance';
 import { TONES, NEUTRAL_TONES } from '../assets/tones';
 
@@ -53,9 +51,7 @@ const Review = (props) => {
                 break;
         }
     }
-    const mainMenu = () => {
-        history.push(`/main`);
-    }
+
     //finishes current session
     const goToSummary = () => {
       setCurrent('undefined')
@@ -213,9 +209,8 @@ const Review = (props) => {
                 setIncorrectList(inCorrectList.concat(current))
             }
             //refresh database with results
-            axios.put("/" + props.userId + "/characters/" + current + ".json?auth=" + props.currentUserToken, userCharObject)
-            .then(() => console.log("PUT: upload to database"))
-            .catch((error) => console.error("Error refreshing database: " + error));
+            props.uploadReviewResults(current, userCharObject)
+
             //resets most things
             setSolutionSubmitted(false);
             setSolutionCorrect(false);
@@ -232,6 +227,8 @@ const Review = (props) => {
 
         document.getElementById("meaning-input-box").focus();
     }
+
+
     // go into summary when no characters left to review
     if (typeof props.data[current] === 'undefined') {
         return (
@@ -262,7 +259,7 @@ const Review = (props) => {
                 <button 
                     id="main-menu-button" 
                     className="board-button" 
-                    onClick={mainMenu}
+                    onClick={props.mainMenu}
                     >Back to Main
                 </button>
             </div>

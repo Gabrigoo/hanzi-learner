@@ -40,6 +40,7 @@ const InfoPanel = () => {
     }, [token, userId])
 
     let content;
+    let userContent = "This character is not yet learned.";
 
     if (data && userData) {
         content = 
@@ -58,22 +59,27 @@ const InfoPanel = () => {
                 <p className="read-info">{data[id].pinyin}</p>
                 <p>{data[id].tone}</p>
             </div>
-            <p>Meaning memonic:</p>
-            {userData[id].memoMean === "" ?
-            "Currently no meaning memonic added" :
-            userData[id].memoMean}
-            <p>Reading memonic:</p>
-            {userData[id].memoRead === "" ?
-            "Currently no reading memonic added" :
-            userData[id].memoRead}
-            <p>Last practiced:</p>
-            <p>{userData[id].lastPract}</p>
-            <p>User level:</p>
-            <div className="horiz-div">
-                <p className="read-info">{userData[id].level}</p>
-                <p>{levels[userData[id].level][1]}</p>
-            </div>
         </>
+        if (userData[id]) {
+            userContent = 
+            <>
+                <p>Meaning memonic:</p>
+                {userData[id].memoMean === "" ?
+                "Currently no meaning memonic added" :
+                userData[id].memoMean}
+                <p>Reading memonic:</p>
+                {userData[id].memoRead === "" ?
+                "Currently no reading memonic added" :
+                userData[id].memoRead}
+                <p>Last practiced:</p>
+                <p>{userData[id].lastPract}</p>
+                <p>User level:</p>
+                <div className="horiz-div">
+                    <p className="read-info">{userData[id].level}</p>
+                    <p>{levels[userData[id].level][1]}</p>
+                </div>
+            </>
+        }
     } else if (!token) {
         content = <Strip message = "No user is signed in"/>
         setTimeout(() => {history.push(`/main`)}, 3000)
@@ -84,6 +90,7 @@ const InfoPanel = () => {
     return (
         <div className="card" id="info-card">
             {content}
+            {userContent}
         </div>
     );
 };
