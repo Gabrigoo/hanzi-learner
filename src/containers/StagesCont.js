@@ -2,14 +2,11 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from '../axios-instance';
 import Strip from '../components/Strip';
 import Stage from '../components/Stage';
-import history from '../history';
 import { UserContext } from '../components/providers/UserProvider'; 
 
 const StagesCont = () => {
     
     const currentUser = useContext(UserContext);
-
-    const highestStage = 5;
 
     const [token, setToken] = useState(localStorage.getItem('token'));
 
@@ -23,11 +20,23 @@ const StagesCont = () => {
         if (token) {
             axios.get("/main-data/characters.json?auth=" + token).then((res) => {
                 setData(res.data);
+                setHighestState(findHighestStage(res.data))
                 console.log("GET: main data downloaded");
             }).catch((error) => console.error("Error downloading main data: " + error));
         }
     }, [token])
 
+    const [highestStage, setHighestState] = useState(null);
+
+    const findHighestStage = (data) => {
+        let highest = 0;
+        for (let character in data) {
+            if (data[character].stage > highest) {
+                highest = data[character].stage;
+            }
+        }
+        return highest;
+    }
 
     const sortDataToLevel = (data, level) => {
         let levelObject = {};
@@ -56,8 +65,7 @@ const StagesCont = () => {
             {loopThrough(highestStage, data)}
         </div>
     } else if (!token) {
-        content = <Strip message = "No user is signed in"/>
-        setTimeout(() => {history.push(`/main`)}, 3000)
+        content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000} />
     } else {
         content = <Strip message = "Loading..."/>
     }

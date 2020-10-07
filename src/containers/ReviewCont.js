@@ -45,7 +45,7 @@ const ReviewCont = () => {
                     console.log("GET user data loaded");
                     // possible characters from main DB for users current level
                     let currentLevelKeys = Object.keys(data).filter(char => data[char].stage === userLevel);
-                    // character that are knows by the user at least at Guru level
+                    // character that are known by the user at least at Guru level
                     let learnedKeys = Object.keys(res.data).filter(char => res.data[char].level > 4);
                     let fullLength = currentLevelKeys.length;
                     let knownLength = currentLevelKeys.filter(char => learnedKeys.includes(char)).length;
@@ -85,17 +85,22 @@ const ReviewCont = () => {
         return review;
     }
 
+    const uploadReviewResults = (character, object) => {
+        axios.put("/" + userId + "/characters/" + character + ".json?auth=" + token, object)
+            .then(() => console.log("PUT: upload to database"))
+            .catch((error) => console.error("Error refreshing database: " + error));
+    }
+
     let content;
     
     if (data && reviewData) {
         if (Object.keys(reviewData).length === 0) {
-            content = <Strip message = "No characters to review right now" clickFunc={mainMenu}/>
+            content = <Strip message = "No characters to review right now" backTrack={'/main'} timeout = {4000}/>
         } else {
-            content = <Review data = {data} reviewData = {reviewData} currentUserToken = {token} userId = {userId} />
+            content = <Review data = {data} reviewData = {reviewData} uploadReviewResults={uploadReviewResults} mainMenu={mainMenu} />
         }
     } else if (!token) {
-        content = <Strip message = "No user is signed in"/>
-        setTimeout(() => {history.push(`/main`)}, 3000)
+        content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000}/>
     } else {
         content = <Strip message = "Loading..."/>
     }

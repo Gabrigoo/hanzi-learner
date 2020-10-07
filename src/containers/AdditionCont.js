@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import Addition from '../components/Addition';
 import axios from '../axios-instance';
 import Strip from '../components/Strip';
-import history from '../history';
 import { UserContext } from '../components/providers/UserProvider';
 
 const AdditionCont = () => {
@@ -16,8 +15,9 @@ const AdditionCont = () => {
     }, [currentUser]);
 
     const [data, setData] = useState(null);
-
+    
     useEffect( () => {
+
         if (token) {
             axios.get("/main-data/characters.json?auth=" + token).then((res) => {
                 setData(Object.keys(res.data));
@@ -26,13 +26,18 @@ const AdditionCont = () => {
         }
     }, [token])
 
+    const uploadNewCharacter = (character, object) => {
+        axios.put("/main-data/characters/" + character + ".json?auth=" + token, object)
+        .then(() => {console.log('PUT: Upload complete')})
+        .catch((error) => console.error("Error adding new entry: " + error))
+    }
+
     let content;
     
     if (data) {
-        content = <Addition data = {data} token = {token} />
+        content = <Addition data = {data} uploadNewCharacter={uploadNewCharacter} />
     } else if (!token) {
-        content = <Strip message = "No user is signed in"/>
-        setTimeout(() => {history.push(`/main`)}, 3000)
+        content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000}/>
     } else {
         content = <Strip message = "Loading..."/>
     }
