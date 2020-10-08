@@ -15,16 +15,27 @@ const AdditionCont = () => {
     }, [currentUser]);
 
     const [data, setData] = useState(null);
-    
-    useEffect( () => {
 
+    useEffect( () => {
+        const source = axios.CancelToken.source();
         if (token) {
-            axios.get("/main-data/characters.json?auth=" + token).then((res) => {
+            axios.get("/main-data/characters.json?auth=" + token, {
+                cancelToken: source.token
+              }).then((res) => {
                 setData(Object.keys(res.data));
                 console.log('GET: main data loaded')
-            }).catch((error) => console.error("Error loading main data: " + error));
+            }).catch(error => {
+                if (axios.isCancel(error)) {
+                    console.log(error)
+                } else {
+                    console.error("Error loading main data: " + error)
+                }
+            });
         }
-    }, [token])
+        return () => {
+            source.cancel('GET request cancelled');
+        }
+    }, [token]);
 
     const uploadNewCharacter = (character, object) => {
         axios.put("/main-data/characters/" + character + ".json?auth=" + token, object)

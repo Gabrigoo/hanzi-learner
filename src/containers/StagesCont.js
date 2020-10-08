@@ -17,12 +17,18 @@ const StagesCont = () => {
     const [data, setData] = useState(null);
 
     useEffect( () => {
+        const source = axios.CancelToken.source();
         if (token) {
-            axios.get("/main-data/characters.json?auth=" + token).then((res) => {
+            axios.get("/main-data/characters.json?auth=" + token, {
+                cancelToken: source.token
+              }).then((res) => {
                 setData(res.data);
                 setHighestState(findHighestStage(res.data))
                 console.log("GET: main data downloaded");
             }).catch((error) => console.error("Error downloading main data: " + error));
+        }
+        return () => {
+            source.cancel('GET request cancelled');
         }
     }, [token])
 
