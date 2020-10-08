@@ -70,7 +70,7 @@ const Review = (props) => {
     }
     const switchChangeMemonics = () => {
         setChangeMemonic(true);
-        setNewReadingMemonic(props.reviewData[current].memoMean);
+        setNewMeaningMemonic(props.reviewData[current].memoMean);
         setNewReadingMemonic(props.reviewData[current].memoRead);
     }
     //runs when asnwer is initially submitted
@@ -212,18 +212,18 @@ const Review = (props) => {
             props.uploadReviewResults(current, userCharObject)
 
             //resets most things
-            setSolutionSubmitted(false);
-            setSolutionCorrect(false);
             setChangeMemonic(false);
             setNewReadingMemonic("");
             setNewMeaningMemonic("");
-            setMeaning("");
-            setReading("");
             //advances to next character
             setCurrent(shuffledDeck[shuffledDeck.indexOf(current) + 1]);
             setTries(0);
             setRemainingNum(remaningNum - 1);
         }
+        setSolutionSubmitted(false);
+        setSolutionCorrect(false);
+        setMeaning("");
+        setReading("");
 
         document.getElementById("meaning-input-box").focus();
     }

@@ -23,17 +23,37 @@ const ReviewCont = () => {
     const [userLevel, setUserLevel] = useState(null);
 
     useEffect( () => {
+            const source = axios.CancelToken.source();
             if (token) {
-                axios.get("/main-data/characters.json?auth=" + token).then((res) => {
+                axios.get("/main-data/characters.json?auth=" + token, {
+                    cancelToken: source.token
+                  }).then((res) => {
                     setData(res.data);
                     console.log("GET: main data loaded");
-                }).catch(error => console.error("Error loading main data: " + error));
+                }).catch(error => {
+                    if (axios.isCancel(error)) {
+                        console.log(error)
+                    } else {
+                        console.error("Error loading main data: " + error)
+                    }
+                });
 
-                axios.get("/" + userId + ".json?auth=" + token).then((res) => {
+                axios.get("/" + userId + ".json?auth=" + token, {
+                    cancelToken: source.token
+                  }).then((res) => {
                     setReviewData(dataToReview(res.data.characters));
                     setUserLevel(res.data.userData.currentStage);
                     console.log("GET: user data loaded");
-                }).catch(error => console.error("Error loading user data: " + error));
+                }).catch(error => {
+                    if (axios.isCancel(error)) {
+                        console.log(error)
+                    } else {
+                        console.error("Error loading user data: " + error)
+                    }
+                });
+            }
+            return () => {
+                source.cancel('GET request cancelled');
             }
     }, [token, userId]);
 
