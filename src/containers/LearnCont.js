@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Learn from '../components/Learn';
-import axios from '../axios-instance';
+import { instance as axios } from '../axios-instance';
 import Strip from '../components/Strip';
 import { UserContext } from '../components/providers/UserProvider';
 

@@ -12,6 +12,7 @@ import Header from './components/Header';
 import StagesCont from './containers/StagesCont';
 import LearnCont from './containers/LearnCont';
 import InfoCont from './containers/InfoCont';
+import SearchCont from './containers/SearchCont';
 
 
 class App extends React.Component {
@@ -28,6 +29,7 @@ class App extends React.Component {
           <Route path="/signIn" component={SignIn}/>
           <Route path="/passwordReset" component={PasswordReset} />
           <Route path="/user" component={ProfilePage}/>
+          <Route path="/search" component={SearchCont}/>
           <Route path="/stages" component={StagesCont}/>
           <Route path="/info/:id" component={InfoCont}/>
           <Redirect to="/main" />

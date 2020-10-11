@@ -1,0 +1,11 @@
+#search-button {
+    height: 40px;
+    width: 100px;
+}
+
+.result-flex {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
