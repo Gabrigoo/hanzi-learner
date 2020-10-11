@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext } from 'react';
-import axios from '../axios-instance';
+import { instance as axios } from '../axios-instance';
 import Review from '../components/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';

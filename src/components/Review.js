@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Character from './Character';
 import './Review.css';
 import { similarity, editDistance } from '../assets/levenshtein_distance';
-import { TONES, NEUTRAL_TONES } from '../assets/tones';
+import { flattenPinyin } from '../assets/tones';
 
 const Review = (props) => {
     //randomizes the sequence
@@ -109,27 +109,15 @@ const Review = (props) => {
             let toneInput = "5";
             let readingInputFlat = ""
             //check if user marked tone at the end
-            if ((!isNaN(readInput.slice(-1))) && readInput.slice(-1) < 6 && readInput.slice(-1) > 0) { 
-                toneInput = readInput.split("").splice(-1)[0];
+            if ((!isNaN(readInput.slice(-1))) && readInput.slice(-1) < 6 && readInput.slice(-1) > 0) {
                 readingInputFlat = readInput.substring(0, readInput.length - 1);
+                toneInput = readInput.split("").splice(-1)[0];
             } else {    // else check if tone is in character                                                                
-                readingInputFlat = readInput.toLowerCase().split("").map(char => {
-                    for (let i = 1; i < 5; i++) {
-                        if (TONES[i].includes(char)) {
-                          toneInput = i.toString();
-                          return NEUTRAL_TONES[i][TONES[i].indexOf(char)]; 
-                        }}
-                    return char;
-                    }).join("");
+                readingInputFlat = flattenPinyin(readInput)[0];
+                toneInput = flattenPinyin(readInput)[0];
             }
             // remove tone from solution in order to compare
-            let readDataFlat = props.data[current].pinyin.split("").map(char => { 
-                for (let i = 1; i < 5; i++) {
-                    if (TONES[i].includes(char)) {
-                      return NEUTRAL_TONES[i][TONES[i].indexOf(char)]; 
-                    }}
-                return char;
-                }).join("");
+            let readDataFlat = flattenPinyin(props.data[current].pinyin)[0]
             // check if reading is correct without tone
             if (readDataFlat === readingInputFlat) { 
                 readCorrect++;

@@ -6,4 +6,4 @@ const instance = axios.create({
 instance.CancelToken = axios.CancelToken;
 instance.isCancel = axios.isCancel;
 
-export default instance;
+export { instance } ;

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import InfoPanel from '../components/InfoPanel';
 import { useParams } from 'react-router-dom';
-import axios from '../axios-instance';
+import { instance as axios } from '../axios-instance';
 import Strip from '../components/Strip';
 import { UserContext } from '../components/providers/UserProvider';
 

@@ -21,6 +21,9 @@ const TitleBox = () => {
                     case "check-stages":
                         path = `/stages`;
                         break;
+                    case "start-search":
+                        path = `/search`;
+                        break;
                     default:
                         break;
             }
@@ -57,6 +60,13 @@ const TitleBox = () => {
                 className="auth-button" 
                 onClick={switchScreen}
                 >Add character
+            </button>
+            <button 
+                name="start-search" 
+                id="start-search-button" 
+                className="auth-button" 
+                onClick={switchScreen}
+                >Search
             </button>
         </div>
     );

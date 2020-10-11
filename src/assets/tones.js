@@ -12,5 +12,17 @@ const NEUTRAL_TONES = {
     "4": ["a", "o", "e", "i", "u", "u"]
   };
 
+  const flattenPinyin = (original) => {
+    let tone = "5";
+    let flattened = original.split("").map(char => { 
+        for (let i = 1; i < 5; i++) {
+            if (TONES[i].includes(char)) {
+              tone = i.toString();
+              return NEUTRAL_TONES[i][TONES[i].indexOf(char)]; 
+            }}
+        return char;
+        }).join("");
+    return [flattened, tone];
+  }
 
-  export {TONES, NEUTRAL_TONES};
+  export {TONES, NEUTRAL_TONES, flattenPinyin};
