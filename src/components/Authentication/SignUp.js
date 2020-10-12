@@ -81,7 +81,6 @@ const SignUp = () => {
         }
     };
     
-
     return (
         <div className="auth-flex-card">
             <h1 className="auth-h1">Sign up</h1>

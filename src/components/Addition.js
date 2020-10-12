@@ -14,19 +14,19 @@ const Addition = (props) => {
     const [stage, setStage] = useState("");
 
     //import data in order to check if entry exists
-    const [data, setData] = useState(Object.keys(props.data));
+    const [dataKeys, setDataKeys] = useState(Object.keys(props.mainData));
     //set if already existing entry should be overwritten or not
     const [overwrite, setOverwrite] = useState(false);
     // a message warning the user if character is already in db
     const [message, setMessage] = useState("");
 
     useEffect( () => {
-        if (data.includes(chineseTrad)) {
+        if (dataKeys.includes(chineseTrad)) {
             setMessage("Character is already in database!");
         } else {
             setMessage("");
         }
-    }, [data, chineseTrad]);
+    }, [dataKeys, chineseTrad]);
 
     //handles state change
     const handleChange = (event) => {
@@ -62,7 +62,7 @@ const Addition = (props) => {
                 break;
         }
     }
-    //automatically checks the tone and fills input box
+    //automatically checks the tone and fills tone input box
     const toneCheck = (pinyin) => {
         for (let i = 0; i < pinyin.length; i++) {
             for (let j = 0; j < Object.keys(TONES).length; j++) {
@@ -104,7 +104,7 @@ const Addition = (props) => {
         if (chineseTrad === "") {
             alert("Insert a valid character")
         }
-        else if (data.includes(chineseTrad) && overwrite === false) {
+        else if (dataKeys.includes(chineseTrad) && overwrite === false) {
             alert("Entry already exists")
         } else {
             let newObj= {
@@ -116,7 +116,7 @@ const Addition = (props) => {
                     stage: parseInt(stage),
                 }
             props.uploadNewCharacter(chineseTrad, newObj);           
-            setData(data.concat(chineseTrad));
+            setDataKeys(dataKeys.concat(chineseTrad));
             clearInput();
         }
     }

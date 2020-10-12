@@ -3,13 +3,13 @@ import './Learn.css';
 import Strip from '../components/Strip';
 
 const Learn = (props) => {
-
+    // starts with first element of to-learn list
     const [current, setCurrent] = useState(props.newKeys[0])
-
+    // memonics in case they are changed
     const [meaningMemonic, setMeaningMemonic] = useState("");
     const [readingMemonic, setReadingMemonic] = useState("");
     const [remaningNum, setRemainingNum] = useState(props.newKeys.length);
-
+    // on continue uploads new character to use DB and continue to next one
     const handleContinue = (event) => {
         event.preventDefault();
 
@@ -18,7 +18,7 @@ const Learn = (props) => {
                 level : 0,
                 memoMean: meaningMemonic,
                 memoRead: readingMemonic
-            }
+        }
         props.putUserNewCharacter(current, newObj);
         setCurrent(props.newKeys[props.newKeys.indexOf(current) + 1]);
         setMeaningMemonic("");
@@ -49,8 +49,8 @@ const Learn = (props) => {
         return (
             <div className="card" id="learn-card">
                 <p id ="chinese-simplified-label">Simplified:</p>
-                <h3 id="chinese-simplified">{props.data[current].chineseSimp}</h3>
-                <h1 id ="chinese-traditional">{props.data[current].chineseTrad}</h1>
+                <h3 id="chinese-simplified">{props.mainData[current].chineseSimp}</h3>
+                <h1 id ="chinese-traditional">{props.mainData[current].chineseTrad}</h1>
                 <p id="remaining">Remanining:{' '}{remaningNum}</p>
                 <p id="meaning-label">Meaning:</p>
                 <p id="reading-label">Reading:</p>
@@ -64,7 +64,7 @@ const Learn = (props) => {
                         value="Continue" />
                 </form>
                 <p id="meaning-learn">
-                    {props.data[current].english.filter(
+                    {props.mainData[current].english.filter(
                         x => typeof x === 'string' && x.length > 0)
                     .join(", ")}</p>
                 <label 
@@ -83,7 +83,7 @@ const Learn = (props) => {
                     onChange={handleChange}>
                 </textarea>
                 <p id="reading-learn">
-                    {props.data[current].pinyin} (tone: {props.data[current].tone})
+                    {props.mainData[current].pinyin} (tone: {props.mainData[current].tone})
                 </p>
                 <label 
                     id="reading-memonic-learn-label"

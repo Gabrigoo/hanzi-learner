@@ -1,13 +1,13 @@
 import React, {useEffect, useState, useContext } from 'react';
 import { instance as axios, getMainDataCharacters, getUserData } from '../axios-instance';
+import history from '../history';
+import { UserContext } from '../components/providers/UserProvider';
 import Review from '../components/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';
-import history from '../history';
-import { UserContext } from '../components/providers/UserProvider';
 
 const ReviewCont = () => {
-    
+    //setting up user status
     const currentUser = useContext(UserContext);
 
     const [userId, setUserID] = useState(localStorage.getItem('userId'));
@@ -17,31 +17,30 @@ const ReviewCont = () => {
         setToken(localStorage.getItem('token'));
         setUserID(localStorage.getItem('userId'));
     }, [currentUser]);
-
-    const [data, setData] = useState(null);
+    //setting up data
+    const [mainData, setMainData] = useState(null);
     const [userData, setUserData] = useState(null);
 
     useEffect( () => {
             const source = axios.CancelToken.source();
             if (token) {
-                getMainDataCharacters(source, token, setData);
+                getMainDataCharacters(source, token, setMainData);
                 getUserData(source, token, userId, setUserData);
             }
             return () => {
                 source.cancel('GET request cancelled');
             }
     }, [token, userId]);
-
+    // after component unmounts user progress is checked and whether they should advance a level is determined
     useEffect(() => {
         return () => {
-            // Anything in here is fired on component unmount.
-            if (userData && data) {
+            if (mainData && userData) {
                 let userLevel = userData.userData.currentStage;
 
                 axios.get("/" + userId + "/characters.json?auth=" + token).then((res) => {
                     console.log("GET user data loaded");
                     // possible characters from main DB for users current level
-                    let currentLevelKeys = Object.keys(data).filter(char => data[char].stage === userLevel);
+                    let currentLevelKeys = Object.keys(mainData).filter(char => mainData[char].stage === userLevel);
                     // character that are known by the user at least at Guru level
                     let learnedKeys = Object.keys(res.data).filter(char => res.data[char].level > 4);
                     let fullLength = currentLevelKeys.length;
@@ -65,7 +64,7 @@ const ReviewCont = () => {
     const mainMenu = () => {
         history.push(`/main`);
     }
-
+    // takes in user data and return the list of characters that need reviewing
     const dataToReview = (data) => {
         let review = {};
         let currentDate = new Date();
@@ -81,7 +80,7 @@ const ReviewCont = () => {
         }
         return review;
     }
-
+    // as name suggests, uploads the results of the review
     const uploadReviewResults = (character, object) => {
         axios.put("/" + userId + "/characters/" + character + ".json?auth=" + token, object)
             .then(() => console.log("PUT: upload to database"))
@@ -90,12 +89,12 @@ const ReviewCont = () => {
 
     let content;
     
-    if (data && userData) {
+    if (mainData && userData) {
         if (Object.keys(dataToReview(userData.characters)).length === 0) {
             content = <Strip message = "No characters to review right now" backTrack={'/main'} timeout = {4000}/>
         } else {
             content = <Review
-                data = {data} 
+                mainData = {mainData} 
                 reviewData = {dataToReview(userData.characters)} 
                 uploadReviewResults={uploadReviewResults} 
                 mainMenu={mainMenu} 

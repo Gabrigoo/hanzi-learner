@@ -3,9 +3,11 @@ import './InfoPanel.css';
 import levels from '../assets/levels';
 
 const InfoPanel = (props) => {
-
-    const id = props.id;
-
+    //getting character the panel is supposed to display
+    const current = props.id;
+    const mainData = props.mainData;
+    const userData = props.userData;
+    //memonics in case they are changed
     const [changeMemonic, setChangeMemonic] = useState(false);
     const [meaningMemonic, setMeaningMemonic] = useState("");
     const [readingMemonic, setReadingMemonic] = useState("");
@@ -13,21 +15,21 @@ const InfoPanel = (props) => {
     const switchChangeMemonics = () => {
         setChangeMemonic(true);
         if (meaningMemonic === "") {
-            setMeaningMemonic(props.characters[id].memoMean);
+            setMeaningMemonic(userData[current].memoMean);
         }
         if (readingMemonic === "") {
-            setReadingMemonic(props.characters[id].memoRead);
+            setReadingMemonic(userData[current].memoRead);
         }
     }
 
     const sendMemonic = () => {
         let object = {
-            lastPract: props.characters[id].lastPract,
-            level: props.characters[id].level,
+            lastPract: userData[current].lastPract,
+            level: userData[current].level,
             memoMean: meaningMemonic,
             memoRead: readingMemonic,
         }
-        props.putUserNewMemonic(id, object);
+        props.putUserNewMemonic(current, object);
         setChangeMemonic(false);
     }
 
@@ -45,7 +47,7 @@ const InfoPanel = (props) => {
                 break;
         }
     }
-
+    // convert JSON date into the displayed date
     const dateToString = (jason) => {
         let date = new Date(jason);
         let year = date.getFullYear();
@@ -63,23 +65,23 @@ const InfoPanel = (props) => {
     let userContent = "This character is not yet learned.";
 
     content = <>
-            <h1 id="chinese-trad-info">{id}</h1>
-            <h2 id="chinese-simp-info">{props.data[id].chineseSimp}</h2>
+            <h1 id="chinese-trad-info">{current}</h1>
+            <h2 id="chinese-simp-info">{mainData[current].chineseSimp}</h2>
             <div className="horiz-div">
                 <p>Stage:</p>
-                <p>{props.data[id].stage}</p>
+                <p>{mainData[current].stage}</p>
             </div>
             <p>Meaning:</p>
             <div className="horiz-div">
-                {props.data[id].english.map((word, index) => <p className="mean-info" key={word+index}>{word}</p>)}
+                {mainData[current].english.map((word, index) => <p className="mean-info" key={word+index}>{word}</p>)}
             </div>
             <p>Reading:</p>
             <div className="horiz-div">
-                <p className="read-info">{props.data[id].pinyin}</p>
-                <p>{props.data[id].tone}</p>
+                <p className="read-info">{mainData[current].pinyin}</p>
+                <p>{mainData[current].tone}</p>
             </div>
         </>
-    if (props.characters[id]) {
+    if (userData[current]) {
         userContent = 
         <>
             {changeMemonic ?
@@ -114,15 +116,15 @@ const InfoPanel = (props) => {
                     <p>Meaning memonic:</p>
                     {meaningMemonic !== "" ? 
                     meaningMemonic :
-                    props.characters[id].memoMean === "" ?
+                    userData[current].memoMean === "" ?
                     "Currently no meaning memonic added" :
-                    props.characters[id].memoMean}
+                    userData[current].memoMean}
                     <p>Reading memonic:</p>
                     {readingMemonic !== "" ? 
                     readingMemonic :
-                    props.characters[id].memoRead === "" ?
+                    userData[current].memoRead === "" ?
                     "Currently no reading memonic added" :
-                    props.characters[id].memoRead}
+                    userData[current].memoRead}
                     <button
                         id="change-memo-button" 
                         className="board-button" 
@@ -132,11 +134,11 @@ const InfoPanel = (props) => {
                 </>
                 }
             <p>Last practiced:</p>
-            <p>{dateToString(props.characters[id].lastPract)}</p>
+            <p>{dateToString(userData[current].lastPract)}</p>
             <p>User level:</p>
             <div className="horiz-div">
-                <p className="read-info">{props.characters[id].level}</p>
-                <p>{levels[props.characters[id].level][1]}</p>
+                <p className="read-info">{userData[current].level}</p>
+                <p>{levels[userData[current].level][1]}</p>
             </div>
         </>
     }

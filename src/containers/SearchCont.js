@@ -1,12 +1,12 @@
 import React, {useEffect, useState, useContext } from 'react';
 import { instance as axios, getMainDataCharacters } from '../axios-instance';
+import { UserContext } from '../components/providers/UserProvider';
 import Strip from '../components/Strip';
 import Search from '../components/Search';
-import { UserContext } from '../components/providers/UserProvider';
 import { flattenPinyin } from '../assets/tones';
 
 const SearchCont = () => {
-
+    //setting up user status
     const currentUser = useContext(UserContext);
 
     const [userId, setUserID] = useState(localStorage.getItem('userId'));
@@ -16,13 +16,13 @@ const SearchCont = () => {
         setToken(localStorage.getItem('token'));
         setUserID(localStorage.getItem('userId'));
     }, [currentUser]);
-
-    const [data, setData] = useState(null);
+    //setting up data
+    const [mainData, setMainData] = useState(null);
 
     useEffect( () => {
             const source = axios.CancelToken.source();
             if (token) {
-                getMainDataCharacters(source, token, setData);
+                getMainDataCharacters(source, token, setMainData);
             }
             return () => {
                 source.cancel('GET request cancelled');
@@ -30,7 +30,7 @@ const SearchCont = () => {
     }, [token, userId]);
 
     const [searchResults, setSearchResults] = useState([]);
-
+    // handles search by input and refreshes search results
     const handleSearch = (event, query) => {
         event.preventDefault();
 
@@ -38,15 +38,15 @@ const SearchCont = () => {
             setSearchResults([]);
         } else {
             let resultList = [];
-            for (const character in data) {
+            for (const character in mainData) {
                 switch(query) {
-                    case data[character].chineseTrad:
-                    case data[character].chineseSimp:
-                    case data[character].pinyin:
-                    case flattenPinyin(data[character].pinyin)[0]:
-                    case data[character].english[0]:
-                    case data[character].english[1]:
-                    case data[character].english[2]:
+                    case mainData[character].chineseTrad:
+                    case mainData[character].chineseSimp:
+                    case mainData[character].pinyin:
+                    case flattenPinyin(mainData[character].pinyin)[0]:
+                    case mainData[character].english[0]:
+                    case mainData[character].english[1]:
+                    case mainData[character].english[2]:
                         resultList = resultList.concat(character);
                         break;
                     default:
@@ -59,8 +59,8 @@ const SearchCont = () => {
 
     let content;
     
-    if (data) {
-        content = <Search data={data} searchResults={searchResults} handleSearch={handleSearch}/>
+    if (mainData) {
+        content = <Search mainData={mainData} searchResults={searchResults} handleSearch={handleSearch}/>
     } else if (!token) {
         content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000}/>
     } else {

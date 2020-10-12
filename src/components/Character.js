@@ -3,13 +3,12 @@ import './Character.css';
 import history from '../history';
 
 const Character = (props) => {
-    // popup box when the user hovers above a character icon
-    const [showBox, setShowBox] = useState(false);
     //these are for the small popup box when hovering over a character
+    const [showBox, setShowBox] = useState(false);
+    
     const handleBoxEnter = () => {
         setShowBox(true);
     }
-    
     const handleBoxLeave = () => {
         setShowBox(false);
     }
