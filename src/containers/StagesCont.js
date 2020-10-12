@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { instance as axios } from '../axios-instance';
+import { instance as axios, getMainDataCharacters } from '../axios-instance';
 import Strip from '../components/Strip';
 import Stage from '../components/Stage';
 import { UserContext } from '../components/providers/UserProvider'; 
@@ -19,20 +19,12 @@ const StagesCont = () => {
     useEffect( () => {
         const source = axios.CancelToken.source();
         if (token) {
-            axios.get("/main-data/characters.json?auth=" + token, {
-                cancelToken: source.token
-              }).then((res) => {
-                setData(res.data);
-                setHighestState(findHighestStage(res.data))
-                console.log("GET: main data downloaded");
-            }).catch((error) => console.error("Error downloading main data: " + error));
+            getMainDataCharacters(source, token, setData);
         }
         return () => {
             source.cancel('GET request cancelled');
         }
     }, [token])
-
-    const [highestStage, setHighestState] = useState(null);
 
     const findHighestStage = (data) => {
         let highest = 0;
@@ -68,7 +60,7 @@ const StagesCont = () => {
     if (data) {
         content = 
         <div className="card" id="stage-flex-card">
-            {loopThrough(highestStage, data)}
+            {loopThrough(findHighestStage(data), data)}
         </div>
     } else if (!token) {
         content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000} />

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import InfoPanel from '../components/InfoPanel';
 import { useParams } from 'react-router-dom';
-import { instance as axios } from '../axios-instance';
+import { instance as axios, getMainDataCharacters, getUserData } from '../axios-instance';
 import Strip from '../components/Strip';
 import { UserContext } from '../components/providers/UserProvider';
 
@@ -25,19 +25,8 @@ const InfoCont = () => {
     useEffect( () => {
         const source = axios.CancelToken.source();
         if (token) {
-            axios.get("/" + userId + ".json?auth=" + token, {
-                cancelToken: source.token
-              }).then(res => {
-                setUserData(res.data.characters);
-                console.log("GET: user data loaded")
-            }).catch(error => console.error("Error loading user data: " + error));
-
-            axios.get("/main-data/characters.json?auth=" + token, {
-                cancelToken: source.token
-              }).then(res => {
-                setData(res.data);
-                console.log("GET: main data loaded")
-            }).catch(error => console.log("Error loading main data: " + error));
+            getMainDataCharacters(source, token, setData);
+            getUserData(source, token, userId, setUserData);
         }
         return () => {
             source.cancel('GET request cancelled');
@@ -53,7 +42,7 @@ const InfoCont = () => {
     let content;
 
     if (data && userData) {
-        content = <InfoPanel id={id} data={data} userData={userData} putUserNewMemonic={putUserNewMemonic}/>
+        content = <InfoPanel id={id} data={data} characters={userData.characters} putUserNewMemonic={putUserNewMemonic}/>
     } else if (!token) {
         content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000}/>
     } else {
