@@ -7,19 +7,23 @@ const InfoPanel = (props) => {
     const id = props.id;
 
     const [changeMemonic, setChangeMemonic] = useState(false);
-    const [meaningMemonic, setMeaningMemonic] = useState(props.userData[id].memoMean);
-    const [readingMemonic, setReadingMemonic] = useState(props.userData[id].memoRead);
+    const [meaningMemonic, setMeaningMemonic] = useState("");
+    const [readingMemonic, setReadingMemonic] = useState("");
 
     const switchChangeMemonics = () => {
         setChangeMemonic(true);
-        setMeaningMemonic(props.userData[id].memoMean);
-        setReadingMemonic(props.userData[id].memoRead);
+        if (meaningMemonic === "") {
+            setMeaningMemonic(props.characters[id].memoMean);
+        }
+        if (readingMemonic === "") {
+            setReadingMemonic(props.characters[id].memoRead);
+        }
     }
 
     const sendMemonic = () => {
         let object = {
-            lastPract: props.userData[id].lastPract,
-            level: props.userData[id].level,
+            lastPract: props.characters[id].lastPract,
+            level: props.characters[id].level,
             memoMean: meaningMemonic,
             memoRead: readingMemonic,
         }
@@ -75,7 +79,7 @@ const InfoPanel = (props) => {
                 <p>{props.data[id].tone}</p>
             </div>
         </>
-    if (props.userData[id]) {
+    if (props.characters[id]) {
         userContent = 
         <>
             {changeMemonic ?
@@ -86,7 +90,7 @@ const InfoPanel = (props) => {
                         className="memonic-textarea"
                         type="text"
                         name="meaning-memo"
-                        value={meaningMemonic} 
+                        value={meaningMemonic}
                         onChange={handleChange}>
                     </textarea>
                     <p>Reading memonic:</p>
@@ -95,7 +99,7 @@ const InfoPanel = (props) => {
                         className="memonic-textarea"
                         type="text"
                         name="reading-memo"
-                        value={readingMemonic} 
+                        value={readingMemonic}
                         onChange={handleChange}>
                     </textarea>
                     <button
@@ -108,13 +112,17 @@ const InfoPanel = (props) => {
                 :
                 <>
                     <p>Meaning memonic:</p>
-                    {meaningMemonic === "" ?
+                    {meaningMemonic !== "" ? 
+                    meaningMemonic :
+                    props.characters[id].memoMean === "" ?
                     "Currently no meaning memonic added" :
-                    meaningMemonic}
+                    props.characters[id].memoMean}
                     <p>Reading memonic:</p>
-                    {readingMemonic === "" ?
+                    {readingMemonic !== "" ? 
+                    readingMemonic :
+                    props.characters[id].memoRead === "" ?
                     "Currently no reading memonic added" :
-                    readingMemonic}
+                    props.characters[id].memoRead}
                     <button
                         id="change-memo-button" 
                         className="board-button" 
@@ -124,11 +132,11 @@ const InfoPanel = (props) => {
                 </>
                 }
             <p>Last practiced:</p>
-            <p>{dateToString(props.userData[id].lastPract)}</p>
+            <p>{dateToString(props.characters[id].lastPract)}</p>
             <p>User level:</p>
             <div className="horiz-div">
-                <p className="read-info">{props.userData[id].level}</p>
-                <p>{levels[props.userData[id].level][1]}</p>
+                <p className="read-info">{props.characters[id].level}</p>
+                <p>{levels[props.characters[id].level][1]}</p>
             </div>
         </>
     }

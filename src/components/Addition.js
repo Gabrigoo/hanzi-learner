@@ -14,7 +14,7 @@ const Addition = (props) => {
     const [stage, setStage] = useState("");
 
     //import data in order to check if entry exists
-    const [data, setData] = useState(props.data)
+    const [data, setData] = useState(Object.keys(props.data));
     //set if already existing entry should be overwritten or not
     const [overwrite, setOverwrite] = useState(false);
     // a message warning the user if character is already in db

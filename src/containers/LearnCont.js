@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Learn from '../components/Learn';
-import { instance as axios } from '../axios-instance';
+import { instance as axios, getMainDataCharacters, getUserData } from '../axios-instance';
 import Strip from '../components/Strip';
 import { UserContext } from '../components/providers/UserProvider';
 
@@ -22,19 +22,8 @@ const LearnCont = () => {
     useEffect( () => {
         const source = axios.CancelToken.source();
         if (token) {
-            axios.get("/main-data/characters.json?auth=" + token, {
-                cancelToken: source.token
-              }).then(res => {
-                setData(res.data);
-                console.log("GET: main data loaded")
-            }).catch(error => console.log("Error loading main data: " + error));
-
-            axios.get("/" + userId + ".json?auth=" + token, {
-                cancelToken: source.token
-              }).then(res => {
-                setUserData(res.data);
-                console.log("GET: user data loaded")
-            }).catch(error => console.error("Error loading user data: " + error));
+            getMainDataCharacters(source, token, setData);
+            getUserData(source, token, userId, setUserData);
         }
         return () => {
             source.cancel('GET request cancelled');
@@ -60,11 +49,11 @@ const LearnCont = () => {
     let content;
     
     if (data && userData) {
-        if (Object.keys(getNewItems(data,userData)).length === 0) {
+        if (Object.keys(getNewItems(data, userData)).length === 0) {
             content = <Strip message = "No new characters to learn right now" backTrack={'/main'} timeout = {4000}/>
         } else {
             content = <Learn 
-                data = {data} 
+                data = {data}
                 putUserNewCharacter={putUserNewCharacter} 
                 newKeys= {getNewItems(data, userData)} 
             />

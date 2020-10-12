@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext } from 'react';
-import { instance as axios } from '../axios-instance';
+import { instance as axios, getMainDataCharacters, getUserData } from '../axios-instance';
 import Review from '../components/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';
@@ -19,38 +19,13 @@ const ReviewCont = () => {
     }, [currentUser]);
 
     const [data, setData] = useState(null);
-    const [reviewData, setReviewData] = useState(null);
-    const [userLevel, setUserLevel] = useState(null);
+    const [userData, setUserData] = useState(null);
 
     useEffect( () => {
             const source = axios.CancelToken.source();
             if (token) {
-                axios.get("/main-data/characters.json?auth=" + token, {
-                    cancelToken: source.token
-                  }).then((res) => {
-                    setData(res.data);
-                    console.log("GET: main data loaded");
-                }).catch(error => {
-                    if (axios.isCancel(error)) {
-                        console.log(error)
-                    } else {
-                        console.error("Error loading main data: " + error)
-                    }
-                });
-
-                axios.get("/" + userId + ".json?auth=" + token, {
-                    cancelToken: source.token
-                  }).then((res) => {
-                    setReviewData(dataToReview(res.data.characters));
-                    setUserLevel(res.data.userData.currentStage);
-                    console.log("GET: user data loaded");
-                }).catch(error => {
-                    if (axios.isCancel(error)) {
-                        console.log(error)
-                    } else {
-                        console.error("Error loading user data: " + error)
-                    }
-                });
+                getMainDataCharacters(source, token, setData);
+                getUserData(source, token, userId, setUserData);
             }
             return () => {
                 source.cancel('GET request cancelled');
@@ -60,7 +35,9 @@ const ReviewCont = () => {
     useEffect(() => {
         return () => {
             // Anything in here is fired on component unmount.
-            if (userLevel && data) {
+            if (userData && data) {
+                let userLevel = userData.userData.currentStage;
+
                 axios.get("/" + userId + "/characters.json?auth=" + token).then((res) => {
                     console.log("GET user data loaded");
                     // possible characters from main DB for users current level
@@ -113,11 +90,16 @@ const ReviewCont = () => {
 
     let content;
     
-    if (data && reviewData) {
-        if (Object.keys(reviewData).length === 0) {
+    if (data && userData) {
+        if (Object.keys(dataToReview(userData.characters)).length === 0) {
             content = <Strip message = "No characters to review right now" backTrack={'/main'} timeout = {4000}/>
         } else {
-            content = <Review data = {data} reviewData = {reviewData} uploadReviewResults={uploadReviewResults} mainMenu={mainMenu} />
+            content = <Review
+                data = {data} 
+                reviewData = {dataToReview(userData.characters)} 
+                uploadReviewResults={uploadReviewResults} 
+                mainMenu={mainMenu} 
+            />
         }
     } else if (!token) {
         content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000}/>

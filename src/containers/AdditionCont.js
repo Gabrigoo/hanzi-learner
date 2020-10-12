@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Addition from '../components/Addition';
-import { instance as axios } from '../axios-instance';
+import { instance as axios, getMainDataCharacters } from '../axios-instance';
 import Strip from '../components/Strip';
 import { UserContext } from '../components/providers/UserProvider';
 
@@ -19,18 +19,7 @@ const AdditionCont = () => {
     useEffect( () => {
         const source = axios.CancelToken.source();
         if (token) {
-            axios.get("/main-data/characters.json?auth=" + token, {
-                cancelToken: source.token
-              }).then((res) => {
-                setData(Object.keys(res.data));
-                console.log('GET: main data loaded')
-            }).catch(error => {
-                if (axios.isCancel(error)) {
-                    console.log(error)
-                } else {
-                    console.error("Error loading main data: " + error)
-                }
-            });
+            getMainDataCharacters(source, token, setData);
         }
         return () => {
             source.cancel('GET request cancelled');

@@ -6,4 +6,36 @@ const instance = axios.create({
 instance.CancelToken = axios.CancelToken;
 instance.isCancel = axios.isCancel;
 
-export { instance } ;
+const getMainDataCharacters = (source, token, setData ) => {
+    
+    instance.get("/main-data/characters.json?auth=" + token, {
+        cancelToken: source.token
+      }).then((res) => {
+        setData(res.data);
+        console.log('GET: main data loaded');
+    }).catch(error => {
+        if (instance.isCancel(error)) {
+            console.log(error);
+        } else {
+            console.error("Error loading main data: " + error);
+        }
+    });
+}
+
+const getUserData = (source, token, userId, setUserData ) => {
+
+    instance.get("/" + userId + ".json?auth=" + token, {
+        cancelToken: source.token
+      }).then(res => {
+        setUserData(res.data);
+        console.log("GET: user data loaded")
+    }).catch(error => {
+        if (instance.isCancel(error)) {
+            console.log(error);
+        } else {
+            console.error("Error loading main data: " + error);
+        }
+    });
+}
+
+export { instance, getMainDataCharacters, getUserData } ;
