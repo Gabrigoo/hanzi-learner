@@ -7,9 +7,7 @@ import history from '../history';
 
 
 const Header = () => {
-    
-    let content = null;
-
+    //setting up user status
     const currentUser = useContext(UserContext);
 
     const [user, setUser] = useState(localStorage.getItem('user'));
@@ -51,7 +49,9 @@ const Header = () => {
                 break;
         }
         history.push(path);
-        }
+    }
+
+    let content = null;
 
     if (currentUser) {
 

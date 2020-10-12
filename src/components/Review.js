@@ -94,12 +94,12 @@ const Review = (props) => {
             // check if meaning is correct first
             for (let i = 0; i < 3; i++ ) {                       // loop through possible correct solutions from DB
                 // use levensthein method to check
-                let editDist = editDistance(props.data[current].english[i], meanInput)   
-                let similar = similarity(props.data[current].english[i], meanInput) 
+                let editDist = editDistance(props.mainData[current].english[i], meanInput)   
+                let similar = similarity(props.mainData[current].english[i], meanInput) 
                 // check if input and data difference are inside tolerance
                 if (meanInput.length > 1 && (editDist < 2 || similar > 0.75)) { 
                     meanCorrect++;
-                    if (props.data[current].english[i] === meanInput) {
+                    if (props.mainData[current].english[i] === meanInput) {
                         meanCorrect++;
                     }
                 }
@@ -117,12 +117,12 @@ const Review = (props) => {
                 toneInput = flattenPinyin(readInput)[0];
             }
             // remove tone from solution in order to compare
-            let readDataFlat = flattenPinyin(props.data[current].pinyin)[0]
+            let readDataFlat = flattenPinyin(props.mainData[current].pinyin)[0]
             // check if reading is correct without tone
             if (readDataFlat === readingInputFlat) { 
                 readCorrect++;
                 // check if tone is also correct
-                if (props.data[current].tone === toneInput) { 
+                if (props.mainData[current].tone === toneInput) { 
                     readCorrect++;
                 }
             }
@@ -218,7 +218,7 @@ const Review = (props) => {
 
 
     // go into summary when no characters left to review
-    if (typeof props.data[current] === 'undefined') {
+    if (typeof props.mainData[current] === 'undefined') {
         return (
         <div id="board">
             <div className="card" id="summary-card">
@@ -227,7 +227,7 @@ const Review = (props) => {
                     {correctList.length === 0 ? "No items" :
                     correctList.map((item, index) => 
                     <Character
-                        data={props.data}
+                        data={props.mainData}
                         character={item} 
                         value='true' 
                         key={item + index} />
@@ -238,7 +238,7 @@ const Review = (props) => {
                     {inCorrectList.length === 0 ? "No items" :
                     inCorrectList.map((item, index) => 
                     <Character
-                        data={props.data}
+                        data={props.mainData}
                         character={item}
                         value='false' 
                         key={item + index} />
@@ -265,8 +265,8 @@ const Review = (props) => {
                         >Summary
                     </button>
                     <p id ="chinese-simplified-label">Simplified:</p>
-                    <h2 id="chinese-simplified">{props.data[current].chineseSimp}</h2>
-                    <h1 id ="chinese-traditional">{props.data[current].chineseTrad}</h1>
+                    <h2 id="chinese-simplified">{props.mainData[current].chineseSimp}</h2>
+                    <h1 id ="chinese-traditional">{props.mainData[current].chineseTrad}</h1>
                     <p id="correct">Correct:{' '}
                         {correctNum} - {correctNum + incorrectNum > 0 ?
                         Math.round(correctNum / (correctNum + incorrectNum)*100) : 0}%
@@ -316,11 +316,11 @@ const Review = (props) => {
                     {!solutionSubmitted ? "" :
                         <>
                         <p id="meaning-solution">
-                            {props.data[current].english.filter(
+                            {props.mainData[current].english.filter(
                                 x => typeof x === 'string' && x.length > 0)
                             .join(", ")}</p>
                         <p id="reading-solution">
-                            {props.data[current].pinyin} (tone: {props.data[current].tone})
+                            {props.mainData[current].pinyin} (tone: {props.mainData[current].tone})
                         </p>
                         <label
                             id="meaning-memonic-label"

@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { instance as axios, getMainDataCharacters } from '../axios-instance';
+import { UserContext } from '../components/providers/UserProvider'; 
 import Strip from '../components/Strip';
 import Stage from '../components/Stage';
-import { UserContext } from '../components/providers/UserProvider'; 
 
 const StagesCont = () => {
-    
+    //setting up user status
     const currentUser = useContext(UserContext);
 
     const [token, setToken] = useState(localStorage.getItem('token'));
@@ -14,18 +14,18 @@ const StagesCont = () => {
         setToken(localStorage.getItem('token'));
     }, [currentUser]);
 
-    const [data, setData] = useState(null);
-
+    const [mainData, setMainData] = useState(null);
+    //setting up data
     useEffect( () => {
         const source = axios.CancelToken.source();
         if (token) {
-            getMainDataCharacters(source, token, setData);
+            getMainDataCharacters(source, token, setMainData);
         }
         return () => {
             source.cancel('GET request cancelled');
         }
     }, [token])
-
+    //finds the highest stage level among all data
     const findHighestStage = (data) => {
         let highest = 0;
         for (let character in data) {
@@ -35,32 +35,32 @@ const StagesCont = () => {
         }
         return highest;
     }
-
-    const sortDataToLevel = (data, level) => {
-        let levelObject = {};
+    // only returns data that is the same as current stage
+    const sortDataToStage = (data, currentStage) => {
+        let stageObject = {};
 
         for (let character in data) {
-            if (data[character].stage === level) {
-                levelObject[character] = data[character]
+            if (data[character].stage === currentStage) {
+                stageObject[character] = data[character]
             }
         }
-        return levelObject;
+        return stageObject;
     }
-
+    // steps through the stages until the current highest
     const loopThrough = (highestStage, data) => {
         let items = [];
         for (let i = 1; i <= highestStage; i++) {
-            items.push(<Stage level= {i.toString()} stageData= {sortDataToLevel(data, i)} key={'stage' + i}/>)
+            items.push(<Stage level= {i.toString()} stageData= {sortDataToStage(data, i)} key={'stage' + i}/>)
         }
         return items;
     }
 
     let content;
     
-    if (data) {
+    if (mainData) {
         content = 
         <div className="card" id="stage-flex-card">
-            {loopThrough(findHighestStage(data), data)}
+            {loopThrough(findHighestStage(mainData), mainData)}
         </div>
     } else if (!token) {
         content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000} />

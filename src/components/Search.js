@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Search.css';
 
 const Search= (props) => {
-
+    // query is the currently searched string by the user
     const [query, setQuery] = useState("");
 
     const handleChange = (event) => {
@@ -21,15 +21,15 @@ const Search= (props) => {
         setQuery("");
         props.handleSearch(event, "");
     }
-
+    // all search results mapped
     const resultList = props.searchResults.map((item, index) => 
         <div className="result-flex" key={item + index}>
-            <p>{props.data[item].chineseTrad}</p>
-            <p>{props.data[item].chineseSimp}</p>
-            <p>{props.data[item].pinyin}</p>
-            <p>{props.data[item].english[0]}</p>
-            <p>{props.data[item].english[1]}</p>
-            <p>{props.data[item].english[2]}</p>
+            <p>{props.mainData[item].chineseTrad}</p>
+            <p>{props.mainData[item].chineseSimp}</p>
+            <p>{props.mainData[item].pinyin}</p>
+            <p>{props.mainData[item].english[0]}</p>
+            <p>{props.mainData[item].english[1]}</p>
+            <p>{props.mainData[item].english[2]}</p>
         </div>
     )
 

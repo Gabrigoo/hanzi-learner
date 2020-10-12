@@ -1,14 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
-import InfoPanel from '../components/InfoPanel';
-import { useParams } from 'react-router-dom';
 import { instance as axios, getMainDataCharacters, getUserData } from '../axios-instance';
-import Strip from '../components/Strip';
 import { UserContext } from '../components/providers/UserProvider';
+import { useParams } from 'react-router-dom';
+import InfoPanel from '../components/InfoPanel';
+import Strip from '../components/Strip';
 
 const InfoCont = () => {
-
+    //getting character the panel is supposed to display
     const { id } = useParams();
-
+    //setting up user status
     const currentUser = useContext(UserContext);
 
     const [userId, setUserID] = useState(localStorage.getItem('userId'));
@@ -18,21 +18,21 @@ const InfoCont = () => {
         setToken(localStorage.getItem('token'));
         setUserID(localStorage.getItem('userId'));
     }, [currentUser]);
-
-    const [data, setData] = useState(null);
+    //setting up data
+    const [mainData, setMainData] = useState(null);
     const [userData, setUserData] = useState(null);
 
     useEffect( () => {
         const source = axios.CancelToken.source();
         if (token) {
-            getMainDataCharacters(source, token, setData);
+            getMainDataCharacters(source, token, setMainData);
             getUserData(source, token, userId, setUserData);
         }
         return () => {
             source.cancel('GET request cancelled');
         }
     }, [token, userId])
-
+    //function for uploading memonic changes by the user
     const putUserNewMemonic = (character, object) => {
         axios.put("/" + userId + "/characters/" + character + ".json?auth=" + token, object)
         .then(() => {console.log("PUT: new user data uploaded")})
@@ -41,8 +41,8 @@ const InfoCont = () => {
 
     let content;
 
-    if (data && userData) {
-        content = <InfoPanel id={id} data={data} characters={userData.characters} putUserNewMemonic={putUserNewMemonic}/>
+    if (mainData && userData) {
+        content = <InfoPanel id={id} mainData={mainData} userData={userData.characters} putUserNewMemonic={putUserNewMemonic}/>
     } else if (!token) {
         content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000}/>
     } else {
