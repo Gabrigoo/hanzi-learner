@@ -1,45 +1,64 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './Character.css';
 import history from '../history';
 
 const Character = (props) => {
-    //these are for the small popup box when hovering over a character
-    const [showBox, setShowBox] = useState(false);
-    
-    const handleBoxEnter = () => {
-        setShowBox(true);
-    }
-    const handleBoxLeave = () => {
-        setShowBox(false);
-    }
+  // these are for the small popup box when hovering over a character
+  const [showBox, setShowBox] = useState(false);
 
-    const handleClick = () => {
-        let path = '/info/' + props.character;
-        history.push(path);
-    }
-    //background color indicating correct and incorrect (or none)
-    let backColor;
+  const handleBoxEnter = () => {
+    setShowBox(true);
+  };
+  const handleBoxLeave = () => {
+    setShowBox(false);
+  };
 
-    if (props.value === 'true') {
-        backColor = 'character-correct';
-    } else if(props.value === 'false') {
-        backColor = 'character-incorrect';
-    } else {
-        backColor = 'character-standard'
-    }
+  const handleClick = () => {
+    const path = '/info/' + props.character;
+    history.push(path);
+  };
+  // background color indicating correct and incorrect (or none)
+  let backColor;
 
-    return (
-        <div id="mapped-character-div" onMouseEnter={handleBoxEnter} onMouseLeave={handleBoxLeave}>
-            <p className={backColor} id="mapped-character" onClick={handleClick}>{props.character}</p>
-            {showBox ? 
-                <div id="floating-div">
-                    <div className="arrow-up"></div>
-                    <p className = "hint-box">Mean: {props.data[props.character].english[0]}</p>
-                    <p className = "hint-box">Read: {props.data[props.character].pinyin}</p>
-                </div>
-            : ""}
-        </div>
-    );
+  if (props.value === 'true') {
+    backColor = 'character-correct';
+  } else if (props.value === 'false') {
+    backColor = 'character-incorrect';
+  } else {
+    backColor = 'character-standard';
+  }
+
+  return (
+    <div id="mapped-character-div" onMouseEnter={handleBoxEnter} onMouseLeave={handleBoxLeave}>
+      <button className={backColor} id="mapped-character" onClick={handleClick}>{props.character}</button>
+      {showBox
+        ? (
+          <div id="floating-div">
+            <div className="arrow-up" />
+            <p className="hint-box">
+              Mean:
+              {props.data[props.character].english[0]}
+            </p>
+            <p className="hint-box">
+              Read:
+              {props.data[props.character].pinyin}
+            </p>
+          </div>
+        )
+        : ''}
+    </div>
+  );
+};
+
+Character.defaultProps = {
+  value: '',
+};
+
+Character.propTypes = {
+  data: PropTypes.objectOf(PropTypes.object).isRequired,
+  character: PropTypes.string.isRequired,
+  value: PropTypes.string,
 };
 
 export default Character;
