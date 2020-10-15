@@ -1,78 +1,79 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { instance as axios, getMainDataCharacters } from '../axios-instance';
-import { UserContext } from '../components/providers/UserProvider'; 
+import { UserContext } from '../components/providers/UserProvider';
 import Strip from '../components/Strip';
 import Stage from '../components/Stage';
 
 const StagesCont = () => {
-    //setting up user status
-    const currentUser = useContext(UserContext);
+  // setting up user status
+  const currentUser = useContext(UserContext);
 
-    const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
-    useEffect( () => {
-        setToken(localStorage.getItem('token'));
-    }, [currentUser]);
+  useEffect(() => {
+    setToken(localStorage.getItem('token'));
+  }, [currentUser]);
 
-    const [mainData, setMainData] = useState(null);
-    //setting up data
-    useEffect( () => {
-        const source = axios.CancelToken.source();
-        if (token) {
-            getMainDataCharacters(source, token, setMainData);
-        }
-        return () => {
-            source.cancel('GET request cancelled');
-        }
-    }, [token])
-    //finds the highest stage level among all data
-    const findHighestStage = (data) => {
-        let highest = 0;
-        for (let character in data) {
-            if (data[character].stage > highest) {
-                highest = data[character].stage;
-            }
-        }
-        return highest;
+  const [mainData, setMainData] = useState(null);
+  // setting up data
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    if (token) {
+      getMainDataCharacters(source, token, setMainData);
     }
-    // only returns data that is the same as current stage
-    const sortDataToStage = (data, currentStage) => {
-        let stageObject = {};
-
-        for (let character in data) {
-            if (data[character].stage === currentStage) {
-                stageObject[character] = data[character]
-            }
-        }
-        return stageObject;
+    return () => {
+      source.cancel('GET request cancelled');
+    };
+  }, [token]);
+  // finds the highest stage level among all data
+  const findHighestStage = (data) => {
+    let highest = 0;
+    for (const character in data) {
+      if (data[character].stage > highest) {
+        highest = data[character].stage;
+      }
     }
-    // steps through the stages until the current highest
-    const loopThrough = (highestStage, data) => {
-        let items = [];
-        for (let i = 1; i <= highestStage; i++) {
-            items.push(<Stage level= {i.toString()} stageData= {sortDataToStage(data, i)} key={'stage' + i}/>)
-        }
-        return items;
-    }
+    return highest;
+  };
+  // only returns data that is the same as current stage
+  const sortDataToStage = (data, currentStage) => {
+    const stageObject = {};
 
-    let content;
-    
-    if (mainData) {
-        content = 
-        <div className="card" id="stage-flex-card">
-            {loopThrough(findHighestStage(mainData), mainData)}
-        </div>
-    } else if (!token) {
-        content = <Strip message = "No user is signed in" backTrack={'/main'} timeout = {4000} />
-    } else {
-        content = <Strip message = "Loading..."/>
+    for (const character in data) {
+      if (data[character].stage === currentStage) {
+        stageObject[character] = data[character];
+      }
     }
-
-    return (
-        <div>
-            {content}
-        </div>
-    );
+    return stageObject;
+  };
+  // steps through the stages until the current highest
+  const loopThrough = (highestStage, data) => {
+    const items = [];
+    for (let i = 1; i <= highestStage; i += 1) {
+      items.push(<Stage level={i.toString()} stageData={sortDataToStage(data, i)} key={'stage' + i} />);
+    }
+    return items;
   };
 
-  export default StagesCont;
+  let content;
+
+  if (mainData) {
+    content = (
+      <div className="card" id="stage-flex-card">
+        {loopThrough(findHighestStage(mainData), mainData)}
+      </div>
+    );
+  } else if (!token) {
+    content = <Strip message="No user is signed in" timeout={4000} />;
+  } else {
+    content = <Strip message="Loading..." />;
+  }
+
+  return (
+    <div>
+      {content}
+    </div>
+  );
+};
+
+export default StagesCont;
