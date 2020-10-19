@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
-import history from "./src/history";
+import history from "./history";
 import './index.css';
-import App from './src/App';
-import * as serviceWorker from './src/serviceWorker';
-import UserProvider from './src/components/providers/UserProvider';
+import App from './App.js';
+import * as serviceWorker from './serviceWorker';
+import UserProvider from './components/providers/UserProvider';
 
 ReactDOM.render(
     <UserProvider>
