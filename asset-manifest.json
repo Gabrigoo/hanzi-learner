@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/hanzi-learner/static/css/main.7ab81003.chunk.css",
+    "main.js": "/hanzi-learner/static/js/main.07bbb73a.chunk.js",
+    "main.js.map": "/hanzi-learner/static/js/main.07bbb73a.chunk.js.map",
+    "runtime-main.js": "/hanzi-learner/static/js/runtime-main.00919829.js",
+    "runtime-main.js.map": "/hanzi-learner/static/js/runtime-main.00919829.js.map",
+    "static/js/2.c5d32922.chunk.js": "/hanzi-learner/static/js/2.c5d32922.chunk.js",
+    "static/js/2.c5d32922.chunk.js.map": "/hanzi-learner/static/js/2.c5d32922.chunk.js.map",
+    "index.html": "/hanzi-learner/index.html",
+    "precache-manifest.fec5167011991f29865891c5c1919266.js": "/hanzi-learner/precache-manifest.fec5167011991f29865891c5c1919266.js",
+    "service-worker.js": "/hanzi-learner/service-worker.js",
+    "static/css/main.7ab81003.chunk.css.map": "/hanzi-learner/static/css/main.7ab81003.chunk.css.map",
+    "static/js/2.c5d32922.chunk.js.LICENSE.txt": "/hanzi-learner/static/js/2.c5d32922.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.00919829.js",
+    "static/js/2.c5d32922.chunk.js",
+    "static/css/main.7ab81003.chunk.css",
+    "static/js/main.07bbb73a.chunk.js"
+  ]
+}
