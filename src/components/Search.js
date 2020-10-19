@@ -24,18 +24,22 @@ const Search = (props) => {
   };
   // all search results mapped
   const resultList = props.searchResults.map((item, index) => (
-    <div className="result-flex" key={item + index}>
-      <p>{props.mainData[item].chineseTrad}</p>
-      <p>{props.mainData[item].chineseSimp}</p>
-      <p>{props.mainData[item].pinyin}</p>
-      <p>{props.mainData[item].english[0]}</p>
-      <p>{props.mainData[item].english[1]}</p>
-      <p>{props.mainData[item].english[2]}</p>
+    <div id="result-flex" key={item + index}>
+      <div id="smallflex-1">
+        <p>{props.mainData[item].chineseTrad}</p>
+        <p>{props.mainData[item].chineseSimp}</p>
+        <p>{props.mainData[item].pinyin}</p>
+      </div>
+      <div id="smallflex-2">
+        <p>{props.mainData[item].english[0]}</p>
+        <p>{props.mainData[item].english[1]}</p>
+        <p>{props.mainData[item].english[2]}</p> 
+      </div>
     </div>
   ));
 
   return (
-    <div className="card">
+    <div id="search-card" className="card">
       <form
         id="search-form"
         autoComplete="off"
@@ -44,6 +48,7 @@ const Search = (props) => {
         <label>
           Search:
           <input
+            id="search-input"
             type="text"
             name="search"
             value={query}
@@ -52,12 +57,15 @@ const Search = (props) => {
         </label>
         <input
           id="search-button"
-          className="board-button"
+          className="standard-button"
           type="submit"
           value="Search"
         />
-        <button id="clear-button" onClick={clearInput}>
-          Clear
+        <button 
+          id="clear-button" 
+          className="standard-button"  
+          onClick={clearInput}
+          >Clear
         </button>
       </form>
       {resultList}

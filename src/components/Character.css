@@ -13,24 +13,6 @@
     border-radius: 3px;
     background: #b4a991;
 }
-.hint-box {
-    margin: 0px;
-    word-wrap: normal;
-
-}
-#floating-div {
-    white-space: nowrap;
-    font-size: 14px;
-    position: absolute;
-    z-index: 1;
-    top: 40px;
-    left: 15px;
-    transform: translate(-50%);
-    text-align: left;
-    padding: 3px;
-    background: rgba(209, 196, 154, 1);
-    border: solid rgb(182, 149, 100) 2px;
-}
 #mapped-character-div {
     position: relative;
     margin-left: 10px;
@@ -45,6 +27,24 @@
 }
 #mapped-character:hover {
     cursor: pointer;
+}
+/* Popup box on mouse hover */
+.popup-box {
+    white-space: nowrap;
+    font-size: 14px;
+    position: absolute;
+    z-index: 1;
+    top: 40px;
+    left: 15px;
+    transform: translate(-50%);
+    text-align: left;
+    padding: 3px;
+    background: rgba(209, 196, 154, 1);
+    border: solid rgb(182, 149, 100) 2px;
+}
+.short-hint {
+    margin: 0px;
+    word-wrap: normal;
 }
 .arrow-up {
         position: absolute;

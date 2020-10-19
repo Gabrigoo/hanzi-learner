@@ -56,14 +56,14 @@ const ProfilePage = () => {
               <h1 className = "auth-h1">{user}</h1>
               <h3 className = "auth-h3">{email}</h3>
               {provider === "password" ?
-                  <button 
-                      className = "auth-button"
-                      onClick= {linkWithGoogle}
+                  <button
+                    className="standard-button"
+                    onClick= {linkWithGoogle}
                       >Link with Google
                   </button> : 
                   "" }
               <button 
-                  className = "auth-button"
+                  className="standard-button"
                   onClick= {handleSignOut}
                   >Sign out
               </button>

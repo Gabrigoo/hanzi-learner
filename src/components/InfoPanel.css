@@ -1,4 +1,6 @@
 #info-card {
+    width: 500px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -6,8 +8,12 @@
     height: auto;
 }
 #chinese-trad-info {
-    margin: 10px 0px 5px 5px;
-    font-size: 50px;
+    margin: 0px;
+    font-size: 70px;
+}
+#chinese-simp-info {
+    margin: 0px 0px 5px 20px;
+    font-size: 35px;
 }
 .mean-info {
     margin-right: 20px;;
@@ -15,8 +21,29 @@
 .read-info {
     margin-right: 5px;;
 }
+#horiz-div-1 {
+    width: 100%;
+    margin-bottom: 30px;
+    justify-content: space-between;
+}
+#horiz-div-2 {
+    align-items: flex-end;
+}
+#stage-count {
+    margin-right: 50px;
+}
+#change-memo-button {
+    margin: 25px 0px 10px 0px;
+    width: 170px;
+}
+.margin-right-30 {
+    margin-right: 30px;
+}
 .horiz-div {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+}
+.memo-info {
+    min-height: 60px;
 }

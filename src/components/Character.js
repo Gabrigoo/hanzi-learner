@@ -34,13 +34,13 @@ const Character = (props) => {
       <button className={backColor} id="mapped-character" onClick={handleClick}>{props.character}</button>
       {showBox
         ? (
-          <div id="floating-div">
+          <div className="popup-box">
             <div className="arrow-up" />
-            <p className="hint-box">
+            <p className="short-hint">
               Mean:
               {props.data[props.character].english[0]}
             </p>
-            <p className="hint-box">
+            <p className="short-hint">
               Read:
               {props.data[props.character].pinyin}
             </p>
