@@ -121,7 +121,7 @@ const Addition = (props) => {
   };
 
   return (
-    <div id="board">
+    <div>
       <form id="addition-grid-card" autoComplete="off" onSubmit={handleSubmit}>
         <h1 className="add-h1">Add new entry</h1>
         <div id="add-message">

@@ -25,17 +25,6 @@
 .auth-input {
     margin-bottom: 5px;
 }
-.auth-button {
-    color: white;
-    width: 160px;
-    height: 45px;
-    margin: 5px;
-    border: solid rgb(59, 87, 119) 3px;
-    border-radius: 5px;
-    background:  rgb(75, 112, 155);
-    font-size: 14px;
-    cursor: pointer;
-}
 .two-button-flex {
     display: flex;
     flex-direction: row;

@@ -29,12 +29,12 @@ const TitleBox = () => {
   };
 
   return (
-    <div className="auth-flex-card">
+    <div className="card">
       <h2>Hanzi SRS</h2>
       <button
         name="start-learn"
         id="start-learn-button"
-        className="auth-button"
+        className="standard-button"
         onClick={switchScreen}
       >
         Learn
@@ -42,7 +42,7 @@ const TitleBox = () => {
       <button
         name="start-practice"
         id="start-practice-button"
-        className="auth-button"
+        className="standard-button"
         onClick={switchScreen}
       >
         Practice
@@ -50,7 +50,7 @@ const TitleBox = () => {
       <button
         name="check-stages"
         id="start-stages-button"
-        className="auth-button"
+        className="standard-button"
         onClick={switchScreen}
       >
         Stages
@@ -58,7 +58,7 @@ const TitleBox = () => {
       <button
         name="start-add"
         id="start-add-button"
-        className="auth-button"
+        className="standard-button"
         onClick={switchScreen}
       >
         Add character
@@ -66,7 +66,7 @@ const TitleBox = () => {
       <button
         name="start-search"
         id="start-search-button"
-        className="auth-button"
+        className="standard-button"
         onClick={switchScreen}
       >
         Search

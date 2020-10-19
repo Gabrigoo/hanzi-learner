@@ -66,7 +66,7 @@ const Learn = (props) => {
       >
         <input
           id="learn-continue-button"
-          className="board-button"
+          className="standard-button"
           type="submit"
           value="Continue"
         />

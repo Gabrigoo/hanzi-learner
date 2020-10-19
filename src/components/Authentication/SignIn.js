@@ -96,16 +96,16 @@ const SignIn = () => {
             <form 
                 id="sign-in-button-form" 
                 onSubmit= { (event) => signInWithEmailAndPasswordHandler(event, email, password)}> 
-                <button className="auth-button" type="submit">
+                <button className="standard-button" type="submit">
                     Sign in
                 </button>
             </form>
             <p className="auth-p">or</p>
             <div className="two-button-flex">
-                <button onClick={signInWithGoogle} className="auth-button">
+                <button onClick={signInWithGoogle} className="standard-button">
                     Sign in with Google
                 </button>
-                <button onClick={signInWithFacebook} className="auth-button">
+                <button onClick={signInWithFacebook} className="standard-button">
                     Sign in with Facebook
                 </button>
             </div>
@@ -113,14 +113,14 @@ const SignIn = () => {
             <button
                 name="sign-up" 
                 id="sing-up-in-redirect"
-                className="auth-button"
+                className="standard-button"
                 onClick={switchScreen}
                 >Sign up here
             </button>
             <button
                 name="password-reset" 
                 id="password-reset-button" 
-                className="auth-button" 
+                className="standard-button"
                 onClick={switchScreen}
                 >Forgot Password?
             </button>

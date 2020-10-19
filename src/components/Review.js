@@ -59,11 +59,11 @@ const Review = (props) => {
   };
   // shuffles deck in the beginning
   function shuffle(sourceArray) {
-    const newArray = sourceArray;
+    const newArray = [...sourceArray];
     if (sourceArray.length > 1) {
       for (let i = 0; i < sourceArray.length - 1; i += 1) {
         const j = i + Math.floor(Math.random() * (sourceArray.length - i));
-        newArray[j] = sourceArray[i];
+        newArray[i] = sourceArray[j];
       }
     }
     return newArray;
@@ -220,7 +220,7 @@ const Review = (props) => {
   // go into summary when no characters left to review
   if (typeof props.mainData[current] === 'undefined') {
     return (
-      <div id="board">
+      <div>
         <div className="card" id="summary-card">
           <p id="correct-label">Correct:</p>
           <div className="mapping-div" id="correct-map">
@@ -248,7 +248,7 @@ const Review = (props) => {
           </div>
           <button
             id="main-menu-button"
-            className="board-button"
+            className="standard-button"
             onClick={props.mainMenu}
           >
             Back to Main
@@ -259,15 +259,17 @@ const Review = (props) => {
     // else review next character
   }
   return (
-    <div id="board">
+    <div>
       <div className="card" id="review-card">
-        <button
-          id="summary-button"
-          className="board-button"
-          onClick={goToSummary}
-        >
-          Summary
-        </button>
+        <div id="summary-flex">
+          <button
+            id="summary-button"
+            className="standard-button"
+            onClick={goToSummary}
+          >
+            Summary
+          </button>
+        </div>
         <p id="chinese-simplified-label">Simplified:</p>
         <h2 id="chinese-simplified">{props.mainData[current].chineseSimp}</h2>
         <h1 id="chinese-traditional">{props.mainData[current].chineseTrad}</h1>
@@ -277,6 +279,7 @@ const Review = (props) => {
           {correctNum}
           {' '}
           -
+          {' '}
           {correctNum + incorrectNum > 0
             ? Math.round((correctNum / (correctNum + incorrectNum)) * 100) : 0}
           %
@@ -287,6 +290,7 @@ const Review = (props) => {
           {incorrectNum}
           {' '}
           -
+          {' '}
           {correctNum + incorrectNum > 0
             ? Math.round((incorrectNum / (correctNum + incorrectNum)) * 100) : 0}
           %
@@ -333,7 +337,7 @@ const Review = (props) => {
         >
           <input
             id="board-submit-button"
-            className="board-button"
+            className="standard-button"
             type="submit"
             value={solutionSubmitted ? 'Continue' : 'Submit'}
           />
@@ -390,7 +394,7 @@ const Review = (props) => {
                 <>
                   <button
                     id="change-memo-button"
-                    className="board-button"
+                    className="standard-button"
                     onClick={switchChangeMemonics}
                   >
                     Change memonics

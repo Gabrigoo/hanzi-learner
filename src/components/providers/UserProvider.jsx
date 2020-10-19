@@ -29,6 +29,7 @@ componentDidMount = () => {
         this.setState({ token: idToken });
       }).catch((error) => console.log(error));
     } else {
+      console.log('user logged out');
       localStorage.removeItem('user');
       localStorage.removeItem('email');
       localStorage.removeItem('token');

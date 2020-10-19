@@ -67,18 +67,20 @@ const InfoPanel = (props) => {
 
   content = (
     <>
-      <h1 id="chinese-trad-info">{current}</h1>
-      <h2 id="chinese-simp-info">{mainData[current].chineseSimp}</h2>
-      <div className="horiz-div">
-        <p>Stage:</p>
-        <p>{mainData[current].stage}</p>
+      <div id="horiz-div-1" className="horiz-div">
+        <div id="horiz-div-2" className="horiz-div">
+          <h1 id="chinese-trad-info">{current}</h1>
+          <h2 id="chinese-simp-info">{mainData[current].chineseSimp}</h2>
+        </div>
+        <p id="stage-count">Stage:{' '}{mainData[current].stage}</p>
       </div>
-      <p>Meaning:</p>
       <div className="horiz-div">
+        <p className="margin-right-30">Meaning:</p>
         {mainData[current].english.map((word, index) => <p className="mean-info" key={word + index}>{word}</p>)}
       </div>
-      <p>Reading:</p>
+      
       <div className="horiz-div">
+        <p className="margin-right-30">Reading:</p>
         <p className="read-info">{mainData[current].pinyin}</p>
         <p>{mainData[current].tone}</p>
       </div>
@@ -93,7 +95,7 @@ const InfoPanel = (props) => {
               <p>Meaning memonic:</p>
               <textarea
                 id="meaning-memonic-input"
-                className="memonic-textarea"
+                className="memo-info"
                 type="text"
                 name="meaning-memo"
                 value={meaningMemonic}
@@ -102,7 +104,7 @@ const InfoPanel = (props) => {
               <p>Reading memonic:</p>
               <textarea
                 id="reading-memonic-input"
-                className="memonic-textarea"
+                className="memo-info"
                 type="text"
                 name="reading-memo"
                 value={readingMemonic}
@@ -110,7 +112,7 @@ const InfoPanel = (props) => {
               />
               <button
                 id="change-memo-button"
-                className="board-button"
+                className="standard-button"
                 onClick={sendMemonic}
               >
                 Save memonics
@@ -120,32 +122,38 @@ const InfoPanel = (props) => {
           : (
             <>
               <p>Meaning memonic:</p>
-              {meaningMemonic !== ''
+              <div className="memo-info">
+                {meaningMemonic !== ''
                 ? meaningMemonic
                 : userData[current].memoMean === ''
                   ? 'Currently no meaning memonic added'
                   : userData[current].memoMean}
+              </div>
               <p>Reading memonic:</p>
-              {readingMemonic !== ''
+              <div className="memo-info">
+                {readingMemonic !== ''
                 ? readingMemonic
                 : userData[current].memoRead === ''
                   ? 'Currently no reading memonic added'
                   : userData[current].memoRead}
+              </div>
               <button
                 id="change-memo-button"
-                className="board-button"
+                className="standard-button"
                 onClick={switchChangeMemonics}
               >
                 Change memonics
               </button>
             </>
           )}
-        <p>Last practiced:</p>
-        <p>{dateToString(userData[current].lastPract)}</p>
-        <p>User level:</p>
         <div className="horiz-div">
+          <p className="margin-right-30">Last practiced:</p>
+          <p>{dateToString(userData[current].lastPract)}</p>
+        </div>
+        <div className="horiz-div">
+          <p className="margin-right-30">User level:</p>{' '}
           <p className="read-info">{userData[current].level}</p>
-          <p>{levels[userData[current].level][1]}</p>
+          <p>"</p><p>{levels[userData[current].level][1]}</p><p>"</p>
         </div>
       </>
     );

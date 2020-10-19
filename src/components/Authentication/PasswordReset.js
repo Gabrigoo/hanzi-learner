@@ -71,9 +71,9 @@ const PasswordReset = () => {
           onChange={handleChange}
       />
       <form id="password-reset-form" onSubmit={sendResetEmail}>
-          <button className="auth-button" type="submit">Send me a reset link</button>
+          <button className="standard-button" type="submit">Send me a reset link</button>
       </form>
-      <button className="auth-button" onClick={backToSignIn}>Back to sign in page</button>
+      <button className="standard-button" onClick={backToSignIn}>Back to sign in page</button>
     </div>
   );
 };
