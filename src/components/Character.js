@@ -20,13 +20,24 @@ const Character = (props) => {
   };
   // background color indicating correct and incorrect (or none)
   let backColor;
-
   if (props.value === 'true') {
-    backColor = 'character-correct';
+    backColor = 'theme-correct';
   } else if (props.value === 'false') {
-    backColor = 'character-incorrect';
+    backColor = 'theme-incorrect';
+  } else if (!props.userData.hasOwnProperty(props.character)) {
+    backColor = 'theme-grey';
+  } else if (props.userData[props.character].level === 0) {
+    backColor = 'theme-grey';
+  } else if (props.userData[props.character].level < 5) {
+    backColor = 'theme-brown';
+  } else if (props.userData[props.character].level < 7) {
+    backColor = 'theme-bronze';
+  } else if (props.userData[props.character].level < 8) {
+    backColor = 'theme-silver';
+  } else if (props.userData[props.character].level < 9) {
+    backColor = 'theme-gold';
   } else {
-    backColor = 'character-standard';
+    backColor = 'theme-diamond';
   }
 
   return (
@@ -37,13 +48,19 @@ const Character = (props) => {
           <div className="popup-box">
             <div className="arrow-up" />
             <p className="short-hint">
-              Mean:
-              {props.data[props.character].english[0]}
+              Mean:{' '}
+              {props.mainData[props.character].english[0]}
             </p>
             <p className="short-hint">
-              Read:
-              {props.data[props.character].pinyin}
+              Read:{' '}
+              {props.mainData[props.character].pinyin}
             </p>
+            {props.userData[props.character] ?
+            <p className="short-hint">
+              Level:{' '}
+              {props.userData[props.character].level}
+            </p>:
+            ""}
           </div>
         )
         : ''}
@@ -53,10 +70,12 @@ const Character = (props) => {
 
 Character.defaultProps = {
   value: '',
+  userData: {},
 };
 
 Character.propTypes = {
-  data: PropTypes.objectOf(PropTypes.object).isRequired,
+  mainData: PropTypes.objectOf(PropTypes.object).isRequired,
+  userData: PropTypes.objectOf(PropTypes.object),
   character: PropTypes.string.isRequired,
   value: PropTypes.string,
 };

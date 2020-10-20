@@ -32,7 +32,7 @@ const LearnCont = () => {
 
   // determines which items are to be learned by user level
   const getNewItems = (main, user) => {
-    const userStage = user.userData.currentStage;
+    const userStage = user.profileData.currentStage;
     const dataKeys = Object.keys(main).filter((char) => main[char].stage <= userStage);
     const userKeys = Object.keys(user.characters);
     return dataKeys.filter((char) => !userKeys.includes(char));

@@ -34,7 +34,7 @@ const ReviewCont = () => {
   // after component unmounts user progress is checked advancement is determined
   useEffect(() => () => {
     if (mainData && userData) {
-      const userLevel = userData.userData.currentStage;
+      const userLevel = userData.profileData.currentStage;
 
       axios.get('/' + userId + '/characters.json?auth=' + token).then((res) => {
         console.log('GET user data loaded');
@@ -51,7 +51,7 @@ const ReviewCont = () => {
         console.log('asessing user data... level completion: ' + ratio);
         if (ratio > 90) {
           console.log('User level increased to: ' + (userLevel + 1));
-          axios.put('/' + userId + '/userData/currentStage.json?auth=' + token, userLevel + 1)
+          axios.put('/' + userId + '/profileData/currentStage.json?auth=' + token, userLevel + 1)
             .then(() => {
               console.log('PUT database overwritten');
             }).catch((error) => console.error('Error updating database: ' + error));

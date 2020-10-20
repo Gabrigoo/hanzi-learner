@@ -79,7 +79,7 @@ Search.defaultProps = {
 
 Search.propTypes = {
   mainData: PropTypes.objectOf(PropTypes.object).isRequired,
-  searchResults: PropTypes.arrayOf(PropTypes.object),
+  searchResults: PropTypes.arrayOf(PropTypes.string),
   handleSearch: PropTypes.func.isRequired,
 };
 

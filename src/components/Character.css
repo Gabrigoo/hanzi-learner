@@ -1,12 +1,42 @@
-.character-correct {
+.theme-correct {
     border: 2px solid green;
     border-radius: 3px;
     background: #76d127;
 }
-.character-incorrect {
+.theme-incorrect {
     border: 2px solid red;
     border-radius: 3px;
     background: #f55d45;
+}
+.theme-grey {
+    border: 2px solid rgba(78, 78, 78, 0.342);
+    border-radius: 3px;
+    background: rgba(121, 120, 120, 0.295);
+}
+.theme-brown {
+    border: 2px solid rgb(153, 60, 60);
+    border-radius: 3px;
+    background: rgb(168, 65, 65);
+}
+.theme-bronze {
+    border: 2px solid rgb(187, 92, 36);
+    border-radius: 3px;
+    background:  rgb(233, 115, 47);
+}
+.theme-silver {
+    border: 2px solid silver;
+    border-radius: 3px;
+    background: rgb(212, 212, 212);
+}
+.theme-gold {
+    border: 2px solid gold;
+    border-radius: 3px;
+    background: rgb(196, 172, 39);
+}
+.theme-diamond {
+    border: 2px solid rgb(80, 80, 179);
+    border-radius: 3px;
+    background: rgb(101, 101, 224);
 }
 .character-standard {
     border: 2px solid grey;

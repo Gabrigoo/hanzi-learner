@@ -12,7 +12,8 @@ const Stage = (props) => ( // all the elements for the current stage mapped
     <div className="stage-flex">
       {Object.keys(props.stageData).map((item, index) => (
         <Character
-          data={props.stageData}
+          mainData={props.stageData}
+          userData={props.userData}
           character={item}
           key={item + index}
         />
@@ -23,6 +24,7 @@ const Stage = (props) => ( // all the elements for the current stage mapped
 
 Stage.propTypes = {
   stageData: PropTypes.objectOf(PropTypes.object).isRequired,
+  userData: PropTypes.objectOf(PropTypes.object).isRequired,
   level: PropTypes.string.isRequired,
 };
 

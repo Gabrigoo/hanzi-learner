@@ -60,10 +60,10 @@ const Review = (props) => {
   // shuffles deck in the beginning
   function shuffle(sourceArray) {
     const newArray = [...sourceArray];
-    if (sourceArray.length > 1) {
-      for (let i = 0; i < sourceArray.length - 1; i += 1) {
-        const j = i + Math.floor(Math.random() * (sourceArray.length - i));
-        newArray[i] = sourceArray[j];
+    if (newArray.length > 1) {
+      for (let i = newArray.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
       }
     }
     return newArray;
@@ -115,7 +115,7 @@ const Review = (props) => {
         toneInput = readInput.split('').splice(-1)[0];
       } else { // else check if tone is in character
         readingInputFlat = flattenPinyin(readInput)[0];
-        toneInput = flattenPinyin(readInput)[0];
+        toneInput = flattenPinyin(readInput)[1];
       }
       // remove tone from solution in order to compare
       const readDataFlat = flattenPinyin(props.mainData[current].pinyin)[0];
@@ -227,7 +227,7 @@ const Review = (props) => {
             {correctList.length === 0 ? 'No items'
               : correctList.map((item, index) => (
                 <Character
-                  data={props.mainData}
+                  mainData={props.mainData}
                   character={item}
                   value="true"
                   key={item + index}
@@ -239,7 +239,7 @@ const Review = (props) => {
             {inCorrectList.length === 0 ? 'No items'
               : inCorrectList.map((item, index) => (
                 <Character
-                  data={props.mainData}
+                  mainData={props.mainData}
                   character={item}
                   value="false"
                   key={item + index}

@@ -37,7 +37,7 @@ const createUserWithEmailAndPasswordHandler = async (event, email, password, dis
         }).then(function() {
             let newObject = {
                 characters: 'α',
-                userData: { currentStage : 1 }
+                profileData: { currentStage : 1 }
             }
             axios.put('/' + user.uid + '.json?auth=' + token, newObject)
             .then(() => { console.log('PUT: new user data created!'); })
@@ -68,7 +68,7 @@ const signInWithGoogle = async (event, setError) => {
         if (isNew) {
             let newObject = {
                 characters: 'α',
-                userData: { currentStage : 1 }
+                profileData: { currentStage : 1 }
             }
             axios.put('/' + userID + '.json?auth=' + token, newObject)
             .then(() => { console.log('PUT: new user data created!'); })
