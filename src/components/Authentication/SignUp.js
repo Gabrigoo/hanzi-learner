@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { auth, signInWithGoogle, signInWithFacebook } from '../../firebase';
+import { signInWithGoogle, signInWithFacebook, createUserWithEmailAndPasswordHandler } from '../../firebase';
 import history from '../../history';
 import './Authentication.css';
-
 
 const SignUp = () => {
 
@@ -40,46 +39,6 @@ const SignUp = () => {
         }
         history.push(path);
     }
-
-    const handleError = (error) => {
-        switch (error.code) {
-            case "auth/email-already-in-use":
-                setError('User is already registered');
-                break;
-            case "auth/weak-password":
-                setError('Password should be at least 6 characters');
-                break;
-            case "auth/invalid-email":
-                setError('Invalid e-mail format');
-                break;
-            default:
-                setError('Unhandled error');
-                break;
-        }
-        setTimeout(() => {setError(null)}, 5000)
-    }
-
-    const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
-        event.preventDefault();
-
-        try{
-            const {user} = await auth.createUserWithEmailAndPassword(email, password);
-
-            user.updateProfile({
-                displayName: displayName,
-                photoURL: ""
-            }).then(function() {
-                history.push(`/main`)
-            }).catch( (error) => {
-                console.error("Error updating profile data: ", error);
-                handleError(error);
-            });
-        }
-        catch(error){
-            console.error("Error signing up with email and password: ", error);
-            handleError(error);            
-        }
-    };
     
     return (
         <div className="auth-flex-card">
@@ -116,14 +75,14 @@ const SignUp = () => {
                 onChange= {handleChange} />
             <form 
                 id="sign-up-button-form"
-                onSubmit= { (event) => createUserWithEmailAndPasswordHandler(event, email, password)}>    
+                onSubmit= { (event) => createUserWithEmailAndPasswordHandler(event, email, password, displayName, setError)}>    
                 <button className="standard-button" type="submit">
                     Sign up
                 </button>
             </form>
             <p className="auth-p">or</p>
             <div className="two-button-flex">
-                <button onClick={signInWithGoogle} className="standard-button">
+                <button onClick={ (event) => signInWithGoogle(event, setError)} className="standard-button">
                     Sign in with Google
                 </button>
                 <button onClick={signInWithFacebook} className="standard-button">

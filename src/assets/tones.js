@@ -25,4 +25,4 @@ const NEUTRAL_TONES = {
     return [flattened, tone];
   }
 
-  export {TONES, NEUTRAL_TONES, flattenPinyin};
+  export { TONES, NEUTRAL_TONES, flattenPinyin };

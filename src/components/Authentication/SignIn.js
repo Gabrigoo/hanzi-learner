@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth, signInWithGoogle, signInWithFacebook } from '../../firebase';
+import { signInWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler } from '../../firebase';
 import history from '../../history';
 import './Authentication.css';
 
@@ -40,35 +40,6 @@ const SignIn = () => {
         history.push(path);
     }
 
-    const handleError = (error) => {
-        switch (error.code) {
-            case "auth/user-not-found":
-                setError('User not registered');
-                break;
-            case "auth/wrong-password":
-                setError('Password is incorrect');
-                break;
-            case "auth/invalid-email":
-                setError('Invalid e-mail format');
-                break;
-            default:
-                setError('Unhandled error');
-                break;
-        }
-        setTimeout(() => {setError(null)}, 5000)
-    }
-
-    const signInWithEmailAndPasswordHandler = (event, email, password) => {
-        event.preventDefault();
-        
-        auth.signInWithEmailAndPassword(email, password).then(() => {
-            history.push(`/main`)
-        }).catch( (error) => {
-            console.error("Error signing in with email and password: ", error);
-            handleError(error);
-        });
-    };
-
     return (
         <div className="auth-flex-card">
             <h1 className="auth-h1">Sign in</h1>
@@ -95,14 +66,14 @@ const SignIn = () => {
                 onChange= {handleChange} />
             <form 
                 id="sign-in-button-form" 
-                onSubmit= { (event) => signInWithEmailAndPasswordHandler(event, email, password)}> 
+                onSubmit= { (event) => signInWithEmailAndPasswordHandler(event, email, password, setError)}> 
                 <button className="standard-button" type="submit">
                     Sign in
                 </button>
             </form>
             <p className="auth-p">or</p>
             <div className="two-button-flex">
-                <button onClick={signInWithGoogle} className="standard-button">
+                <button onClick={(event) => signInWithGoogle(event, setError)} className="standard-button">
                     Sign in with Google
                 </button>
                 <button onClick={signInWithFacebook} className="standard-button">

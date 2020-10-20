@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import history from '../../history';
 import { auth } from "../../firebase";
 import './Authentication.css';
+import handleError from "./HandleAuthError";
 
 
 const PasswordReset = () => {
@@ -18,24 +19,6 @@ const PasswordReset = () => {
       }
   };
 
-  const handleError = (error) => {
-    switch (error.code) {
-        case "auth/user-not-found":
-            setError('User not registered');
-            break;
-        case "auth/wrong-password":
-            setError('Password is incorrect');
-            break;
-        case "auth/invalid-email":
-            setError('Invalid e-mail format');
-            break;
-        default:
-            setError('Unhandled error');
-            break;
-    }
-    setTimeout(() => {setError(null)}, 5000)
-}
-
   const sendResetEmail = (event) => {
       event.preventDefault();
 
@@ -45,7 +28,7 @@ const PasswordReset = () => {
           setTimeout(() => {setMessage("")}, 4000);
       }).catch((error) => {
           console.error('Error resetting password:', error);
-          handleError(error);
+          handleError(error, setError);
       });
   };
 

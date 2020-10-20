@@ -39,4 +39,4 @@ function editDistance(s1, s2) {
     return costs[s2.length];
   }
 
-  export {similarity, editDistance};
+  export { similarity, editDistance };

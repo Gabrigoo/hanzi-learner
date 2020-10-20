@@ -92,7 +92,9 @@ const ReviewCont = () => {
   let content;
 
   if (mainData && userData) {
-    if (Object.keys(dataToReview(userData.characters)).length === 0) {
+    if (userData.characters === "α") {
+      content = <Strip message="You do not have any characters to review yet. Please visit Learn first." backTrack="/main" timeout={4000} />;
+    } else if (Object.keys(dataToReview(userData.characters)).length === 0) {
       content = <Strip message="No characters to review right now" backTrack="/main" timeout={4000} />;
     } else {
       content = (

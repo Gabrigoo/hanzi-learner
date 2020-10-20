@@ -34,7 +34,7 @@
   width: 100px;
   margin: 0px;
 }
-#change-memo-button {
+#change-memo-button-review {
   margin: auto;
   width: 100%;
 }
@@ -120,7 +120,7 @@
   grid-row: 8 / 9;
   grid-column: 4 / 5; 
 }
-#change-memo-button {
+#change-memo-button-review {
   grid-row: 8 / 9;
   grid-column: 2 / 4; 
 }

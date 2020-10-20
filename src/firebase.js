@@ -2,6 +2,8 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import history from './history';
+import { instance as axios } from './axios-instance';
+import handleError from "./components/Authentication/HandleAuthError";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBSdOBDev-GT-SSN_aa6H9IpdpEJBAngao",
@@ -15,21 +17,86 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
+const auth = firebase.auth();
+const firestore = firebase.firestore();
 
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
-export const signInWithGoogle = () => {
-    auth.signInWithPopup(googleProvider).then(() => {
-        history.push(`/main`);
-    }).catch((error) => {
-        console.error("Error when signing is with google: " + error)
-    });
+const createUserWithEmailAndPasswordHandler = async (event, email, password, displayName, setError) => {
+    event.preventDefault();
+
+    try{
+        const { user } = await auth.createUserWithEmailAndPassword(email, password);
+        const token = await auth.currentUser.getIdToken();
+
+        localStorage.setItem('user', displayName);
+        user.updateProfile({
+            displayName: displayName,
+            photoURL: ""
+        }).then(function() {
+            let newObject = {
+                characters: 'α',
+                userData: { currentStage : 1 }
+            }
+            axios.put('/' + user.uid + '.json?auth=' + token, newObject)
+            .then(() => { console.log('PUT: new user data created!'); })
+            .catch((error) => console.error('Error uploading new data: ' + error));
+            history.push(`/main`)
+        }).catch( (error) => {
+            console.error("Error updating profile data: ", error);
+            handleError(error, setError);
+        });
+    }
+    catch(error){
+        console.error("Error signing up with email and password: ", error);
+        handleError(error, setError);            
+    }
+};
+
+const signInWithGoogle = async (event, setError) => {
+    event.preventDefault();
+    try{
+        let userID;
+        let isNew = false;
+        await auth.signInWithPopup(googleProvider).then((result) => {
+            userID = result.user.uid
+            isNew = result.additionalUserInfo.isNewUser;
+        });
+        const token = await auth.currentUser.getIdToken();
+
+        if (isNew) {
+            let newObject = {
+                characters: 'α',
+                userData: { currentStage : 1 }
+            }
+            axios.put('/' + userID + '.json?auth=' + token, newObject)
+            .then(() => { console.log('PUT: new user data created!'); })
+            .catch((error) => { 
+                console.error('Error creating new user data: ' + error);
+                throw new Error(error);
+            });
+        }
+        history.push(`/main`)
+    }
+    catch(error){
+        console.error("Error signing up with google: ", error);
+        handleError(error, setError);            
+    }
 }
 
-export const linkWithGoogle = () => {
+const signInWithEmailAndPasswordHandler = (event, email, password, setError) => {
+    event.preventDefault();
+    
+    auth.signInWithEmailAndPassword(email, password).then(() => {
+        history.push(`/main`)
+    }).catch( (error) => {
+        console.error("Error signing in with email and password: ", error);
+        handleError(error, setError);
+    });
+};
+
+const linkWithGoogle = () => {
     auth.currentUser.linkWithPopup(googleProvider).then(() => {
         history.push(`/main`);
     }).catch((error) => {
@@ -37,10 +104,13 @@ export const linkWithGoogle = () => {
     });
 }
 //this is not working yet
-export const signInWithFacebook = () => {
+const signInWithFacebook = () => {
     auth.signInWithPopup(facebookProvider).then(function(result) {
         history.push(`/main`);
     }).catch(function(error) {
         console.log(error.message)
     });
 }
+
+export { auth, firestore, createUserWithEmailAndPasswordHandler, signInWithGoogle,
+     linkWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler }

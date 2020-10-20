@@ -393,7 +393,7 @@ const Review = (props) => {
               : (
                 <>
                   <button
-                    id="change-memo-button"
+                    id="change-memo-button-review"
                     className="standard-button"
                     onClick={switchChangeMemonics}
                   >

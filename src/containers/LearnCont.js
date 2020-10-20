@@ -35,7 +35,6 @@ const LearnCont = () => {
     const userStage = user.userData.currentStage;
     const dataKeys = Object.keys(main).filter((char) => main[char].stage <= userStage);
     const userKeys = Object.keys(user.characters);
-
     return dataKeys.filter((char) => !userKeys.includes(char));
   };
   // adds learned character from main DB to user DB
