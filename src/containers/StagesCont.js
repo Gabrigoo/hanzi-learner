@@ -54,7 +54,7 @@ const StagesCont = () => {
   const loopThrough = (highestStage, main, user) => {
     const items = [];
     for (let i = 1; i <= highestStage; i += 1) {
-      items.push(<Stage level={i.toString()} stageData={sortDataToStage(main, i)} userData={user.characters} key={'stage' + i} />);
+      items.push(<Stage level={i.toString()} stageData={sortDataToStage(main, i)} userData={user.characters} key={`stage${i}`} />);
     }
     return items;
   };

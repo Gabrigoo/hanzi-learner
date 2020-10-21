@@ -36,7 +36,7 @@ const ReviewCont = () => {
     if (mainData && userData) {
       const userLevel = userData.profileData.currentStage;
 
-      axios.get('/' + userId + '/characters.json?auth=' + token).then((res) => {
+      axios.get(`/${userId}/characters.json?auth=${token}`).then((res) => {
         console.log('GET user data loaded');
         // possible characters from main DB for users current level
         const currentLevelKeys = Object.keys(mainData)
@@ -45,18 +45,18 @@ const ReviewCont = () => {
         const learnedKeys = Object.keys(res.data).filter((char) => res.data[char].level > 4);
         const fullLength = currentLevelKeys.length;
         const knownLength = currentLevelKeys.filter((char) => learnedKeys.includes(char)).length;
-        console.log('Full: ' + fullLength);
-        console.log('Known: ' + knownLength);
+        console.log(`Full: ${fullLength}`);
+        console.log(`Known: ${knownLength}`);
         const ratio = (knownLength / fullLength) * 100;
-        console.log('asessing user data... level completion: ' + ratio);
+        console.log(`asessing user data... level completion: ${ratio}`);
         if (ratio > 90) {
-          console.log('User level increased to: ' + (userLevel + 1));
-          axios.put('/' + userId + '/profileData/currentStage.json?auth=' + token, userLevel + 1)
+          console.log(`User level increased to: ${userLevel + 1}`);
+          axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, userLevel + 1)
             .then(() => {
               console.log('PUT database overwritten');
-            }).catch((error) => console.error('Error updating database: ' + error));
+            }).catch((error) => console.error(`Error updating database: ${error}`));
         }
-      }).catch((error) => console.error('Error loading user data: ' + error));
+      }).catch((error) => console.error(`Error loading user data: ${error}`));
     }
   });
 
@@ -84,15 +84,15 @@ const ReviewCont = () => {
   };
   // as name suggests, uploads the results of the review
   const uploadReviewResults = (character, object) => {
-    axios.put('/' + userId + '/characters/' + character + '.json?auth=' + token, object)
+    axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => console.log('PUT: upload to database'))
-      .catch((error) => console.error('Error refreshing database: ' + error));
+      .catch((error) => console.error(`Error refreshing database: ${error}`));
   };
 
   let content;
 
   if (mainData && userData) {
-    if (userData.characters === "α") {
+    if (userData.characters === 'α') {
       content = <Strip message="You do not have any characters to review yet. Please visit Learn first." backTrack="/main" timeout={4000} />;
     } else if (Object.keys(dataToReview(userData.characters)).length === 0) {
       content = <Strip message="No characters to review right now" backTrack="/main" timeout={4000} />;

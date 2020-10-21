@@ -26,9 +26,9 @@ const AdditionCont = () => {
   }, [token]);
   // function for data upload when next character is added to DB
   const uploadNewCharacter = (character, object) => {
-    axios.put('/main-data/characters/' + character + '.json?auth=' + token, object)
+    axios.put(`/main-data/characters/${character}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: Upload complete'); })
-      .catch((error) => console.error('Error adding new entry: ' + error));
+      .catch((error) => console.error(`Error adding new entry: ${error}`));
   };
 
   let content;

@@ -56,10 +56,10 @@ const InfoPanel = (props) => {
     let day = date.getDate();
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    if (month < 10) { month = '0' + month; }
-    if (day < 10) { day = '0' + day; }
+    if (month < 10) { month = `0${month}`; }
+    if (day < 10) { day = `0${day}`; }
 
-    return year + '/' + month + '/' + day + ' ' + hours + ':' + minutes;
+    return `${year}/${month}/${day} ${hours}:${minutes}`;
   };
 
   let content;
@@ -72,13 +72,17 @@ const InfoPanel = (props) => {
           <h1 id="chinese-trad-info">{current}</h1>
           <h2 id="chinese-simp-info">{mainData[current].chineseSimp}</h2>
         </div>
-        <p id="stage-count">Stage:{' '}{mainData[current].stage}</p>
+        <p id="stage-count">
+          Stage:
+          {' '}
+          {mainData[current].stage}
+        </p>
       </div>
       <div className="horiz-div">
         <p className="margin-right-30">Meaning:</p>
         {mainData[current].english.map((word, index) => <p className="mean-info" key={word + index}>{word}</p>)}
       </div>
-      
+
       <div className="horiz-div">
         <p className="margin-right-30">Reading:</p>
         <p className="read-info">{mainData[current].pinyin}</p>
@@ -124,18 +128,18 @@ const InfoPanel = (props) => {
               <p>Meaning memonic:</p>
               <div className="memo-info">
                 {meaningMemonic !== ''
-                ? meaningMemonic
-                : userData[current].memoMean === ''
-                  ? 'Currently no meaning memonic added'
-                  : userData[current].memoMean}
+                  ? meaningMemonic
+                  : userData[current].memoMean === ''
+                    ? 'Currently no meaning memonic added'
+                    : userData[current].memoMean}
               </div>
               <p>Reading memonic:</p>
               <div className="memo-info">
                 {readingMemonic !== ''
-                ? readingMemonic
-                : userData[current].memoRead === ''
-                  ? 'Currently no reading memonic added'
-                  : userData[current].memoRead}
+                  ? readingMemonic
+                  : userData[current].memoRead === ''
+                    ? 'Currently no reading memonic added'
+                    : userData[current].memoRead}
               </div>
               <button
                 id="change-memo-button"
@@ -151,9 +155,14 @@ const InfoPanel = (props) => {
           <p>{dateToString(userData[current].lastPract)}</p>
         </div>
         <div className="horiz-div">
-          <p className="margin-right-30">User level:</p>{' '}
+          <p className="margin-right-30">User level:</p>
+          {' '}
           <p className="read-info">{userData[current].level}</p>
-          <p>"</p><p>{levels[userData[current].level][1]}</p><p>"</p>
+          <p>
+            &quot;
+            {levels[userData[current].level][1]}
+            &quot;
+          </p>
         </div>
       </>
     );
