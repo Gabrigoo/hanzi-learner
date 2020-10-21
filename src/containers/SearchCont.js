@@ -39,7 +39,8 @@ const SearchCont = () => {
     } else {
       let resultList = [];
       for (const character in mainData) {
-        switch (query) {
+        if (Object.prototype.hasOwnProperty.call(mainData, character)) {
+          switch (query) {
           case mainData[character].chineseTrad:
           case mainData[character].chineseSimp:
           case mainData[character].pinyin:
@@ -51,6 +52,7 @@ const SearchCont = () => {
             break;
           default:
             break;
+          }
         }
       }
       setSearchResults(resultList);

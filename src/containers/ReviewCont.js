@@ -69,15 +69,17 @@ const ReviewCont = () => {
     const currentDate = new Date();
 
     for (const character in data) {
-      const storedDate = new Date(data[character].lastPract);
+      if (Object.prototype.hasOwnProperty.call(data, character)) {
+        const storedDate = new Date(data[character].lastPract);
 
-      if (data[character].level === 9) {
-        // Good job! No need to review this anymore
-      } else if (
-        Math.round((currentDate - storedDate) / (1000 * 60 * 60))
-        >= levels[data[character].level][0]
-      ) {
-        review[character] = data[character];
+        if (data[character].level === 9) {
+          // Good job! No need to review this anymore
+        } else if (
+          Math.round((currentDate - storedDate) / (1000 * 60 * 60))
+          >= levels[data[character].level][0]
+        ) {
+          review[character] = data[character];
+        }
       }
     }
     return review;

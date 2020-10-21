@@ -33,8 +33,10 @@ const StagesCont = () => {
   const findHighestStage = (data) => {
     let highest = 0;
     for (const character in data) {
-      if (data[character].stage > highest) {
+      if (Object.prototype.hasOwnProperty.call(data, character)) {
+        if (data[character].stage > highest) {
         highest = data[character].stage;
+        }
       }
     }
     return highest;
@@ -44,8 +46,10 @@ const StagesCont = () => {
     const stageObject = {};
 
     for (const character in data) {
-      if (data[character].stage === currentStage) {
+      if (Object.prototype.hasOwnProperty.call(data, character)) {
+        if (data[character].stage === currentStage) {
         stageObject[character] = data[character];
+        }
       }
     }
     return stageObject;
