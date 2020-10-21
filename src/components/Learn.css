@@ -1,0 +1,61 @@
+.memonic-textarea {
+  width: 80%;
+  height: 60%;  
+}
+#learn-card {
+    grid-template-rows: repeat(6, 50px) 150px;
+    grid-template-columns: 1fr 50px 50px 1fr;
+}
+#continue-button-form {
+    width: 100%;
+}
+#learn-continue-button {
+    width: 100%;
+    height: 50px;
+    margin: 0px;
+}
+/* Position definitions from here */
+#chinese-simplified {
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+}
+#chinese-simplified-label {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2; 
+}
+#meaning-label {
+  grid-row: 4 / 5;
+  grid-column: 1 / 3; 
+}
+#meaning-learn {
+    grid-row: 5 / 6;
+    grid-column: 1 / 3; 
+}
+#meaning-memonic-learn-label {
+    grid-row: 6 / 7;
+    grid-column: 1 / 2; 
+}
+#meaning-memonic-learn {
+    grid-row: 7 / 8;
+    grid-column: 1 / 2; 
+}
+#reading-label {
+    grid-row: 4 / 5;
+    grid-column: 3 / 5; 
+}
+#reading-learn {
+    grid-row: 5 / 6;
+    grid-column: 3 / 5; 
+}
+#reading-memonic-learn-label {
+    grid-row: 6 / 7;
+    grid-column: 4 / 5; 
+}
+#reading-memonic-learn {
+    grid-row: 7 / 8;
+    grid-column: 4 / 5; 
+}
+#continue-button-form {
+    grid-row: 7 / 8;
+    grid-column: 2 / 4; 
+}

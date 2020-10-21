@@ -1,0 +1,21 @@
+.levels-h1 {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    margin-left: 8px;
+}
+.stage-flex {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.justify-left {
+    text-align: left;
+}
+#stage-flex-card {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
