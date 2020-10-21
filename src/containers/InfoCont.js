@@ -34,9 +34,9 @@ const InfoCont = () => {
   }, [token, userId]);
   // function for uploading memonic changes by the user
   const putUserNewMemonic = (character, object) => {
-    axios.put('/' + userId + '/characters/' + character + '.json?auth=' + token, object)
+    axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error) => console.error('Error uploading new data: ' + error));
+      .catch((error) => console.error(`Error uploading new data: ${error}`));
   };
 
   let content;

@@ -44,7 +44,7 @@ const Learn = (props) => {
 
   if (remaningNum === 0) {
     return (
-      <Strip message="No new characters to learn right now" timeout={4000}/>
+      <Strip message="No new characters to learn right now" timeout={4000} />
     );
   }
   return (

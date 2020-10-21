@@ -33,7 +33,7 @@ const Search = (props) => {
       <div id="smallflex-2">
         <p>{props.mainData[item].english[0]}</p>
         <p>{props.mainData[item].english[1]}</p>
-        <p>{props.mainData[item].english[2]}</p> 
+        <p>{props.mainData[item].english[2]}</p>
       </div>
     </div>
   ));
@@ -61,11 +61,12 @@ const Search = (props) => {
           type="submit"
           value="Search"
         />
-        <button 
-          id="clear-button" 
-          className="standard-button"  
+        <button
+          id="clear-button"
+          className="standard-button"
           onClick={clearInput}
-          >Clear
+        >
+          Clear
         </button>
       </form>
       {resultList}

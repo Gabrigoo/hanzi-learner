@@ -39,9 +39,9 @@ const LearnCont = () => {
   };
   // adds learned character from main DB to user DB
   const putUserNewCharacter = (character, object) => {
-    axios.put('/' + userId + '/characters/' + character + '.json?auth=' + token, object)
+    axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error) => console.error('Error uploading new data: ' + error));
+      .catch((error) => console.error(`Error uploading new data: ${error}`));
   };
 
   let content;

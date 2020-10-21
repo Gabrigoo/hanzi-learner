@@ -15,7 +15,7 @@ const Character = (props) => {
   };
 
   const handleClick = () => {
-    const path = '/info/' + props.character;
+    const path = `/info/${props.character}`;
     history.push(path);
   };
   // background color indicating correct and incorrect (or none)
@@ -48,19 +48,24 @@ const Character = (props) => {
           <div className="popup-box">
             <div className="arrow-up" />
             <p className="short-hint">
-              Mean:{' '}
+              Mean:
+              {' '}
               {props.mainData[props.character].english[0]}
             </p>
             <p className="short-hint">
-              Read:{' '}
+              Read:
+              {' '}
               {props.mainData[props.character].pinyin}
             </p>
-            {props.userData[props.character] ?
-            <p className="short-hint">
-              Level:{' '}
-              {props.userData[props.character].level}
-            </p>:
-            ""}
+            {props.userData[props.character]
+              ? (
+                <p className="short-hint">
+                  Level:
+                  {' '}
+                  {props.userData[props.character].level}
+                </p>
+              )
+              : ''}
           </div>
         )
         : ''}
