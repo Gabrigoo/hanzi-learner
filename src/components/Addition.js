@@ -15,7 +15,7 @@ const Addition = (props) => {
   const [stage, setStage] = useState('');
 
   // import data in order to check if entry exists
-  const [dataKeys, setDataKeys] = useState(Object.keys(props.mainData));
+  const [dataKeys, setDataKeys] = useState(Object.keys(props.mainData.characters));
   // set if already existing entry should be overwritten or not
   const [overwrite, setOverwrite] = useState(false);
   // a message warning the user if character is already in db
@@ -218,7 +218,17 @@ const Addition = (props) => {
 };
 
 Addition.propTypes = {
-  mainData: PropTypes.objectOf(PropTypes.object).isRequired,
+  mainData: PropTypes.shape({
+    characters: PropTypes.objectOf(
+      PropTypes.exact({
+        chineseSimp: PropTypes.string,
+        chineseTrad: PropTypes.string,
+        english: PropTypes.arrayOf(PropTypes.string),
+        pinyin: PropTypes.string,
+        stage: PropTypes.number,
+        tone: PropTypes.string
+      })
+    )}).isRequired,
   uploadNewCharacter: PropTypes.func.isRequired,
 };
 

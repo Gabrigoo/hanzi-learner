@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { instance as axios, getMainDataCharacters } from '../axios-instance';
+import { instance as axios, getMainData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import Addition from '../components/Addition';
 import Strip from '../components/Strip';
@@ -18,7 +18,7 @@ const AdditionCont = () => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (token) {
-      getMainDataCharacters(source, token, setMainData);
+      getMainData(source, token, setMainData);
     }
     return () => {
       source.cancel('GET request cancelled');

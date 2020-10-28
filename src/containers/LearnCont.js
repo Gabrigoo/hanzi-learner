@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { instance as axios, getMainDataCharacters, getUserData } from '../axios-instance';
+import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import Learn from '../components/Learn';
 import Strip from '../components/Strip';
@@ -22,7 +22,7 @@ const LearnCont = () => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (token) {
-      getMainDataCharacters(source, token, setMainData);
+      getMainData(source, token, setMainData);
       getUserData(source, token, userId, setUserData);
     }
     return () => {
@@ -33,7 +33,8 @@ const LearnCont = () => {
   // determines which items are to be learned by user level
   const getNewItems = (main, user) => {
     const userStage = user.profileData.currentStage;
-    const dataKeys = Object.keys(main).filter((char) => main[char].stage <= userStage);
+    const dataKeys = Object.keys(main.characters)
+      .filter((char) => main.characters[char].stage <= userStage);
     const userKeys = Object.keys(user.characters);
     return dataKeys.filter((char) => !userKeys.includes(char));
   };

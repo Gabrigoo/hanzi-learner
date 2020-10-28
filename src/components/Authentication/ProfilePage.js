@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../providers/UserProvider';
-import { auth, linkWithGoogle } from '../../firebase';
-import history from '../../history';
+import { linkWithGoogle, handleSignOut } from '../../firebase';
 import unknownUser from '../../assets/unknown-user.png';
 import './Authentication.css';
 
@@ -23,16 +22,6 @@ const ProfilePage = () => {
       handleSignOut();
     }
   }, [currentUser]);
-
-  const handleSignOut = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('email');
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    history.push('/main');
-    auth.signOut();
-    console.log('signing out');
-  };
 
   let photoURL = null;
   if (photo === 'null') {

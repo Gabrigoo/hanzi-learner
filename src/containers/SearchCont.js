@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { instance as axios, getMainDataCharacters } from '../axios-instance';
+import { instance as axios, getMainData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import Strip from '../components/Strip';
 import Search from '../components/Search';
@@ -22,7 +22,7 @@ const SearchCont = () => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (token) {
-      getMainDataCharacters(source, token, setMainData);
+      getMainData(source, token, setMainData);
     }
     return () => {
       source.cancel('GET request cancelled');
@@ -31,7 +31,7 @@ const SearchCont = () => {
 
   const [searchResults, setSearchResults] = useState([]);
   // handles search by input and refreshes search results
-  const handleSearch = (event, query) => {
+  const handleSearch = (event, query, mainData) => {
     event.preventDefault();
 
     if (query === '') {

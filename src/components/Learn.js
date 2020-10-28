@@ -4,6 +4,8 @@ import './Learn.css';
 import Strip from './Strip';
 
 const Learn = (props) => {
+
+  const mainData = props.mainData.characters;
   // starts with first element of to-learn list
   const [current, setCurrent] = useState(props.newKeys[0]);
   // memonics in case they are changed
@@ -50,8 +52,8 @@ const Learn = (props) => {
   return (
     <div className="card" id="learn-card">
       <p id="chinese-simplified-label">Simplified:</p>
-      <h3 id="chinese-simplified">{props.mainData[current].chineseSimp}</h3>
-      <h1 id="chinese-traditional">{props.mainData[current].chineseTrad}</h1>
+      <h3 id="chinese-simplified">{mainData[current].chineseSimp}</h3>
+      <h1 id="chinese-traditional">{mainData[current].chineseTrad}</h1>
       <p id="remaining">
         Remanining:
         {' '}
@@ -72,7 +74,7 @@ const Learn = (props) => {
         />
       </form>
       <p id="meaning-learn">
-        {props.mainData[current].english.filter(
+        {mainData[current].english.filter(
           (x) => typeof x === 'string' && x.length > 0,
         )
           .join(', ')}
@@ -94,10 +96,10 @@ const Learn = (props) => {
         onChange={handleChange}
       />
       <p id="reading-learn">
-        {props.mainData[current].pinyin}
+        {mainData[current].pinyin}
         {' '}
         (tone:
-        {props.mainData[current].tone}
+        {mainData[current].tone}
         )
       </p>
       <label
@@ -121,7 +123,17 @@ const Learn = (props) => {
 };
 
 Learn.propTypes = {
-  mainData: PropTypes.objectOf(PropTypes.object).isRequired,
+  mainData: PropTypes.shape({
+    characters: PropTypes.objectOf(
+      PropTypes.exact({
+        chineseSimp: PropTypes.string,
+        chineseTrad: PropTypes.string,
+        english: PropTypes.arrayOf(PropTypes.string),
+        pinyin: PropTypes.string,
+        stage: PropTypes.number,
+        tone: PropTypes.string
+      })
+    )}).isRequired,
   newKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   putUserNewCharacter: PropTypes.func.isRequired,
 };

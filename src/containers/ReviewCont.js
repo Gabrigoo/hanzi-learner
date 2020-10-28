@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { instance as axios, getMainDataCharacters, getUserData } from '../axios-instance';
+import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import history from '../history';
 import { UserContext } from '../components/providers/UserProvider';
 import Review from '../components/Review';
@@ -24,7 +24,7 @@ const ReviewCont = () => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (token) {
-      getMainDataCharacters(source, token, setMainData);
+      getMainData(source, token, setMainData);
       getUserData(source, token, userId, setUserData);
     }
     return () => {
@@ -39,8 +39,8 @@ const ReviewCont = () => {
       axios.get(`/${userId}/characters.json?auth=${token}`).then((res) => {
         console.log('GET user data loaded');
         // possible characters from main DB for users current level
-        const currentLevelKeys = Object.keys(mainData)
-          .filter((char) => mainData[char].stage === userLevel);
+        const currentLevelKeys = Object.keys(mainData.characters)
+          .filter((char) => mainData.characters[char].stage === userLevel);
         // character that are known by the user at least at Guru level
         const learnedKeys = Object.keys(res.data).filter((char) => res.data[char].level > 4);
         const fullLength = currentLevelKeys.length;

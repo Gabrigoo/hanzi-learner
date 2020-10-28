@@ -22,9 +22,34 @@ const Stage = (props) => ( // all the elements for the current stage mapped
   </div>
 );
 
+Character.defaultProps = {
+  userData: {},
+};
+
 Stage.propTypes = {
-  stageData: PropTypes.objectOf(PropTypes.object).isRequired,
-  userData: PropTypes.objectOf(PropTypes.object).isRequired,
+  stageData: PropTypes.objectOf(
+    PropTypes.exact({
+      chineseSimp: PropTypes.string,
+      chineseTrad: PropTypes.string,
+      english: PropTypes.arrayOf(PropTypes.string),
+      pinyin: PropTypes.string,
+      stage: PropTypes.number,
+      tone: PropTypes.string
+    }),
+  ).isRequired,
+  userData: PropTypes.shape({
+    characters: PropTypes.objectOf(
+      PropTypes.exact({
+        lastPract: PropTypes.string,
+        level: PropTypes.number,
+        memoMean: PropTypes.string,
+        memoRead: PropTypes.string,
+      }),
+    ),
+    profileData: PropTypes.exact({
+      currentStage: PropTypes.number,
+    }),
+  }),
   level: PropTypes.string.isRequired,
 };
 

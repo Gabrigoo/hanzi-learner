@@ -40,12 +40,13 @@ const Strip = (props) => {
 };
 
 Strip.defaultProps = {
+  message: "",
   backTrack: '/main',
   timeout: null,
 };
 
 Strip.propTypes = {
-  message: PropTypes.string.isRequired,
+  message: PropTypes.string,
   backTrack: PropTypes.string,
   timeout: PropTypes.number,
 };

@@ -6,6 +6,8 @@ import { similarity, editDistance } from '../assets/levenshtein_distance';
 import { flattenPinyin } from '../assets/tones';
 
 const Review = (props) => {
+
+  const mainData = props.mainData.characters;
   // randomizes the sequence
   const [shuffledDeck] = useState(shuffle(Object.keys(props.reviewData)));
   // current character being tested
@@ -93,12 +95,12 @@ const Review = (props) => {
       // check if meaning is correct first
       for (let i = 0; i < 3; i += 1) { // loop through possible correct solutions from DB
         // use levensthein method to check
-        const editDist = editDistance(props.mainData[current].english[i], meanInput);
-        const similar = similarity(props.mainData[current].english[i], meanInput);
+        const editDist = editDistance(mainData[current].english[i], meanInput);
+        const similar = similarity(mainData[current].english[i], meanInput);
         // check if input and data difference are inside tolerance
         if (meanInput.length > 1 && (editDist < 2 || similar > 0.75)) {
           meanCorrect += 1;
-          if (props.mainData[current].english[i] === meanInput) {
+          if (mainData[current].english[i] === meanInput) {
             meanCorrect += 1;
           }
         }
@@ -118,12 +120,12 @@ const Review = (props) => {
         toneInput = flattenPinyin(readInput)[1];
       }
       // remove tone from solution in order to compare
-      const readDataFlat = flattenPinyin(props.mainData[current].pinyin)[0];
+      const readDataFlat = flattenPinyin(mainData[current].pinyin)[0];
       // check if reading is correct without tone
       if (readDataFlat === readingInputFlat) {
         readCorrect += 1;
         // check if tone is also correct
-        if (props.mainData[current].tone === toneInput) {
+        if (mainData[current].tone === toneInput) {
           readCorrect += 1;
         }
       }
@@ -218,7 +220,7 @@ const Review = (props) => {
   };
 
   // go into summary when no characters left to review
-  if (typeof props.mainData[current] === 'undefined') {
+  if (typeof mainData[current] === 'undefined') {
     return (
       <div>
         <div className="card" id="summary-card">
@@ -227,7 +229,7 @@ const Review = (props) => {
             {correctList.length === 0 ? 'No items'
               : correctList.map((item, index) => (
                 <Character
-                  mainData={props.mainData}
+                  mainData={mainData}
                   character={item}
                   value="true"
                   key={item + index}
@@ -239,7 +241,7 @@ const Review = (props) => {
             {inCorrectList.length === 0 ? 'No items'
               : inCorrectList.map((item, index) => (
                 <Character
-                  mainData={props.mainData}
+                  mainData={mainData}
                   character={item}
                   value="false"
                   key={item + index}
@@ -271,8 +273,8 @@ const Review = (props) => {
           </button>
         </div>
         <p id="chinese-simplified-label">Simplified:</p>
-        <h2 id="chinese-simplified">{props.mainData[current].chineseSimp}</h2>
-        <h1 id="chinese-traditional">{props.mainData[current].chineseTrad}</h1>
+        <h2 id="chinese-simplified">{mainData[current].chineseSimp}</h2>
+        <h1 id="chinese-traditional">{mainData[current].chineseTrad}</h1>
         <p id="correct">
           Correct:
           {' '}
@@ -345,16 +347,16 @@ const Review = (props) => {
         {!solutionSubmitted ? '' : (
           <>
             <p id="meaning-solution">
-              {props.mainData[current].english.filter(
+              {mainData[current].english.filter(
                 (x) => typeof x === 'string' && x.length > 0,
               )
                 .join(', ')}
             </p>
             <p id="reading-solution">
-              {props.mainData[current].pinyin}
+              {mainData[current].pinyin}
               {' '}
               (tone:
-              {props.mainData[current].tone}
+              {mainData[current].tone}
               )
             </p>
             <label
@@ -419,8 +421,25 @@ const Review = (props) => {
 };
 
 Review.propTypes = {
-  mainData: PropTypes.objectOf(PropTypes.object).isRequired,
-  reviewData: PropTypes.objectOf(PropTypes.object).isRequired,
+  mainData: PropTypes.shape({
+    characters: PropTypes.objectOf(
+      PropTypes.exact({
+        chineseSimp: PropTypes.string,
+        chineseTrad: PropTypes.string,
+        english: PropTypes.arrayOf(PropTypes.string),
+        pinyin: PropTypes.string,
+        stage: PropTypes.number,
+        tone: PropTypes.string
+      })
+    )}).isRequired,
+  reviewData: PropTypes.objectOf(
+    PropTypes.exact({
+      lastPract: PropTypes.string,
+      level: PropTypes.number,
+      memoMean: PropTypes.string,
+      memoRead: PropTypes.string,
+    }),
+  ).isRequired,
   uploadReviewResults: PropTypes.func.isRequired,
   mainMenu: PropTypes.func.isRequired,
 };

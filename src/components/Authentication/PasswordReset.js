@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import history from '../../history';
-import { auth } from '../../firebase';
+import { sendResetEmail } from '../../firebase';
 import './Authentication.css';
-import handleError from './HandleAuthError';
 
 const PasswordReset = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [errorMess, setErrorMess] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleChange = (event) => {
     const { name, value } = event.currentTarget;
@@ -17,19 +16,6 @@ const PasswordReset = () => {
     }
   };
 
-  const sendResetEmail = (event) => {
-    event.preventDefault();
-
-    auth.sendPasswordResetEmail(email).then(() => {
-      setEmail('');
-      setMessage('An email has been sent to you!');
-      setTimeout(() => { setMessage(''); }, 4000);
-    }).catch((error) => {
-      console.error('Error resetting password:', error);
-      handleError(error, setErrorMess);
-    });
-  };
-
   const backToSignIn = () => {
     history.push('/signIn');
   };
@@ -37,8 +23,8 @@ const PasswordReset = () => {
   return (
     <div className="auth-flex-card">
       <h1 className="auth-h1">Reset your Password</h1>
-      {errorMess
-        ? <div id="auth-error">{errorMess}</div>
+      {error
+        ? <div id="auth-error">{error}</div>
         : <div id="auth-message">{message}</div>}
       <label htmlFor="userEmail">Email:</label>
       <input
@@ -51,7 +37,7 @@ const PasswordReset = () => {
         placeholder="Input your email"
         onChange={handleChange}
       />
-      <form id="password-reset-form" onSubmit={sendResetEmail}>
+      <form id="password-reset-form" onSubmit={(event) => sendResetEmail(event, email, setEmail, setMessage, setError)}>
         <button className="standard-button" type="submit">Send me a reset link</button>
       </form>
       <button className="standard-button" onClick={backToSignIn}>Back to sign in page</button>

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { instance as axios, getMainDataCharacters, getUserData } from '../axios-instance';
+import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import Strip from '../components/Strip';
 import Stage from '../components/Stage';
@@ -22,7 +22,7 @@ const StagesCont = () => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (token) {
-      getMainDataCharacters(source, token, setMainData);
+      getMainData(source, token, setMainData);
       getUserData(source, token, userId, setUserData);
     }
     return () => {
@@ -58,7 +58,7 @@ const StagesCont = () => {
   const loopThrough = (highestStage, main, user) => {
     const items = [];
     for (let i = 1; i <= highestStage; i += 1) {
-      items.push(<Stage level={i.toString()} stageData={sortDataToStage(main, i)} userData={user.characters} key={`stage${i}`} />);
+      items.push(<Stage level={i.toString()} stageData={sortDataToStage(main.characters, i)} userData={user.characters} key={`stage${i}`} />);
     }
     return items;
   };
@@ -68,7 +68,7 @@ const StagesCont = () => {
   if (mainData && userData) {
     content = (
       <div className="card" id="stage-flex-card">
-        {loopThrough(findHighestStage(mainData), mainData, userData)}
+        {loopThrough(findHighestStage(mainData.characters), mainData, userData)}
       </div>
     );
   } else if (!token) {

@@ -110,7 +110,31 @@ const signInWithFacebook = () => {
   });
 };
 
+const sendResetEmail = (event, email, setEmail, setMessage, setError) => {
+  event.preventDefault();
+
+  auth.sendPasswordResetEmail(email).then(() => {
+    setEmail('');
+    setMessage('An email has been sent to you!');
+    setTimeout(() => { setMessage(''); }, 4000);
+  }).catch((error) => {
+    console.error('Error resetting password:', error);
+    handleError(error, setError);
+  });
+};
+
+const handleSignOut = () => {
+  localStorage.removeItem('user');
+  localStorage.removeItem('email');
+  localStorage.removeItem('token');
+  localStorage.removeItem('userId');
+  history.push('/main');
+  auth.signOut();
+  console.log('signing out');
+};
+
 export {
   auth, firestore, createUserWithEmailAndPasswordHandler, signInWithGoogle,
-  linkWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler,
+  linkWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler, sendResetEmail,
+  handleSignOut
 };

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { instance as axios, getMainDataCharacters, getUserData } from '../axios-instance';
+import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import InfoPanel from '../components/InfoPanel';
 import Strip from '../components/Strip';
@@ -25,7 +25,7 @@ const InfoCont = () => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (token) {
-      getMainDataCharacters(source, token, setMainData);
+      getMainData(source, token, setMainData);
       getUserData(source, token, userId, setUserData);
     }
     return () => {
@@ -46,7 +46,7 @@ const InfoCont = () => {
       <InfoPanel
         id={id}
         mainData={mainData}
-        userData={userData.characters}
+        userData={userData}
         putUserNewMemonic={putUserNewMemonic}
       />
     );

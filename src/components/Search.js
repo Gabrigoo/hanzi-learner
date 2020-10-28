@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './Search.css';
 
 const Search = (props) => {
+
+  const mainData = props.mainData.characters;
   // query is the currently searched string by the user
   const [query, setQuery] = useState('');
 
@@ -26,14 +28,14 @@ const Search = (props) => {
   const resultList = props.searchResults.map((item, index) => (
     <div id="result-flex" key={item + index}>
       <div id="smallflex-1">
-        <p>{props.mainData[item].chineseTrad}</p>
-        <p>{props.mainData[item].chineseSimp}</p>
-        <p>{props.mainData[item].pinyin}</p>
+        <p>{mainData[item].chineseTrad}</p>
+        <p>{mainData[item].chineseSimp}</p>
+        <p>{mainData[item].pinyin}</p>
       </div>
       <div id="smallflex-2">
-        <p>{props.mainData[item].english[0]}</p>
-        <p>{props.mainData[item].english[1]}</p>
-        <p>{props.mainData[item].english[2]}</p>
+        <p>{mainData[item].english[0]}</p>
+        <p>{mainData[item].english[1]}</p>
+        <p>{mainData[item].english[2]}</p>
       </div>
     </div>
   ));
@@ -79,7 +81,17 @@ Search.defaultProps = {
 };
 
 Search.propTypes = {
-  mainData: PropTypes.objectOf(PropTypes.object).isRequired,
+  mainData: PropTypes.shape({
+    characters: PropTypes.objectOf(
+      PropTypes.exact({
+        chineseSimp: PropTypes.string,
+        chineseTrad: PropTypes.string,
+        english: PropTypes.arrayOf(PropTypes.string),
+        pinyin: PropTypes.string,
+        stage: PropTypes.number,
+        tone: PropTypes.string
+      })
+    )}).isRequired,
   searchResults: PropTypes.arrayOf(PropTypes.string),
   handleSearch: PropTypes.func.isRequired,
 };

@@ -6,8 +6,8 @@ import levels from '../assets/levels';
 const InfoPanel = (props) => {
   // getting character the panel is supposed to display
   const current = props.id;
-  const { mainData } = props;
-  const { userData } = props;
+  const mainData = props.mainData.characters;
+  const userData  = props.userData.characters;
   // memonics in case they are changed
   const [changeMemonic, setChangeMemonic] = useState(false);
   const [meaningMemonic, setMeaningMemonic] = useState('');
@@ -182,8 +182,30 @@ InfoPanel.defaultProps = {
 
 InfoPanel.propTypes = {
   id: PropTypes.string.isRequired,
-  mainData: PropTypes.objectOf(PropTypes.object).isRequired,
-  userData: PropTypes.objectOf(PropTypes.object),
+  mainData: PropTypes.shape({
+    characters: PropTypes.objectOf(
+      PropTypes.exact({
+        chineseSimp: PropTypes.string,
+        chineseTrad: PropTypes.string,
+        english: PropTypes.arrayOf(PropTypes.string),
+        pinyin: PropTypes.string,
+        stage: PropTypes.number,
+        tone: PropTypes.string
+      })
+    )}).isRequired,
+  userData: PropTypes.shape({
+    characters: PropTypes.objectOf(
+      PropTypes.exact({
+        lastPract: PropTypes.string,
+        level: PropTypes.number,
+        memoMean: PropTypes.string,
+        memoRead: PropTypes.string,
+      }),
+    ),
+    profileData: PropTypes.exact({
+      currentStage: PropTypes.number,
+    }),
+  }),
   putUserNewMemonic: PropTypes.func.isRequired,
 };
 

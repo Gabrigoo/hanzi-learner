@@ -6,8 +6,8 @@ const instance = axios.create({
 instance.CancelToken = axios.CancelToken;
 instance.isCancel = axios.isCancel;
 
-const getMainDataCharacters = (source, token, setData) => {
-  instance.get(`/main-data/characters.json?auth=${token}`, {
+const getMainData = (source, token, setData) => {
+  instance.get(`/main-data.json?auth=${token}`, {
     cancelToken: source.token,
   }).then((res) => {
     setData(res.data);
@@ -36,4 +36,4 @@ const getUserData = (source, token, userId, setData) => {
   });
 };
 
-export { instance, getMainDataCharacters, getUserData };
+export { instance, getMainData, getUserData };
