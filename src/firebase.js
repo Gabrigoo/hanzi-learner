@@ -23,7 +23,9 @@ const firestore = firebase.firestore();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
-const createUserWithEmailAndPasswordHandler = async (event, email, password, displayName, setError) => {
+const createUserWithEmailAndPasswordHandler = async (
+  event, email, password, displayName, setError,
+) => {
   event.preventDefault();
 
   try {
@@ -103,7 +105,7 @@ const linkWithGoogle = () => {
 };
 // this is not working yet
 const signInWithFacebook = () => {
-  auth.signInWithPopup(facebookProvider).then((result) => {
+  auth.signInWithPopup(facebookProvider).then(() => {
     history.push('/main');
   }).catch((error) => {
     console.log(error.message);
@@ -136,5 +138,5 @@ const handleSignOut = () => {
 export {
   auth, firestore, createUserWithEmailAndPasswordHandler, signInWithGoogle,
   linkWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler, sendResetEmail,
-  handleSignOut
+  handleSignOut,
 };

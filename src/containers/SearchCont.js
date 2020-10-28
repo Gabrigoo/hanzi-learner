@@ -31,30 +31,28 @@ const SearchCont = () => {
 
   const [searchResults, setSearchResults] = useState([]);
   // handles search by input and refreshes search results
-  const handleSearch = (event, query, mainData) => {
+  const handleSearch = (event, query, main) => {
     event.preventDefault();
 
     if (query === '') {
       setSearchResults([]);
     } else {
       let resultList = [];
-      for (const character in mainData) {
-        if (Object.prototype.hasOwnProperty.call(mainData, character)) {
-          switch (query) {
-          case mainData[character].chineseTrad:
-          case mainData[character].chineseSimp:
-          case mainData[character].pinyin:
-          case flattenPinyin(mainData[character].pinyin)[0]:
-          case mainData[character].english[0]:
-          case mainData[character].english[1]:
-          case mainData[character].english[2]:
-            resultList = resultList.concat(character);
+      Object.keys(main).forEach((item) => {
+        switch (query) {
+          case main[item].chineseTrad:
+          case main[item].chineseSimp:
+          case main[item].pinyin:
+          case flattenPinyin(main[item].pinyin)[0]:
+          case main[item].english[0]:
+          case main[item].english[1]:
+          case main[item].english[2]:
+            resultList = resultList.concat(item);
             break;
           default:
             break;
-          }
         }
-      }
+      });
       setSearchResults(resultList);
     }
   };

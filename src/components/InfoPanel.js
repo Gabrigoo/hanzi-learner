@@ -7,7 +7,7 @@ const InfoPanel = (props) => {
   // getting character the panel is supposed to display
   const current = props.id;
   const mainData = props.mainData.characters;
-  const userData  = props.userData.characters;
+  const userData = props.userData.characters;
   // memonics in case they are changed
   const [changeMemonic, setChangeMemonic] = useState(false);
   const [meaningMemonic, setMeaningMemonic] = useState('');
@@ -62,10 +62,9 @@ const InfoPanel = (props) => {
     return `${year}/${month}/${day} ${hours}:${minutes}`;
   };
 
-  let content;
   let userContent = 'This character is not yet learned.';
 
-  content = (
+  const content = (
     <>
       <div id="horiz-div-1" className="horiz-div">
         <div id="horiz-div-2" className="horiz-div">
@@ -190,9 +189,10 @@ InfoPanel.propTypes = {
         english: PropTypes.arrayOf(PropTypes.string),
         pinyin: PropTypes.string,
         stage: PropTypes.number,
-        tone: PropTypes.string
-      })
-    )}).isRequired,
+        tone: PropTypes.string,
+      }),
+    ),
+  }).isRequired,
   userData: PropTypes.shape({
     characters: PropTypes.objectOf(
       PropTypes.exact({

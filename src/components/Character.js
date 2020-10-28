@@ -24,7 +24,7 @@ const Character = (props) => {
     backColor = 'theme-correct';
   } else if (props.value === 'false') {
     backColor = 'theme-incorrect';
-  } else if (!props.userData.hasOwnProperty(props.character)) {
+  } else if (!Object.prototype.hasOwnProperty.call(props.userData, props.character)) {
     backColor = 'theme-grey';
   } else if (props.userData[props.character].level === 0) {
     backColor = 'theme-grey';
@@ -87,9 +87,9 @@ Character.propTypes = {
         english: PropTypes.arrayOf(PropTypes.string),
         pinyin: PropTypes.string,
         stage: PropTypes.number,
-        tone: PropTypes.string
-      })
-    )
+        tone: PropTypes.string,
+      }),
+    ),
   }).isRequired,
   userData: PropTypes.shape({
     characters: PropTypes.objectOf(

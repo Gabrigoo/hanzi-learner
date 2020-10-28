@@ -22,7 +22,7 @@ const Stage = (props) => ( // all the elements for the current stage mapped
   </div>
 );
 
-Character.defaultProps = {
+Stage.defaultProps = {
   userData: {},
 };
 
@@ -34,7 +34,7 @@ Stage.propTypes = {
       english: PropTypes.arrayOf(PropTypes.string),
       pinyin: PropTypes.string,
       stage: PropTypes.number,
-      tone: PropTypes.string
+      tone: PropTypes.string,
     }),
   ).isRequired,
   userData: PropTypes.shape({

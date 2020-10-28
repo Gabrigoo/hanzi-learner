@@ -6,7 +6,6 @@ import { similarity, editDistance } from '../assets/levenshtein_distance';
 import { flattenPinyin } from '../assets/tones';
 
 const Review = (props) => {
-
   const mainData = props.mainData.characters;
   // randomizes the sequence
   const [shuffledDeck] = useState(shuffle(Object.keys(props.reviewData)));
@@ -429,9 +428,10 @@ Review.propTypes = {
         english: PropTypes.arrayOf(PropTypes.string),
         pinyin: PropTypes.string,
         stage: PropTypes.number,
-        tone: PropTypes.string
-      })
-    )}).isRequired,
+        tone: PropTypes.string,
+      }),
+    ),
+  }).isRequired,
   reviewData: PropTypes.objectOf(
     PropTypes.exact({
       lastPract: PropTypes.string,

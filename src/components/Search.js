@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import './Search.css';
 
 const Search = (props) => {
-
   const mainData = props.mainData.characters;
   // query is the currently searched string by the user
   const [query, setQuery] = useState('');
@@ -45,7 +44,7 @@ const Search = (props) => {
       <form
         id="search-form"
         autoComplete="off"
-        onSubmit={(event) => props.handleSearch(event, query)}
+        onSubmit={(event) => props.handleSearch(event, query, mainData)}
       >
         <label>
           Search:
@@ -89,9 +88,10 @@ Search.propTypes = {
         english: PropTypes.arrayOf(PropTypes.string),
         pinyin: PropTypes.string,
         stage: PropTypes.number,
-        tone: PropTypes.string
-      })
-    )}).isRequired,
+        tone: PropTypes.string,
+      }),
+    ),
+  }).isRequired,
   searchResults: PropTypes.arrayOf(PropTypes.string),
   handleSearch: PropTypes.func.isRequired,
 };

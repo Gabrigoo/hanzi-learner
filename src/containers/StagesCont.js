@@ -32,26 +32,21 @@ const StagesCont = () => {
   // finds the highest stage level among all data
   const findHighestStage = (data) => {
     let highest = 0;
-    for (const character in data) {
-      if (Object.prototype.hasOwnProperty.call(data, character)) {
-        if (data[character].stage > highest) {
-        highest = data[character].stage;
-        }
+    Object.keys(data).forEach((item) => {
+      if (data[item].stage > highest) {
+        highest = data[item].stage;
       }
-    }
+    });
     return highest;
   };
   // only returns data that is the same as current stage
   const sortDataToStage = (data, currentStage) => {
     const stageObject = {};
-
-    for (const character in data) {
-      if (Object.prototype.hasOwnProperty.call(data, character)) {
-        if (data[character].stage === currentStage) {
-        stageObject[character] = data[character];
-        }
+    Object.keys(data).forEach((item) => {
+      if (data[item].stage === currentStage) {
+        stageObject[item] = data[item];
       }
-    }
+    });
     return stageObject;
   };
   // steps through the stages until the current highest

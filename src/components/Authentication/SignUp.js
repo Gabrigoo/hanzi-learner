@@ -77,7 +77,11 @@ const SignUp = () => {
       />
       <form
         id="sign-up-button-form"
-        onSubmit={(event) => createUserWithEmailAndPasswordHandler(event, email, password, displayName, setError)}
+        onSubmit={
+          (event) => {
+            createUserWithEmailAndPasswordHandler(event, email, password, displayName, setError);
+          }
+        }
       >
         <button className="standard-button" type="submit">
           Sign up

@@ -42,5 +42,9 @@ module.exports = {
     "no-use-before-define": "off",
     "no-alert": "off",
     "react/state-in-constructor": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "no-nested-ternary": "off",
+    "react/no-unused-prop-types": 1
   },
 };

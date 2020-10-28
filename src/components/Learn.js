@@ -4,7 +4,6 @@ import './Learn.css';
 import Strip from './Strip';
 
 const Learn = (props) => {
-
   const mainData = props.mainData.characters;
   // starts with first element of to-learn list
   const [current, setCurrent] = useState(props.newKeys[0]);
@@ -131,9 +130,10 @@ Learn.propTypes = {
         english: PropTypes.arrayOf(PropTypes.string),
         pinyin: PropTypes.string,
         stage: PropTypes.number,
-        tone: PropTypes.string
-      })
-    )}).isRequired,
+        tone: PropTypes.string,
+      }),
+    ),
+  }).isRequired,
   newKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
   putUserNewCharacter: PropTypes.func.isRequired,
 };

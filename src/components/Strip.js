@@ -40,7 +40,7 @@ const Strip = (props) => {
 };
 
 Strip.defaultProps = {
-  message: "",
+  message: '',
   backTrack: '/main',
   timeout: null,
 };

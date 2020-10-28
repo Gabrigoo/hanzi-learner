@@ -68,20 +68,18 @@ const ReviewCont = () => {
     const review = {};
     const currentDate = new Date();
 
-    for (const character in data) {
-      if (Object.prototype.hasOwnProperty.call(data, character)) {
-        const storedDate = new Date(data[character].lastPract);
+    Object.keys(data).forEach((item) => {
+      const storedDate = new Date(data[item].lastPract);
 
-        if (data[character].level === 9) {
-          // Good job! No need to review this anymore
-        } else if (
-          Math.round((currentDate - storedDate) / (1000 * 60 * 60))
-          >= levels[data[character].level][0]
-        ) {
-          review[character] = data[character];
-        }
+      if (data[item].level === 9) {
+        // Good job! No need to review this anymore
+      } else if (
+        Math.round((currentDate - storedDate) / (1000 * 60 * 60))
+          >= levels[data[item].level][0]
+      ) {
+        review[item] = data[item];
       }
-    }
+    });
     return review;
   };
   // as name suggests, uploads the results of the review

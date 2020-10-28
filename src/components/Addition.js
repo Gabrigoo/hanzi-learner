@@ -226,9 +226,10 @@ Addition.propTypes = {
         english: PropTypes.arrayOf(PropTypes.string),
         pinyin: PropTypes.string,
         stage: PropTypes.number,
-        tone: PropTypes.string
-      })
-    )}).isRequired,
+        tone: PropTypes.string,
+      }),
+    ),
+  }).isRequired,
   uploadNewCharacter: PropTypes.func.isRequired,
 };
 
