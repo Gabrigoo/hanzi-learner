@@ -1,11 +1,16 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import './Strip.css';
 import history from '../history';
 
-const Strip = (props) => {
+interface StripProps {
+  message?: string,
+  backTrack?: any,
+  timeout?: number | null,
+}
+
+const Strip: React.FC<StripProps> = (props) => {
   // on the jump to whatever url saven in backtract
-  const clickHandler = (event) => {
+  const clickHandler = (event: any) => {
     event.preventDefault();
     if (props.timeout) {
       history.push(props.backTrack);
@@ -13,7 +18,7 @@ const Strip = (props) => {
   };
   // set up and clear a timeout for jumping to backtract automatically
   useEffect(() => {
-    let myTimeout;
+    let myTimeout: ReturnType<typeof setTimeout>;
     if (props.timeout) {
       myTimeout = setTimeout(() => { history.push(props.backTrack); }, props.timeout);
     }
@@ -28,12 +33,12 @@ const Strip = (props) => {
 
   useEffect(() => {
     if (props.timeout) {
-      document.getElementById('strip-card').focus();
+      (document.getElementById('strip-card') as HTMLDivElement).focus();
     }
   });
 
   return (
-    <div id="strip-card" onClick={clickHandler} onKeyPress={handleKey} role="button" tabIndex="0">
+    <div id="strip-card" onClick={clickHandler} onKeyPress={handleKey} role="button" tabIndex={0}>
       <p>{props.message}</p>
     </div>
   );
@@ -43,12 +48,6 @@ Strip.defaultProps = {
   message: '',
   backTrack: '/main',
   timeout: null,
-};
-
-Strip.propTypes = {
-  message: PropTypes.string,
-  backTrack: PropTypes.string,
-  timeout: PropTypes.number,
 };
 
 export default Strip;

@@ -1,9 +1,42 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import './InfoPanel.css';
-import levels from '../assets/levels';
+import LEVELS from '../assets/levels';
 
-const InfoPanel = (props) => {
+interface MainCharacterInt {
+  chineseSimp: string,
+  chineseTrad: string,
+  english: string[],
+  pinyin: string,
+  stage: number,
+  tone: string,
+}
+
+interface UserCharacterInt {
+  lastPract: number,
+  level: number,
+  memoMean: string,
+  memoRead: string,
+}
+
+interface InfoPanelProps {
+  mainData: {
+    characters: {
+      [key: string]: MainCharacterInt,
+    },
+  },
+  userData: {
+    characters: {
+      [key: string]: UserCharacterInt,
+    },
+    profileData: {
+      currentStage: number
+    }
+  };
+  id: string,
+  putUserNewMemonic: (character: string, object: UserCharacterInt) => void,
+}
+
+const InfoPanel: React.FC<InfoPanelProps> = (props) => {
   // getting character the panel is supposed to display
   const current = props.id;
   const mainData = props.mainData.characters;
@@ -34,8 +67,8 @@ const InfoPanel = (props) => {
     setChangeMemonic(false);
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+  const handleChange = (event: any) => {
+    const { name, value }: { name: string; value: string } = event.currentTarget;
 
     switch (name) {
       case 'meaning-memo':
@@ -49,20 +82,20 @@ const InfoPanel = (props) => {
     }
   };
   // convert JSON date into the displayed date
-  const dateToString = (jason) => {
-    const date = new Date(jason);
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    if (month < 10) { month = `0${month}`; }
-    if (day < 10) { day = `0${day}`; }
+  // const dateToString = (jason:string) => {
+  //   const date = new Date(jason);
+  //   const year = date.getFullYear();
+  //   let currentMonth:string = (date.getMonth() + 1).toString();
+  //   let currentDay:string = (date.getDate()).toString();
+  //   const hours = date.getHours();
+  //   const minutes = date.getMinutes();
+  //   if (parseInt(currentMonth, 10) < 10) { currentMonth = `0${currentMonth}`; }
+  //   if (parseInt(currentDay, 10) < 10) { currentDay = `0${currentDay}`; }
 
-    return `${year}/${month}/${day} ${hours}:${minutes}`;
-  };
+  //   return `${year}/${currentMonth}/${currentDay} ${hours}:${minutes}`;
+  // };
 
-  let userContent = 'This character is not yet learned.';
+  let userContent = <p>This character is not yet learned.</p>;
 
   const content = (
     <>
@@ -99,7 +132,6 @@ const InfoPanel = (props) => {
               <textarea
                 id="meaning-memonic-input"
                 className="memo-info"
-                type="text"
                 name="meaning-memo"
                 value={meaningMemonic}
                 onChange={handleChange}
@@ -108,7 +140,6 @@ const InfoPanel = (props) => {
               <textarea
                 id="reading-memonic-input"
                 className="memo-info"
-                type="text"
                 name="reading-memo"
                 value={readingMemonic}
                 onChange={handleChange}
@@ -151,7 +182,7 @@ const InfoPanel = (props) => {
           )}
         <div className="horiz-div">
           <p className="margin-right-30">Last practiced:</p>
-          <p>{dateToString(userData[current].lastPract)}</p>
+          <p>{userData[current].lastPract}</p>
         </div>
         <div className="horiz-div">
           <p className="margin-right-30">User level:</p>
@@ -159,7 +190,7 @@ const InfoPanel = (props) => {
           <p className="read-info">{userData[current].level}</p>
           <p>
             &quot;
-            {levels[userData[current].level][1]}
+            {LEVELS[userData[current].level.toString()][1]}
             &quot;
           </p>
         </div>
@@ -173,40 +204,6 @@ const InfoPanel = (props) => {
       {userContent}
     </div>
   );
-};
-
-InfoPanel.defaultProps = {
-  userData: {},
-};
-
-InfoPanel.propTypes = {
-  id: PropTypes.string.isRequired,
-  mainData: PropTypes.shape({
-    characters: PropTypes.objectOf(
-      PropTypes.exact({
-        chineseSimp: PropTypes.string,
-        chineseTrad: PropTypes.string,
-        english: PropTypes.arrayOf(PropTypes.string),
-        pinyin: PropTypes.string,
-        stage: PropTypes.number,
-        tone: PropTypes.string,
-      }),
-    ),
-  }).isRequired,
-  userData: PropTypes.shape({
-    characters: PropTypes.objectOf(
-      PropTypes.exact({
-        lastPract: PropTypes.string,
-        level: PropTypes.number,
-        memoMean: PropTypes.string,
-        memoRead: PropTypes.string,
-      }),
-    ),
-    profileData: PropTypes.exact({
-      currentStage: PropTypes.number,
-    }),
-  }),
-  putUserNewMemonic: PropTypes.func.isRequired,
 };
 
 export default InfoPanel;

@@ -4,6 +4,37 @@ import { UserContext } from '../components/providers/UserProvider';
 import Learn from '../components/Learn';
 import Strip from '../components/Strip';
 
+interface MainCharacterInt {
+  chineseSimp: string,
+  chineseTrad: string,
+  english: string[],
+  pinyin: string,
+  stage: number,
+  tone: string,
+}
+
+interface UserCharacterInt {
+  lastPract: number,
+  level: number,
+  memoMean: string,
+  memoRead: string,
+}
+
+interface MainInt {
+  characters: {
+    [key: string]: MainCharacterInt,
+  },
+}
+
+interface UserInt {
+  characters: {
+    [key: string]: UserCharacterInt,
+  },
+  profileData: {
+    currentStage: number
+  }
+}
+
 const LearnCont = () => {
   // setting up user status
   const currentUser = useContext(UserContext);
@@ -16,12 +47,12 @@ const LearnCont = () => {
     setUserID(localStorage.getItem('userId'));
   }, [currentUser]);
   // setting up data
-  const [mainData, setMainData] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [mainData, setMainData] = useState<any>(null);
+  const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (token) {
+    if (token && userId) {
       getMainData(source, token, setMainData);
       getUserData(source, token, userId, setUserData);
     }
@@ -31,7 +62,7 @@ const LearnCont = () => {
   }, [token, userId]);
 
   // determines which items are to be learned by user level
-  const getNewItems = (main, user) => {
+  const getNewItems = (main: MainInt, user: UserInt) => {
     const userStage = user.profileData.currentStage;
     const dataKeys = Object.keys(main.characters)
       .filter((char) => main.characters[char].stage <= userStage);
@@ -39,10 +70,10 @@ const LearnCont = () => {
     return dataKeys.filter((char) => !userKeys.includes(char));
   };
   // adds learned character from main DB to user DB
-  const putUserNewCharacter = (character, object) => {
+  const putUserNewCharacter = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error) => console.error(`Error uploading new data: ${error}`));
+      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
   };
 
   let content;

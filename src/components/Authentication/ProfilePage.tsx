@@ -5,7 +5,7 @@ import unknownUser from '../../assets/unknown-user.png';
 import './Authentication.css';
 
 const ProfilePage = () => {
-  const currentUser = useContext(UserContext);
+  const currentUser = useContext<any>(UserContext);
 
   const [provider, setProvider] = useState(null);
   const [user, setUser] = useState(localStorage.getItem('user'));

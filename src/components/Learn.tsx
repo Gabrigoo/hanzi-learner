@@ -1,9 +1,34 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import './Learn.css';
 import Strip from './Strip';
 
-const Learn = (props) => {
+interface MainCharacterInt {
+  chineseSimp: string,
+  chineseTrad: string,
+  english: string[],
+  pinyin: string,
+  stage: number,
+  tone: string,
+}
+
+interface UserCharacterInt {
+  lastPract: number,
+  level: number,
+  memoMean: string,
+  memoRead: string,
+}
+
+interface LearnProps {
+  mainData: {
+    characters: {
+      [key: string]: MainCharacterInt,
+    },
+  },
+  newKeys: string[],
+  putUserNewCharacter: (character: string, object: UserCharacterInt) => void,
+}
+
+const Learn: React.FC<LearnProps> = (props) => {
   const mainData = props.mainData.characters;
   // starts with first element of to-learn list
   const [current, setCurrent] = useState(props.newKeys[0]);
@@ -12,11 +37,11 @@ const Learn = (props) => {
   const [readingMemonic, setReadingMemonic] = useState('');
   const [remaningNum, setRemainingNum] = useState(props.newKeys.length);
   // on continue uploads new character to use DB and continue to next one
-  const handleContinue = (event) => {
+  const handleContinue = (event: any) => {
     event.preventDefault();
 
     const newObj = {
-      lastPract: new Date(),
+      lastPract: new Date().getTime(),
       level: 0,
       memoMean: meaningMemonic,
       memoRead: readingMemonic,
@@ -28,8 +53,8 @@ const Learn = (props) => {
     setRemainingNum(remaningNum - 1);
   };
 
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+  const handleChange = (event:any) => {
+    const { name, value }: { name: string, value: string} = event.currentTarget;
 
     switch (name) {
       case 'meaning':
@@ -89,7 +114,6 @@ const Learn = (props) => {
         id="meaning-memonic-learn"
         className="memonic-textarea"
         form="continue-button-form"
-        type="text"
         name="meaning"
         value={meaningMemonic}
         onChange={handleChange}
@@ -112,30 +136,12 @@ const Learn = (props) => {
         id="reading-memonic-learn"
         className="memonic-textarea"
         form="continue-button-form"
-        type="text"
         name="reading"
         value={readingMemonic}
         onChange={handleChange}
       />
     </div>
   );
-};
-
-Learn.propTypes = {
-  mainData: PropTypes.shape({
-    characters: PropTypes.objectOf(
-      PropTypes.exact({
-        chineseSimp: PropTypes.string,
-        chineseTrad: PropTypes.string,
-        english: PropTypes.arrayOf(PropTypes.string),
-        pinyin: PropTypes.string,
-        stage: PropTypes.number,
-        tone: PropTypes.string,
-      }),
-    ),
-  }).isRequired,
-  newKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
-  putUserNewCharacter: PropTypes.func.isRequired,
 };
 
 export default Learn;

@@ -1,5 +1,5 @@
 /src/serviceWorker.js
-/src/history.js
-/src/assets/*.js
+/src/history.ts
+/src/assets/*
 /src/App.test.js
-/src/components/providers/*.jsx
+/src/components/providers/

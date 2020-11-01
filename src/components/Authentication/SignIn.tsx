@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { signInWithGoogle, signInWithFacebook, createUserWithEmailAndPasswordHandler } from '../../firebase';
+import { signInWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler } from '../../firebase';
 import history from '../../history';
 import './Authentication.css';
 
-const SignUp = () => {
+const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+  const handleChange = (event: any) => {
+    const { name, value }: { name: string, value: string } = event.currentTarget;
 
     switch (name) {
       case 'userEmail':
@@ -19,19 +18,19 @@ const SignUp = () => {
       case 'userPassword':
         setPassword(value);
         break;
-      case 'displayName':
-        setDisplayName(value);
-        break;
       default:
         break;
     }
   };
 
-  const switchScreen = (event) => {
+  const switchScreen = (event: any) => {
     let path = '';
     switch (event.target.name) {
-      case 'sign-in':
-        path = '/signIn';
+      case 'password-reset':
+        path = '/passwordReset';
+        break;
+      case 'sign-up':
+        path = '/signUp';
         break;
       default:
         break;
@@ -41,23 +40,13 @@ const SignUp = () => {
 
   return (
     <div className="auth-flex-card">
-      <h1 className="auth-h1">Sign up</h1>
+      <h1 className="auth-h1">Sign in</h1>
       <div id="auth-error">{error}</div>
-      <label htmlFor="displayName">Display Name:</label>
-      <input
-        type="text"
-        name="displayName"
-        value={displayName}
-        placeholder="E.g: Johnathan"
-        id="displayname"
-        className="auth-input"
-        onChange={handleChange}
-      />
       <label htmlFor="userEmail">Email:</label>
       <input
         type="email"
         name="userEmail"
-        form="sign-up-button-form"
+        form="sign-in-button-form"
         value={email}
         placeholder="E.g: ilearnchinese@gmail.com"
         id="userEmail"
@@ -68,7 +57,7 @@ const SignUp = () => {
       <input
         type="password"
         name="userPassword"
-        form="sign-up-button-form"
+        form="sign-in-button-form"
         value={password}
         placeholder="Your password"
         id="userPassword"
@@ -76,15 +65,11 @@ const SignUp = () => {
         onChange={handleChange}
       />
       <form
-        id="sign-up-button-form"
-        onSubmit={
-          (event) => {
-            createUserWithEmailAndPasswordHandler(event, email, password, displayName, setError);
-          }
-        }
+        id="sign-in-button-form"
+        onSubmit={(event) => signInWithEmailAndPasswordHandler(event, email, password, setError)}
       >
         <button className="standard-button" type="submit">
-          Sign up
+          Sign in
         </button>
       </form>
       <p className="auth-p">or</p>
@@ -96,17 +81,25 @@ const SignUp = () => {
           Sign in with Facebook
         </button>
       </div>
-      <p className="auth-p">Already have an account?</p>
+      <p className="auth-p">Don&apos;t have an account?</p>
       <button
-        name="sign-in"
+        name="sign-up"
         id="sing-up-in-redirect"
         className="standard-button"
         onClick={switchScreen}
       >
-        Sign in here
+        Sign up here
+      </button>
+      <button
+        name="password-reset"
+        id="password-reset-button"
+        className="standard-button"
+        onClick={switchScreen}
+      >
+        Forgot Password?
       </button>
     </div>
   );
 };
 
-export default SignUp;
+export default SignIn;

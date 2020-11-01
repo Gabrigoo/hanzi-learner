@@ -1,9 +1,44 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import './Character.css';
 import history from '../history';
 
-const Character = (props) => {
+interface MainCharacterInt {
+  chineseSimp: string,
+  chineseTrad: string,
+  english: string[],
+  pinyin: string,
+  stage: number,
+  tone: string,
+}
+
+interface UserCharacterInt {
+  lastPract: number,
+  level: number,
+  memoMean: string,
+  memoRead: string,
+}
+
+interface CharacterProps {
+  mainData: {
+    characters: {
+      [key: string]: MainCharacterInt,
+    },
+  },
+  userData: {
+    characters: {
+      [key: string]: UserCharacterInt,
+    },
+    profileData: {
+      currentStage: number
+    }
+  };
+  character: string,
+  value?: string
+}
+
+const Character: React.FC<CharacterProps> = (props) => {
+  const mainData = props.mainData.characters;
+  const userData = props.userData.characters;
   // these are for the small popup box when hovering over a character
   const [showBox, setShowBox] = useState(false);
 
@@ -18,23 +53,23 @@ const Character = (props) => {
     const path = `/info/${props.character}`;
     history.push(path);
   };
-  // background color indicating correct and incorrect (or none)
-  let backColor;
+  // background color indicating status
+  let backColor:string;
   if (props.value === 'true') {
     backColor = 'theme-correct';
   } else if (props.value === 'false') {
     backColor = 'theme-incorrect';
-  } else if (!Object.prototype.hasOwnProperty.call(props.userData, props.character)) {
+  } else if (!Object.prototype.hasOwnProperty.call(userData, props.character)) {
     backColor = 'theme-grey';
-  } else if (props.userData[props.character].level === 0) {
+  } else if (userData[props.character].level === 0) {
     backColor = 'theme-grey';
-  } else if (props.userData[props.character].level < 5) {
+  } else if (userData[props.character].level < 5) {
     backColor = 'theme-brown';
-  } else if (props.userData[props.character].level < 7) {
+  } else if (userData[props.character].level < 7) {
     backColor = 'theme-bronze';
-  } else if (props.userData[props.character].level < 8) {
+  } else if (userData[props.character].level < 8) {
     backColor = 'theme-silver';
-  } else if (props.userData[props.character].level < 9) {
+  } else if (userData[props.character].level < 9) {
     backColor = 'theme-gold';
   } else {
     backColor = 'theme-diamond';
@@ -50,19 +85,19 @@ const Character = (props) => {
             <p className="short-hint">
               Mean:
               {' '}
-              {props.mainData[props.character].english[0]}
+              {mainData[props.character].english[0]}
             </p>
             <p className="short-hint">
               Read:
               {' '}
-              {props.mainData[props.character].pinyin}
+              {mainData[props.character].pinyin}
             </p>
-            {props.userData[props.character]
+            {userData[props.character]
               ? (
                 <p className="short-hint">
                   Level:
                   {' '}
-                  {props.userData[props.character].level}
+                  {userData[props.character].level}
                 </p>
               )
               : ''}
@@ -75,37 +110,6 @@ const Character = (props) => {
 
 Character.defaultProps = {
   value: '',
-  userData: {},
-};
-
-Character.propTypes = {
-  mainData: PropTypes.shape({
-    characters: PropTypes.objectOf(
-      PropTypes.exact({
-        chineseSimp: PropTypes.string,
-        chineseTrad: PropTypes.string,
-        english: PropTypes.arrayOf(PropTypes.string),
-        pinyin: PropTypes.string,
-        stage: PropTypes.number,
-        tone: PropTypes.string,
-      }),
-    ),
-  }).isRequired,
-  userData: PropTypes.shape({
-    characters: PropTypes.objectOf(
-      PropTypes.exact({
-        lastPract: PropTypes.string,
-        level: PropTypes.number,
-        memoMean: PropTypes.string,
-        memoRead: PropTypes.string,
-      }),
-    ),
-    profileData: PropTypes.exact({
-      currentStage: PropTypes.number,
-    }),
-  }),
-  character: PropTypes.string.isRequired,
-  value: PropTypes.oneOf(['true', 'false', '']),
 };
 
 export default Character;

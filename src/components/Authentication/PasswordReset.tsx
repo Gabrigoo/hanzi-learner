@@ -6,10 +6,10 @@ import './Authentication.css';
 const PasswordReset = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+  const handleChange = (event: any) => {
+    const { name, value }: { name: string, value: string } = event.currentTarget;
 
     if (name === 'userEmail') {
       setEmail(value);
