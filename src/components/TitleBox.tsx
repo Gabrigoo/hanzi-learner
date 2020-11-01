@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import history from '../history';
 
 const TitleBox = () => {
-  const switchScreen = (event) => {
+  const switchScreen = (event: any) => {
     let path = '';
     switch (event.target.name) {
       case 'start-learn':

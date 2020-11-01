@@ -20,9 +20,10 @@ const Header = () => {
     console.log('header reloads');
   }, [currentUser]);
 
-  const switchScreen = (event) => {
+  const switchScreen = (event:any) => {
+    const { name }: { name:string } = event.currentTarget;
     let path = '';
-    switch (event.target.name) {
+    switch (name) {
       case 'main-menu':
         path = '/main';
         break;
@@ -50,10 +51,10 @@ const Header = () => {
     history.push(path);
   };
 
-  let content = null;
+  let content;
 
   if (currentUser) {
-    let photoURL = null;
+    let photoURL:any;
 
     if (photo === 'null') {
       photoURL = unknownUser;
@@ -63,19 +64,27 @@ const Header = () => {
 
     content = (
       <header id="header">
-        <img name="profile" id="profile-img" src={photoURL} alt="profile" onClick={switchScreen} />
+        <button name="profile" id="profile-button" onClick={switchScreen}>
+          <img id="profile-img" src={photoURL} alt="profile" />
+        </button>
         {user !== 'null' ? <p>{user}</p> : ''}
         {email !== 'null' ? <p>{email}</p> : ''}
-        <img name="main-menu" id="main-menu-icon" src={mainMenu} alt="mainmenu" onClick={switchScreen} />
+        <button name="main-menu" id="menu-button" onClick={switchScreen}>
+          <img id="main-menu-icon" src={mainMenu} alt="mainmenu" />
+        </button>
       </header>
     );
   } else {
     content = (
       <header id="header">
-        <img name="profile" id="profile-img" src={unknownUser} alt="profile" />
+        <button name="profile" id="profile-button">
+          <img id="profile-img" src={unknownUser} alt="profile" />
+        </button>
         <button type="button" name="sign-in" id="sing-in-button" onClick={switchScreen}>Sign in</button>
         <button type="button" name="sign-up" id="sing-up-button" onClick={switchScreen}>Sign up</button>
-        <img name="main-menu" id="main-menu-icon" src={mainMenu} alt="mainmenu" onClick={switchScreen} />
+        <button name="main-menu" id="menu-button" onClick={switchScreen}>
+          <img id="main-menu-icon" src={mainMenu} alt="mainmenu" />
+        </button>
       </header>
     );
   }
@@ -84,7 +93,6 @@ const Header = () => {
     <div>
       {content}
     </div>
-
   );
 };
 

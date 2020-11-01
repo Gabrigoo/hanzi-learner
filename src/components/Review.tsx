@@ -1,15 +1,49 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import Character from './Character';
 import './Review.css';
 import { similarity, editDistance } from '../assets/levenshtein_distance';
 import { flattenPinyin } from '../assets/tones';
 
-const Review = (props) => {
+interface MainCharacterInt {
+    chineseSimp: string,
+    chineseTrad: string,
+    english: string[],
+    pinyin: string,
+    stage: number,
+    tone: string,
+  }
 
+interface UserCharacterInt {
+  lastPract: number,
+  level: number,
+  memoMean: string,
+  memoRead: string,
+}
+
+interface ReviewProps {
+  mainData: {
+    characters: {
+      [key: string]: MainCharacterInt,
+    },
+  },
+  userData: {
+      characters: {
+        [key: string]: UserCharacterInt,
+      },
+      profileData: {
+        currentStage: number
+      }
+    };
+  reviewData: string[];
+  uploadReviewResults: (character: string, object: UserCharacterInt) => void,
+  mainMenu: () => void,
+}
+
+const Review: React.FC<ReviewProps> = (props) => {
   const mainData = props.mainData.characters;
+  const userData = props.userData.characters;
   // randomizes the sequence
-  const [shuffledDeck] = useState(shuffle(Object.keys(props.reviewData)));
+  const [shuffledDeck] = useState(shuffle(props.reviewData));
   // current character being tested
   const [current, setCurrent] = useState(shuffledDeck[0]);
   // how many time an answer was given to this particular character so far
@@ -26,16 +60,16 @@ const Review = (props) => {
   const [incorrectNum, setIncorrectNum] = useState(0);
   const [remaningNum, setRemainingNum] = useState(shuffledDeck.length);
   // arrays with correct and incorrect tries
-  const [correctList, setCorrectList] = useState([]);
-  const [inCorrectList, setIncorrectList] = useState([]);
+  const [correctList, setCorrectList] = useState<string[]>([]);
+  const [inCorrectList, setIncorrectList] = useState<string[]>([]);
   // memonic data that is changeable by the user
   const [changeMemonic, setChangeMemonic] = useState(false);
   const [newMeaningMemonic, setNewMeaningMemonic] = useState('');
   const [newReadingMemonic, setNewReadingMemonic] = useState('');
 
   // handle input
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+  const handleChange = (event: any) => {
+    const { name, value }: { name: string, value: string } = event.currentTarget;
 
     switch (name) {
       case 'meaning':
@@ -56,11 +90,11 @@ const Review = (props) => {
   };
 
   // finishes current session
-  const goToSummary = () => {
+  const goToSummary = ():void => {
     setCurrent('undefined');
   };
   // shuffles deck in the beginning
-  function shuffle(sourceArray) {
+  function shuffle(sourceArray: string[]): string[] {
     const newArray = [...sourceArray];
     if (newArray.length > 1) {
       for (let i = newArray.length - 1; i > 0; i -= 1) {
@@ -70,13 +104,13 @@ const Review = (props) => {
     }
     return newArray;
   }
-  const switchChangeMemonics = () => {
+  const switchChangeMemonics = (): void => {
     setChangeMemonic(true);
-    setNewMeaningMemonic(props.reviewData[current].memoMean);
-    setNewReadingMemonic(props.reviewData[current].memoRead);
+    setNewMeaningMemonic(userData[current].memoMean);
+    setNewReadingMemonic(userData[current].memoRead);
   };
   // runs when asnwer is initially submitted
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any): void => {
     event.preventDefault();
 
     if (meanInput === '' || readInput === '') {
@@ -84,8 +118,8 @@ const Review = (props) => {
     } else if (solutionSubmitted) {
       handleContinue(event);
     } else { // evaluates the given answer and displays results
-      document.getElementById('meaning-input-box').disabled = true;
-      document.getElementById('reading-input-box').disabled = true;
+      (document.getElementById('meaning-input-box') as HTMLInputElement).disabled = true;
+      (document.getElementById('reading-input-box') as HTMLInputElement).disabled = true;
 
       setTries(tries + 1);
 
@@ -108,11 +142,11 @@ const Review = (props) => {
 
       // then check reading
       let toneInput = '5';
-      let readingInputFlat = '';
+      let readingInputFlat:string;
       // check if user marked tone at the end
       if ((!Number.isNaN(readInput.slice(-1)))
-          && readInput.slice(-1) < 6
-          && readInput.slice(-1) > 0) {
+          && parseInt(readInput.slice(-1), 10) < 6
+          && parseInt(readInput.slice(-1), 10) > 0) {
         readingInputFlat = readInput.substring(0, readInput.length - 1);
         toneInput = readInput.split('').splice(-1)[0];
       } else { // else check if tone is in character
@@ -136,48 +170,48 @@ const Review = (props) => {
       // color input boxes depending on result
       switch (meanCorrect) {
         case 0:
-          document.getElementById('meaning-input-box').style.backgroundColor = 'red';
+          (document.getElementById('meaning-input-box') as HTMLInputElement).style.backgroundColor = 'red';
           break;
         case 1:
-          document.getElementById('meaning-input-box').style.backgroundColor = 'yellow';
+          (document.getElementById('meaning-input-box') as HTMLInputElement).style.backgroundColor = 'yellow';
           break;
         default:
-          document.getElementById('meaning-input-box').style.backgroundColor = 'green';
+          (document.getElementById('meaning-input-box') as HTMLInputElement).style.backgroundColor = 'green';
           break;
       }
       switch (readCorrect) {
         case 0:
-          document.getElementById('reading-input-box').style.backgroundColor = 'red';
+          (document.getElementById('reading-input-box') as HTMLInputElement).style.backgroundColor = 'red';
           break;
         case 1:
-          document.getElementById('reading-input-box').style.backgroundColor = 'yellow';
+          (document.getElementById('reading-input-box') as HTMLInputElement).style.backgroundColor = 'yellow';
           break;
         default:
-          document.getElementById('reading-input-box').style.backgroundColor = 'green';
+          (document.getElementById('reading-input-box') as HTMLInputElement).style.backgroundColor = 'green';
           break;
       }
       // this is needed so we can advance to the next step
       setSolutionSubmitted(true);
-      document.getElementById('board-submit-button').focus();
+      (document.getElementById('board-submit-button') as HTMLButtonElement).focus();
     }
   };
     // this runs when user was given the results and wants to continue
-  const handleContinue = (event) => {
+  const handleContinue = (event: any): void => {
     event.preventDefault();
 
-    document.getElementById('meaning-input-box').style.backgroundColor = 'white';
-    document.getElementById('reading-input-box').style.backgroundColor = 'white';
-    document.getElementById('meaning-input-box').disabled = false;
-    document.getElementById('reading-input-box').disabled = false;
+    (document.getElementById('meaning-input-box') as HTMLInputElement).style.backgroundColor = 'white';
+    (document.getElementById('reading-input-box') as HTMLInputElement).style.backgroundColor = 'white';
+    (document.getElementById('meaning-input-box') as HTMLInputElement).disabled = false;
+    (document.getElementById('reading-input-box') as HTMLInputElement).disabled = false;
 
     // this is only activates when the user finally gets it right (regardless of number of tries)
     if (solutionCorrect) {
       // creates a new object to upload new information
-      const userCharObject = {
-        lastPract: new Date(),
-        level: props.reviewData[current].level,
-        memoMean: props.reviewData[current].memoMean,
-        memoRead: props.reviewData[current].memoRead,
+      const userCharObject: UserCharacterInt = {
+        lastPract: new Date().getTime(),
+        level: userData[current].level,
+        memoMean: userData[current].memoMean,
+        memoRead: userData[current].memoRead,
       };
       // if memonic was modified, save it
       if (changeMemonic) {
@@ -216,7 +250,7 @@ const Review = (props) => {
     setMeaning('');
     setReading('');
 
-    document.getElementById('meaning-input-box').focus();
+    (document.getElementById('meaning-input-box') as HTMLInputElement).focus();
   };
 
   // go into summary when no characters left to review
@@ -229,7 +263,8 @@ const Review = (props) => {
             {correctList.length === 0 ? 'No items'
               : correctList.map((item, index) => (
                 <Character
-                  mainData={mainData}
+                  mainData={props.mainData}
+                  userData={props.userData}
                   character={item}
                   value="true"
                   key={item + index}
@@ -241,7 +276,8 @@ const Review = (props) => {
             {inCorrectList.length === 0 ? 'No items'
               : inCorrectList.map((item, index) => (
                 <Character
-                  mainData={mainData}
+                  mainData={props.mainData}
+                  userData={props.userData}
                   character={item}
                   value="false"
                   key={item + index}
@@ -377,7 +413,6 @@ const Review = (props) => {
                   <textarea
                     id="meaning-memonic-input"
                     className="memonic-textarea"
-                    type="text"
                     name="meaning-memo"
                     value={newMeaningMemonic}
                     onChange={handleChange}
@@ -385,7 +420,6 @@ const Review = (props) => {
                   <textarea
                     id="reading-memonic-input"
                     className="memonic-textarea"
-                    type="text"
                     name="reading-memo"
                     value={newReadingMemonic}
                     onChange={handleChange}
@@ -402,14 +436,14 @@ const Review = (props) => {
                     Change memonics
                   </button>
                   <p id="meaning-memonic" className="memonic">
-                    {props.reviewData[current].memoMean === ''
+                    {userData[current].memoMean === ''
                       ? 'Currently no meaning memonic added'
-                      : props.reviewData[current].memoMean}
+                      : userData[current].memoMean}
                   </p>
                   <p id="reading-memonic" className="memonic">
-                    {props.reviewData[current].memoRead === ''
+                    {userData[current].memoRead === ''
                       ? 'Currently no reading memonic added'
-                      : props.reviewData[current].memoRead}
+                      : userData[current].memoRead}
                   </p>
                 </>
               )}
@@ -418,30 +452,6 @@ const Review = (props) => {
       </div>
     </div>
   );
-};
-
-Review.propTypes = {
-  mainData: PropTypes.shape({
-    characters: PropTypes.objectOf(
-      PropTypes.exact({
-        chineseSimp: PropTypes.string,
-        chineseTrad: PropTypes.string,
-        english: PropTypes.arrayOf(PropTypes.string),
-        pinyin: PropTypes.string,
-        stage: PropTypes.number,
-        tone: PropTypes.string
-      })
-    )}).isRequired,
-  reviewData: PropTypes.objectOf(
-    PropTypes.exact({
-      lastPract: PropTypes.string,
-      level: PropTypes.number,
-      memoMean: PropTypes.string,
-      memoRead: PropTypes.string,
-    }),
-  ).isRequired,
-  uploadReviewResults: PropTypes.func.isRequired,
-  mainMenu: PropTypes.func.isRequired,
 };
 
 export default Review;

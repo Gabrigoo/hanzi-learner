@@ -6,6 +6,13 @@ import Review from '../components/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';
 
+interface UserCharacterInt {
+  lastPract: number,
+  level: number,
+  memoMean: string,
+  memoRead: string,
+}
+
 const ReviewCont = () => {
   // setting up user status
   const currentUser = useContext(UserContext);
@@ -18,12 +25,12 @@ const ReviewCont = () => {
     setUserID(localStorage.getItem('userId'));
   }, [currentUser]);
   // setting up data
-  const [mainData, setMainData] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [mainData, setMainData] = useState<any>(null);
+  const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (token) {
+    if (token && userId) {
       getMainData(source, token, setMainData);
       getUserData(source, token, userId, setUserData);
     }
@@ -36,7 +43,7 @@ const ReviewCont = () => {
     if (mainData && userData) {
       const userLevel = userData.profileData.currentStage;
 
-      axios.get(`/${userId}/characters.json?auth=${token}`).then((res) => {
+      axios.get(`/${userId}/characters.json?auth=${token}`).then((res:any) => {
         console.log('GET user data loaded');
         // possible characters from main DB for users current level
         const currentLevelKeys = Object.keys(mainData.characters)
@@ -54,9 +61,9 @@ const ReviewCont = () => {
           axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, userLevel + 1)
             .then(() => {
               console.log('PUT database overwritten');
-            }).catch((error) => console.error(`Error updating database: ${error}`));
+            }).catch((error:any) => console.error(`Error updating database: ${error}`));
         }
-      }).catch((error) => console.error(`Error loading user data: ${error}`));
+      }).catch((error:any) => console.error(`Error loading user data: ${error}`));
     }
   });
 
@@ -64,31 +71,28 @@ const ReviewCont = () => {
     history.push('/main');
   };
   // takes in user data and return the list of characters that need reviewing
-  const dataToReview = (data) => {
-    const review = {};
-    const currentDate = new Date();
+  const dataToReview = (data: { [key: string]: UserCharacterInt }) => {
+    const review: string[] = [];
+    const currentDate = new Date().getTime();
 
-    for (const character in data) {
-      if (Object.prototype.hasOwnProperty.call(data, character)) {
-        const storedDate = new Date(data[character].lastPract);
-
-        if (data[character].level === 9) {
-          // Good job! No need to review this anymore
-        } else if (
-          Math.round((currentDate - storedDate) / (1000 * 60 * 60))
-          >= levels[data[character].level][0]
-        ) {
-          review[character] = data[character];
-        }
+    Object.keys(data).forEach((item) => {
+      const storedDate = data[item].lastPract;
+      if (data[item].level === 9) {
+        // Good job! No need to review this anymore
+      } else if (
+        Math.round((currentDate - storedDate) / (1000 * 60 * 60))
+          >= levels[data[item].level][0]
+      ) {
+        review.push(item);
       }
-    }
+    });
     return review;
   };
   // as name suggests, uploads the results of the review
-  const uploadReviewResults = (character, object) => {
+  const uploadReviewResults = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => console.log('PUT: upload to database'))
-      .catch((error) => console.error(`Error refreshing database: ${error}`));
+      .catch((error:any) => console.error(`Error refreshing database: ${error}`));
   };
 
   let content;
@@ -102,6 +106,7 @@ const ReviewCont = () => {
       content = (
         <Review
           mainData={mainData}
+          userData={userData}
           reviewData={dataToReview(userData.characters)}
           uploadReviewResults={uploadReviewResults}
           mainMenu={mainMenu}

@@ -7,10 +7,10 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+  const handleChange = (event: any) => {
+    const { name, value }: { name: string, value: string } = event.currentTarget;
 
     switch (name) {
       case 'userEmail':
@@ -27,7 +27,7 @@ const SignUp = () => {
     }
   };
 
-  const switchScreen = (event) => {
+  const switchScreen = (event: any) => {
     let path = '';
     switch (event.target.name) {
       case 'sign-in':
@@ -77,7 +77,11 @@ const SignUp = () => {
       />
       <form
         id="sign-up-button-form"
-        onSubmit={(event) => createUserWithEmailAndPasswordHandler(event, email, password, displayName, setError)}
+        onSubmit={
+          (event) => {
+            createUserWithEmailAndPasswordHandler(event, email, password, displayName, setError);
+          }
+        }
       >
         <button className="standard-button" type="submit">
           Sign up

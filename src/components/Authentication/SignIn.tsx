@@ -6,10 +6,10 @@ import './Authentication.css';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+  const handleChange = (event: any) => {
+    const { name, value }: { name: string, value: string } = event.currentTarget;
 
     switch (name) {
       case 'userEmail':
@@ -23,7 +23,7 @@ const SignIn = () => {
     }
   };
 
-  const switchScreen = (event) => {
+  const switchScreen = (event: any) => {
     let path = '';
     switch (event.target.name) {
       case 'password-reset':

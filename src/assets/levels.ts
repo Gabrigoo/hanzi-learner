@@ -1,4 +1,8 @@
-const LEVELS = {
+interface Levels {
+  [key: string]: (number|string)[]
+}
+
+const LEVELS:Levels = {
   0: [0, 'New Item'],
   1: [4, 'Apprentice 1'],
   2: [8, 'Apprentice 2'],

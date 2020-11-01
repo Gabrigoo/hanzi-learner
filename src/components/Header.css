@@ -1,3 +1,24 @@
+#profile-button {
+    background: none;
+    border: none;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+    margin: 0px 20px 0px 0px;
+    padding: 0px;
+}
+#menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0px;
+    height: 45px;
+    width: 45px;
+    position: fixed;
+    top: 8px;
+    left: 10px;
+    z-index: 1;
+}
 #header {
     height: 50px;
     position: fixed;
@@ -13,17 +34,10 @@
     gap: 12px;
 }
 #profile-img {
-    cursor: pointer;
     height: 100%;
-    margin: 0px 10px 0px 0px;
 }
 #main-menu-icon {
-    cursor: pointer;
-    height: 36px;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1;
+    height: 100%;
 }
 #sing-in-button, #sing-up-button {
     font-size: 20px;

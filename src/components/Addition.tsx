@@ -1,9 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import './Addition.css';
 import { TONES } from '../assets/tones';
 
-const Addition = (props) => {
+interface MainCharacterInt {
+  chineseSimp: string,
+  chineseTrad: string,
+  english: string[],
+  pinyin: string,
+  stage: number,
+  tone: string,
+}
+
+interface AdditionProps {
+  mainData: {
+    characters: {
+      [key: string]: MainCharacterInt,
+    },
+  },
+  uploadNewCharacter: (character: string, object: MainCharacterInt) => void
+}
+
+const Addition: React.FC<AdditionProps> = (props) => {
   // states for user input
   const [chineseTrad, setChineseTrad] = useState('');
   const [chineseSimp, setChineseSimp] = useState('');
@@ -30,7 +47,7 @@ const Addition = (props) => {
   }, [dataKeys, chineseTrad]);
 
   // automatically checks the tone and fills tone input box
-  const toneCheck = (input) => {
+  const toneCheck = (input: string) => {
     for (let i = 0; i < input.length; i += 1) {
       for (let j = 0; j < Object.keys(TONES).length; j += 1) {
         if (TONES[Object.keys(TONES)[j]].includes(input[i])) {
@@ -44,8 +61,8 @@ const Addition = (props) => {
     return '5';
   };
   // handles state change
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+  const handleChange = (event: any) => {
+    const { name, value }: {name:string, value:string} = event.currentTarget;
 
     switch (name) {
       case 'chineseTrad':
@@ -78,7 +95,7 @@ const Addition = (props) => {
     }
   };
   // determines whether user is allowed to overwrite existing character entry
-  const switchOverwrite = () => {
+  const switchOverwrite = ():void => {
     if (overwrite) {
       setOverwrite(false);
     } else {
@@ -87,7 +104,7 @@ const Addition = (props) => {
     }
   };
   // resets all input fields to empty string
-  const clearInput = () => {
+  const clearInput = ():void => {
     setChineseTrad('');
     setChineseSimp('');
     setEnglish1('');
@@ -98,7 +115,7 @@ const Addition = (props) => {
     setStage('');
   };
   // handles uploading of character
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any):void => {
     event.preventDefault();
 
     if (chineseTrad === '') {
@@ -111,8 +128,8 @@ const Addition = (props) => {
         chineseSimp,
         english: [english1.toLowerCase(), english2.toLowerCase(), english3.toLowerCase()],
         pinyin: pinyin.toLowerCase(),
-        tone,
         stage: parseInt(stage, 10),
+        tone,
       };
       props.uploadNewCharacter(chineseTrad, newObj);
       setDataKeys(dataKeys.concat(chineseTrad));
@@ -215,21 +232,6 @@ const Addition = (props) => {
       </form>
     </div>
   );
-};
-
-Addition.propTypes = {
-  mainData: PropTypes.shape({
-    characters: PropTypes.objectOf(
-      PropTypes.exact({
-        chineseSimp: PropTypes.string,
-        chineseTrad: PropTypes.string,
-        english: PropTypes.arrayOf(PropTypes.string),
-        pinyin: PropTypes.string,
-        stage: PropTypes.number,
-        tone: PropTypes.string
-      })
-    )}).isRequired,
-  uploadNewCharacter: PropTypes.func.isRequired,
 };
 
 export default Addition;

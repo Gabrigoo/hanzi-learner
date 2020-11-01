@@ -5,6 +5,15 @@ import Strip from '../components/Strip';
 import Search from '../components/Search';
 import { flattenPinyin } from '../assets/tones';
 
+interface MainCharacterInt {
+  chineseSimp: string,
+  chineseTrad: string,
+  english: string[],
+  pinyin: string,
+  stage: number,
+  tone: string,
+}
+
 const SearchCont = () => {
   // setting up user status
   const currentUser = useContext(UserContext);
@@ -17,7 +26,7 @@ const SearchCont = () => {
     setUserID(localStorage.getItem('userId'));
   }, [currentUser]);
   // setting up data
-  const [mainData, setMainData] = useState(null);
+  const [mainData, setMainData] = useState<any>(null);
 
   useEffect(() => {
     const source = axios.CancelToken.source();
@@ -29,32 +38,30 @@ const SearchCont = () => {
     };
   }, [token, userId]);
 
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<string[]>([]);
   // handles search by input and refreshes search results
-  const handleSearch = (event, query, mainData) => {
+  const handleSearch = (event: any, query: string, main: {[key: string]: MainCharacterInt}) => {
     event.preventDefault();
 
     if (query === '') {
       setSearchResults([]);
     } else {
-      let resultList = [];
-      for (const character in mainData) {
-        if (Object.prototype.hasOwnProperty.call(mainData, character)) {
-          switch (query) {
-          case mainData[character].chineseTrad:
-          case mainData[character].chineseSimp:
-          case mainData[character].pinyin:
-          case flattenPinyin(mainData[character].pinyin)[0]:
-          case mainData[character].english[0]:
-          case mainData[character].english[1]:
-          case mainData[character].english[2]:
-            resultList = resultList.concat(character);
+      let resultList: string[] = [];
+      Object.keys(main).forEach((item) => {
+        switch (query) {
+          case main[item].chineseTrad:
+          case main[item].chineseSimp:
+          case main[item].pinyin:
+          case flattenPinyin(main[item].pinyin)[0]:
+          case main[item].english[0]:
+          case main[item].english[1]:
+          case main[item].english[2]:
+            resultList = resultList.concat(item);
             break;
           default:
             break;
-          }
         }
-      }
+      });
       setSearchResults(resultList);
     }
   };

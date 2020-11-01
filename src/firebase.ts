@@ -1,3 +1,4 @@
+import React from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
@@ -23,11 +24,17 @@ const firestore = firebase.firestore();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
-const createUserWithEmailAndPasswordHandler = async (event, email, password, displayName, setError) => {
+const createUserWithEmailAndPasswordHandler = async (
+  event: any, email: string, password: string, displayName: string,
+  setError: React.Dispatch<React.SetStateAction<string>>,
+) => {
   event.preventDefault();
 
   try {
     const { user } = await auth.createUserWithEmailAndPassword(email, password);
+    if (!auth.currentUser || !user) {
+      throw new Error('No user currently logged in!');
+    }
     const token = await auth.currentUser.getIdToken();
 
     localStorage.setItem('user', displayName);
@@ -41,7 +48,7 @@ const createUserWithEmailAndPasswordHandler = async (event, email, password, dis
       };
       axios.put(`/${user.uid}.json?auth=${token}`, newObject)
         .then(() => { console.log('PUT: new user data created!'); })
-        .catch((error) => console.error(`Error uploading new data: ${error}`));
+        .catch((error: any) => console.error(`Error uploading new data: ${error}`));
       history.push('/main');
     }).catch((error) => {
       console.error('Error updating profile data: ', error);
@@ -53,15 +60,23 @@ const createUserWithEmailAndPasswordHandler = async (event, email, password, dis
   }
 };
 
-const signInWithGoogle = async (event, setError) => {
+const signInWithGoogle = async (
+  event: any, setError: React.Dispatch<React.SetStateAction<string>>,
+) => {
   event.preventDefault();
   try {
     let userID;
     let isNew = false;
     await auth.signInWithPopup(googleProvider).then((result) => {
+      if (!result.user || !result.additionalUserInfo) {
+        throw new Error('No user currently logged in!');
+      }
       userID = result.user.uid;
       isNew = result.additionalUserInfo.isNewUser;
     });
+    if (!auth.currentUser) {
+      throw new Error('No user currently logged in!');
+    }
     const token = await auth.currentUser.getIdToken();
 
     if (isNew) {
@@ -71,7 +86,7 @@ const signInWithGoogle = async (event, setError) => {
       };
       axios.put(`/${userID}.json?auth=${token}`, newObject)
         .then(() => { console.log('PUT: new user data created!'); })
-        .catch((error) => {
+        .catch((error: any) => {
           console.error(`Error creating new user data: ${error}`);
           throw new Error(error);
         });
@@ -83,7 +98,10 @@ const signInWithGoogle = async (event, setError) => {
   }
 };
 
-const signInWithEmailAndPasswordHandler = (event, email, password, setError) => {
+const signInWithEmailAndPasswordHandler = (
+  event: any, email: string, password: string,
+  setError: React.Dispatch<React.SetStateAction<string>>,
+) => {
   event.preventDefault();
 
   auth.signInWithEmailAndPassword(email, password).then(() => {
@@ -95,6 +113,9 @@ const signInWithEmailAndPasswordHandler = (event, email, password, setError) => 
 };
 
 const linkWithGoogle = () => {
+  if (!auth.currentUser) {
+    throw new Error('No user currently logged in!');
+  }
   auth.currentUser.linkWithPopup(googleProvider).then(() => {
     history.push('/main');
   }).catch((error) => {
@@ -103,14 +124,20 @@ const linkWithGoogle = () => {
 };
 // this is not working yet
 const signInWithFacebook = () => {
-  auth.signInWithPopup(facebookProvider).then((result) => {
+  auth.signInWithPopup(facebookProvider).then(() => {
     history.push('/main');
   }).catch((error) => {
     console.log(error.message);
   });
 };
 
-const sendResetEmail = (event, email, setEmail, setMessage, setError) => {
+const sendResetEmail = (
+  event: any,
+  email: string,
+  setEmail: React.Dispatch<React.SetStateAction<string>>,
+  setMessage: React.Dispatch<React.SetStateAction<string>>,
+  setError: React.Dispatch<React.SetStateAction<string>>,
+) => {
   event.preventDefault();
 
   auth.sendPasswordResetEmail(email).then(() => {
@@ -136,5 +163,5 @@ const handleSignOut = () => {
 export {
   auth, firestore, createUserWithEmailAndPasswordHandler, signInWithGoogle,
   linkWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler, sendResetEmail,
-  handleSignOut
+  handleSignOut,
 };

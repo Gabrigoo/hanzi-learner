@@ -5,9 +5,17 @@ import { UserContext } from '../components/providers/UserProvider';
 import InfoPanel from '../components/InfoPanel';
 import Strip from '../components/Strip';
 
+interface UserCharacterInt {
+  lastPract: number,
+  level: number,
+  memoMean: string,
+  memoRead: string,
+}
+
 const InfoCont = () => {
   // getting character the panel is supposed to display
-  const { id } = useParams();
+
+  const { id }: { id: string } = useParams();
   // setting up user status
   const currentUser = useContext(UserContext);
 
@@ -19,12 +27,12 @@ const InfoCont = () => {
     setUserID(localStorage.getItem('userId'));
   }, [currentUser]);
   // setting up data
-  const [mainData, setMainData] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [mainData, setMainData] = useState<any>(null);
+  const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (token) {
+    if (token && userId) {
       getMainData(source, token, setMainData);
       getUserData(source, token, userId, setUserData);
     }
@@ -33,10 +41,10 @@ const InfoCont = () => {
     };
   }, [token, userId]);
   // function for uploading memonic changes by the user
-  const putUserNewMemonic = (character, object) => {
+  const putUserNewMemonic = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error) => console.error(`Error uploading new data: ${error}`));
+      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
   };
 
   let content;

@@ -1,4 +1,6 @@
-const handleError = (error, setError) => {
+import React from 'react';
+
+const handleError = (error: any, setError: React.Dispatch<React.SetStateAction<string>>) => {
   switch (error.code) {
     case 'auth/email-already-in-use':
       setError('User is already registered');
@@ -22,7 +24,7 @@ const handleError = (error, setError) => {
       setError('Unhandled error');
       break;
   }
-  setTimeout(() => { setError(null); }, 5000);
+  setTimeout(() => { setError(''); }, 5000);
 };
 
 export default handleError;

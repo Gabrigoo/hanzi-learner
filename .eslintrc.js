@@ -5,18 +5,29 @@ module.exports = {
   },
   extends: [
     'plugin:react/recommended',
+    "plugin:@typescript-eslint/recommended",
     'airbnb',
   ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
-  parser: "babel-eslint",
+  settings: {
+    'import/resolver': {
+      'node': {
+        'extensions': ['.js','.jsx','.ts','.tsx']
+      }
+    },
+    react: {
+      version: "detect" // Tells eslint-plugin-react to automatically detect the version of React to use
+    }
+  },
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: 'module',
   },
   plugins: [
@@ -42,5 +53,13 @@ module.exports = {
     "no-use-before-define": "off",
     "no-alert": "off",
     "react/state-in-constructor": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "no-nested-ternary": "off",
+    "react/no-unused-prop-types": 1,
+    "no-console": "off",
+    "react/prop-types": "off",
+    "react/jsx-filename-extension": "off",
+    "import/extensions": [1, "never"],
   },
 };

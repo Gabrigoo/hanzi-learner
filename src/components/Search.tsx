@@ -1,15 +1,32 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import './Search.css';
 
-const Search = (props) => {
+interface MainCharacterInt {
+  chineseSimp: string,
+  chineseTrad: string,
+  english: string[],
+  pinyin: string,
+  stage: number,
+  tone: string,
+}
 
+interface SearchProps {
+  mainData: {
+    characters: {
+      [key: string]: MainCharacterInt,
+    },
+  },
+  searchResults: string[],
+  handleSearch: (event: any, query: string, main: {[key: string]: MainCharacterInt}) => void,
+}
+
+const Search: React.FC<SearchProps> = (props) => {
   const mainData = props.mainData.characters;
   // query is the currently searched string by the user
   const [query, setQuery] = useState('');
 
-  const handleChange = (event) => {
-    const { name, value } = event.currentTarget;
+  const handleChange = (event: any) => {
+    const { name, value }: { name: string, value: string } = event.currentTarget;
 
     switch (name) {
       case 'search':
@@ -20,9 +37,9 @@ const Search = (props) => {
     }
   };
 
-  const clearInput = (event) => {
+  const clearInput = (event: any) => {
     setQuery('');
-    props.handleSearch(event, '');
+    props.handleSearch(event, '', mainData);
   };
   // all search results mapped
   const resultList = props.searchResults.map((item, index) => (
@@ -45,7 +62,7 @@ const Search = (props) => {
       <form
         id="search-form"
         autoComplete="off"
-        onSubmit={(event) => props.handleSearch(event, query)}
+        onSubmit={(event) => props.handleSearch(event, query, mainData)}
       >
         <label>
           Search:
@@ -78,22 +95,6 @@ const Search = (props) => {
 
 Search.defaultProps = {
   searchResults: [],
-};
-
-Search.propTypes = {
-  mainData: PropTypes.shape({
-    characters: PropTypes.objectOf(
-      PropTypes.exact({
-        chineseSimp: PropTypes.string,
-        chineseTrad: PropTypes.string,
-        english: PropTypes.arrayOf(PropTypes.string),
-        pinyin: PropTypes.string,
-        stage: PropTypes.number,
-        tone: PropTypes.string
-      })
-    )}).isRequired,
-  searchResults: PropTypes.arrayOf(PropTypes.string),
-  handleSearch: PropTypes.func.isRequired,
 };
 
 export default Search;
