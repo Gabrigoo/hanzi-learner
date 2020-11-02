@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect, ChangeEvent, FormEvent, ReactElement,
+} from 'react';
 import './Addition.css';
 import { TONES } from '../assets/tones';
 
@@ -20,7 +22,7 @@ interface AdditionProps {
   uploadNewCharacter: (character: string, object: MainCharacterInt) => void
 }
 
-const Addition: React.FC<AdditionProps> = (props) => {
+const Addition: React.FC<AdditionProps> = (props): ReactElement => {
   // states for user input
   const [chineseTrad, setChineseTrad] = useState('');
   const [chineseSimp, setChineseSimp] = useState('');
@@ -61,7 +63,7 @@ const Addition: React.FC<AdditionProps> = (props) => {
     return '5';
   };
   // handles state change
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value }: {name:string, value:string} = event.currentTarget;
 
     switch (name) {
@@ -95,7 +97,7 @@ const Addition: React.FC<AdditionProps> = (props) => {
     }
   };
   // determines whether user is allowed to overwrite existing character entry
-  const switchOverwrite = ():void => {
+  const switchOverwrite = () => {
     if (overwrite) {
       setOverwrite(false);
     } else {
@@ -104,7 +106,7 @@ const Addition: React.FC<AdditionProps> = (props) => {
     }
   };
   // resets all input fields to empty string
-  const clearInput = ():void => {
+  const clearInput = () => {
     setChineseTrad('');
     setChineseSimp('');
     setEnglish1('');
@@ -115,7 +117,7 @@ const Addition: React.FC<AdditionProps> = (props) => {
     setStage('');
   };
   // handles uploading of character
-  const handleSubmit = (event: any):void => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (chineseTrad === '') {

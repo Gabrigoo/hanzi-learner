@@ -1,6 +1,6 @@
 import React from 'react';
 
-const handleError = (error: any, setError: React.Dispatch<React.SetStateAction<string>>) => {
+const handleError = (error: any, setError: React.Dispatch<React.SetStateAction<string>>): void => {
   switch (error.code) {
     case 'auth/email-already-in-use':
       setError('User is already registered');

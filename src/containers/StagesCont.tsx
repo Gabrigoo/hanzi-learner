@@ -1,4 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, {
+  useState, useContext, useEffect, ReactElement,
+} from 'react';
 import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import Strip from '../components/Strip';
@@ -35,7 +37,7 @@ interface UserInt {
   }
 }
 
-const StagesCont = () => {
+const StagesCont = (): ReactElement => {
   // setting up user status
   const currentUser = useContext(UserContext);
 

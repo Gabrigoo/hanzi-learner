@@ -1,4 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {
+  useContext, useState, useEffect, ReactElement,
+} from 'react';
 import { useParams } from 'react-router-dom';
 import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
@@ -12,7 +14,7 @@ interface UserCharacterInt {
   memoRead: string,
 }
 
-const InfoCont = () => {
+const InfoCont = (): ReactElement => {
   // getting character the panel is supposed to display
 
   const { id }: { id: string } = useParams();

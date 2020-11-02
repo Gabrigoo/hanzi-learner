@@ -1,11 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {
+  useContext, useState, useEffect, MouseEvent, ReactElement,
+} from 'react';
 import './Header.css';
 import unknownUser from '../assets/unknown-user.png';
 import mainMenu from '../assets/main-menu.png';
 import { UserContext } from './providers/UserProvider';
 import history from '../history';
 
-const Header = () => {
+const Header = (): ReactElement => {
   // setting up user status
   const currentUser = useContext(UserContext);
 
@@ -20,8 +22,8 @@ const Header = () => {
     console.log('header reloads');
   }, [currentUser]);
 
-  const switchScreen = (event:any) => {
-    const { name }: { name:string } = event.currentTarget;
+  const switchScreen = (event: MouseEvent<HTMLButtonElement>) => {
+    const name = event.currentTarget.name;
     let path = '';
     switch (name) {
       case 'main-menu':

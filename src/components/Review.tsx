@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, {
+  useState, ChangeEvent, FormEvent, ReactElement,
+} from 'react';
 import Character from './Character';
 import './Review.css';
 import { similarity, editDistance } from '../assets/levenshtein_distance';
@@ -39,7 +41,7 @@ interface ReviewProps {
   mainMenu: () => void,
 }
 
-const Review: React.FC<ReviewProps> = (props) => {
+const Review: React.FC<ReviewProps> = (props): ReactElement => {
   const mainData = props.mainData.characters;
   const userData = props.userData.characters;
   // randomizes the sequence
@@ -68,7 +70,7 @@ const Review: React.FC<ReviewProps> = (props) => {
   const [newReadingMemonic, setNewReadingMemonic] = useState('');
 
   // handle input
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value }: { name: string, value: string } = event.currentTarget;
 
     switch (name) {
@@ -90,7 +92,7 @@ const Review: React.FC<ReviewProps> = (props) => {
   };
 
   // finishes current session
-  const goToSummary = ():void => {
+  const goToSummary = () => {
     setCurrent('undefined');
   };
   // shuffles deck in the beginning
@@ -110,7 +112,7 @@ const Review: React.FC<ReviewProps> = (props) => {
     setNewReadingMemonic(userData[current].memoRead);
   };
   // runs when asnwer is initially submitted
-  const handleSubmit = (event: any): void => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (meanInput === '' || readInput === '') {
@@ -196,7 +198,7 @@ const Review: React.FC<ReviewProps> = (props) => {
     }
   };
     // this runs when user was given the results and wants to continue
-  const handleContinue = (event: any): void => {
+  const handleContinue = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
     (document.getElementById('meaning-input-box') as HTMLInputElement).style.backgroundColor = 'white';

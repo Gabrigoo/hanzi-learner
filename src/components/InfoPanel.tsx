@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, ReactElement } from 'react';
 import './InfoPanel.css';
 import LEVELS from '../assets/levels';
 
@@ -36,7 +36,7 @@ interface InfoPanelProps {
   putUserNewMemonic: (character: string, object: UserCharacterInt) => void,
 }
 
-const InfoPanel: React.FC<InfoPanelProps> = (props) => {
+const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
   // getting character the panel is supposed to display
   const current = props.id;
   const mainData = props.mainData.characters;
@@ -67,7 +67,7 @@ const InfoPanel: React.FC<InfoPanelProps> = (props) => {
     setChangeMemonic(false);
   };
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value }: { name: string; value: string } = event.currentTarget;
 
     switch (name) {

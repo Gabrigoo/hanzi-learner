@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent, MouseEvent } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
@@ -25,9 +25,9 @@ const googleProvider = new firebase.auth.GoogleAuthProvider();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
 const createUserWithEmailAndPasswordHandler = async (
-  event: any, email: string, password: string, displayName: string,
+  event: FormEvent<HTMLFormElement>, email: string, password: string, displayName: string,
   setError: React.Dispatch<React.SetStateAction<string>>,
-) => {
+): Promise<void> => {
   event.preventDefault();
 
   try {
@@ -61,8 +61,8 @@ const createUserWithEmailAndPasswordHandler = async (
 };
 
 const signInWithGoogle = async (
-  event: any, setError: React.Dispatch<React.SetStateAction<string>>,
-) => {
+  event: MouseEvent<HTMLButtonElement>, setError: React.Dispatch<React.SetStateAction<string>>,
+): Promise<void> => {
   event.preventDefault();
   try {
     let userID;
@@ -99,9 +99,9 @@ const signInWithGoogle = async (
 };
 
 const signInWithEmailAndPasswordHandler = (
-  event: any, email: string, password: string,
+  event: FormEvent<HTMLFormElement>, email: string, password: string,
   setError: React.Dispatch<React.SetStateAction<string>>,
-) => {
+): void => {
   event.preventDefault();
 
   auth.signInWithEmailAndPassword(email, password).then(() => {
@@ -112,7 +112,7 @@ const signInWithEmailAndPasswordHandler = (
   });
 };
 
-const linkWithGoogle = () => {
+const linkWithGoogle = (): void => {
   if (!auth.currentUser) {
     throw new Error('No user currently logged in!');
   }
@@ -123,7 +123,7 @@ const linkWithGoogle = () => {
   });
 };
 // this is not working yet
-const signInWithFacebook = () => {
+const signInWithFacebook = (): void => {
   auth.signInWithPopup(facebookProvider).then(() => {
     history.push('/main');
   }).catch((error) => {
@@ -132,12 +132,12 @@ const signInWithFacebook = () => {
 };
 
 const sendResetEmail = (
-  event: any,
+  event: FormEvent<HTMLFormElement>,
   email: string,
   setEmail: React.Dispatch<React.SetStateAction<string>>,
   setMessage: React.Dispatch<React.SetStateAction<string>>,
   setError: React.Dispatch<React.SetStateAction<string>>,
-) => {
+): void => {
   event.preventDefault();
 
   auth.sendPasswordResetEmail(email).then(() => {
@@ -150,7 +150,7 @@ const sendResetEmail = (
   });
 };
 
-const handleSignOut = () => {
+const handleSignOut = (): void => {
   localStorage.removeItem('user');
   localStorage.removeItem('email');
   localStorage.removeItem('token');

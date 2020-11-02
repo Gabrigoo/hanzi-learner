@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, ReactElement } from 'react';
 import history from '../../history';
 import { sendResetEmail } from '../../firebase';
 import './Authentication.css';
 
-const PasswordReset = () => {
+const PasswordReset = (): ReactElement => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value }: { name: string, value: string } = event.currentTarget;
 
     if (name === 'userEmail') {

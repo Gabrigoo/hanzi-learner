@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, {
+  useState, ChangeEvent, MouseEvent, ReactElement,
+} from 'react';
 import { signInWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler } from '../../firebase';
 import history from '../../history';
 import './Authentication.css';
 
-const SignIn = () => {
+const SignIn = (): ReactElement => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value }: { name: string, value: string } = event.currentTarget;
 
     switch (name) {
@@ -23,9 +25,9 @@ const SignIn = () => {
     }
   };
 
-  const switchScreen = (event: any) => {
+  const switchScreen = (event: MouseEvent<HTMLButtonElement>) => {
     let path = '';
-    switch (event.target.name) {
+    switch (event.currentTarget.name) {
       case 'password-reset':
         path = '/passwordReset';
         break;

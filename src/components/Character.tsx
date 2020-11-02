@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactElement } from 'react';
 import './Character.css';
 import history from '../history';
 
@@ -36,7 +36,7 @@ interface CharacterProps {
   value?: string
 }
 
-const Character: React.FC<CharacterProps> = (props) => {
+const Character: React.FC<CharacterProps> = (props): ReactElement => {
   const mainData = props.mainData.characters;
   const userData = props.userData.characters;
   // these are for the small popup box when hovering over a character

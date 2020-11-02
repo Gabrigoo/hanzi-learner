@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { MouseEvent, ReactElement } from 'react';
 import './TitleBox.css';
 import { withRouter } from 'react-router-dom';
 import history from '../history';
 
-const TitleBox = () => {
-  const switchScreen = (event: any) => {
+const TitleBox = (): ReactElement => {
+  const switchScreen = (event: MouseEvent<HTMLButtonElement>) => {
     let path = '';
-    switch (event.target.name) {
+    switch (event.currentTarget.name) {
       case 'start-learn':
         path = '/learn';
         break;

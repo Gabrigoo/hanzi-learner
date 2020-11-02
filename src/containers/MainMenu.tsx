@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import TitleBox from '../components/TitleBox';
 
-const MainMenu = () => (
+const MainMenu = (): ReactElement => (
   <div>
     <TitleBox />
   </div>

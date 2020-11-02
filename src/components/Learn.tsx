@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, {
+  useState, ChangeEvent, FormEvent, ReactElement,
+} from 'react';
 import './Learn.css';
 import Strip from './Strip';
 
@@ -28,7 +30,7 @@ interface LearnProps {
   putUserNewCharacter: (character: string, object: UserCharacterInt) => void,
 }
 
-const Learn: React.FC<LearnProps> = (props) => {
+const Learn: React.FC<LearnProps> = (props): ReactElement => {
   const mainData = props.mainData.characters;
   // starts with first element of to-learn list
   const [current, setCurrent] = useState(props.newKeys[0]);
@@ -37,7 +39,7 @@ const Learn: React.FC<LearnProps> = (props) => {
   const [readingMemonic, setReadingMemonic] = useState('');
   const [remaningNum, setRemainingNum] = useState(props.newKeys.length);
   // on continue uploads new character to use DB and continue to next one
-  const handleContinue = (event: any) => {
+  const handleContinue = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const newObj = {
@@ -53,7 +55,7 @@ const Learn: React.FC<LearnProps> = (props) => {
     setRemainingNum(remaningNum - 1);
   };
 
-  const handleChange = (event:any) => {
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value }: { name: string, value: string} = event.currentTarget;
 
     switch (name) {

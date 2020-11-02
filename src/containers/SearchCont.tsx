@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {
+  useEffect, useState, useContext, MouseEvent, ReactElement,
+} from 'react';
 import { instance as axios, getMainData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import Strip from '../components/Strip';
@@ -14,7 +16,7 @@ interface MainCharacterInt {
   tone: string,
 }
 
-const SearchCont = () => {
+const SearchCont = (): ReactElement => {
   // setting up user status
   const currentUser = useContext(UserContext);
 
@@ -40,7 +42,11 @@ const SearchCont = () => {
 
   const [searchResults, setSearchResults] = useState<string[]>([]);
   // handles search by input and refreshes search results
-  const handleSearch = (event: any, query: string, main: {[key: string]: MainCharacterInt}) => {
+  const handleSearch = (
+    event: MouseEvent<HTMLButtonElement>,
+    query: string,
+    main: {[key: string]: MainCharacterInt},
+  ) => {
     event.preventDefault();
 
     if (query === '') {

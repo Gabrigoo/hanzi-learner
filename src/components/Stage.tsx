@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import './Stage.css';
 import Character from './Character';
 
@@ -35,8 +35,8 @@ interface StageProps {
   };
   level: string,
 }
-
-const Stage: React.FC<StageProps> = (props) => ( // all the elements for the current stage mapped
+// all the elements for the current stage mapped
+const Stage: React.FC<StageProps> = (props): ReactElement => (
   <div className="justify-left">
     <h1 className="levels-h1">
       Stage

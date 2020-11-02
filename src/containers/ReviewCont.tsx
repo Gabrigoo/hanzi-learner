@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {
+  useEffect, useState, useContext, ReactElement,
+} from 'react';
 import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import history from '../history';
 import { UserContext } from '../components/providers/UserProvider';
@@ -13,7 +15,7 @@ interface UserCharacterInt {
   memoRead: string,
 }
 
-const ReviewCont = () => {
+const ReviewCont = (): ReactElement => {
   // setting up user status
   const currentUser = useContext(UserContext);
 
@@ -61,9 +63,9 @@ const ReviewCont = () => {
           axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, userLevel + 1)
             .then(() => {
               console.log('PUT database overwritten');
-            }).catch((error:any) => console.error(`Error updating database: ${error}`));
+            }).catch((error: any) => console.error(`Error updating database: ${error}`));
         }
-      }).catch((error:any) => console.error(`Error loading user data: ${error}`));
+      }).catch((error: any) => console.error(`Error loading user data: ${error}`));
     }
   });
 
@@ -92,7 +94,7 @@ const ReviewCont = () => {
   const uploadReviewResults = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => console.log('PUT: upload to database'))
-      .catch((error:any) => console.error(`Error refreshing database: ${error}`));
+      .catch((error: any) => console.error(`Error refreshing database: ${error}`));
   };
 
   let content;

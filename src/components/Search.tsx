@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, {
+  useState, ChangeEvent, MouseEvent, ReactElement,
+} from 'react';
 import './Search.css';
 
 interface MainCharacterInt {
@@ -20,12 +22,12 @@ interface SearchProps {
   handleSearch: (event: any, query: string, main: {[key: string]: MainCharacterInt}) => void,
 }
 
-const Search: React.FC<SearchProps> = (props) => {
+const Search: React.FC<SearchProps> = (props): ReactElement => {
   const mainData = props.mainData.characters;
   // query is the currently searched string by the user
   const [query, setQuery] = useState('');
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value }: { name: string, value: string } = event.currentTarget;
 
     switch (name) {
@@ -37,7 +39,7 @@ const Search: React.FC<SearchProps> = (props) => {
     }
   };
 
-  const clearInput = (event: any) => {
+  const clearInput = (event: MouseEvent<HTMLButtonElement>) => {
     setQuery('');
     props.handleSearch(event, '', mainData);
   };

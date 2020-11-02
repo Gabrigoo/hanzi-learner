@@ -11,7 +11,7 @@ const getMainData = (
   source: any,
   token: string,
   setData: React.Dispatch<React.SetStateAction<any>>,
-) => {
+): void => {
   instance.get(`/main-data.json?auth=${token}`, {
     cancelToken: source.token,
   }).then((res: any) => {
@@ -31,7 +31,7 @@ const getUserData = (
   token: string,
   userId: string,
   setData: React.Dispatch<React.SetStateAction<any>>,
-) => {
+): void => {
   instance.get(`/${userId}.json?auth=${token}`, {
     cancelToken: source.token,
   }).then((res: any) => {

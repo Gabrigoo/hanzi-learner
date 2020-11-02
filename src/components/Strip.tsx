@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, SyntheticEvent, ReactElement } from 'react';
 import './Strip.css';
 import history from '../history';
 
@@ -8,9 +8,9 @@ interface StripProps {
   timeout?: number | null,
 }
 
-const Strip: React.FC<StripProps> = (props) => {
+const Strip: React.FC<StripProps> = (props): ReactElement => {
   // on the jump to whatever url saven in backtract
-  const clickHandler = (event: any) => {
+  const clickHandler = (event: SyntheticEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (props.timeout) {
       history.push(props.backTrack);

@@ -1,4 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {
+  useContext, useState, useEffect, ReactElement,
+} from 'react';
 import { instance as axios, getMainData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import Addition from '../components/Addition';
@@ -13,7 +15,7 @@ interface MainCharacterInt {
   tone: string,
 }
 
-const AdditionCont = () => {
+const AdditionCont = (): ReactElement => {
   // setting up user status
   const currentUser = useContext(UserContext);
   const [token, setToken] = useState(localStorage.getItem('token'));

@@ -1,10 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {
+  useContext, useState, useEffect, ReactElement,
+} from 'react';
 import { UserContext } from '../providers/UserProvider';
 import { linkWithGoogle, handleSignOut } from '../../firebase';
 import unknownUser from '../../assets/unknown-user.png';
 import './Authentication.css';
 
-const ProfilePage = () => {
+const ProfilePage = (): ReactElement => {
   const currentUser = useContext<any>(UserContext);
 
   const [provider, setProvider] = useState(null);
