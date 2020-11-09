@@ -5,7 +5,7 @@ import { instance as axios, getMainData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import Strip from '../components/Strip';
 import Search from '../components/Search';
-import { flattenPinyin } from '../assets/tones';
+import { toneChecker } from '../assets/tones';
 
 interface MainCharacterInt {
   chineseSimp: string,
@@ -14,6 +14,24 @@ interface MainCharacterInt {
   pinyin: string,
   stage: number,
   tone: string,
+}
+
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
+}
+
+interface MainInt {
+  characters: {
+    [key: string]: MainCharacterInt,
+  },
+  words: {
+    [key: string]: MainWordInt,
+  },
 }
 
 const SearchCont = (): ReactElement => {
@@ -45,7 +63,7 @@ const SearchCont = (): ReactElement => {
   const handleSearch = (
     event: MouseEvent<HTMLButtonElement>,
     query: string,
-    main: {[key: string]: MainCharacterInt},
+    main: MainInt,
   ) => {
     event.preventDefault();
 
@@ -53,22 +71,44 @@ const SearchCont = (): ReactElement => {
       setSearchResults([]);
     } else {
       let resultList: string[] = [];
-      Object.keys(main).forEach((item) => {
+
+      Object.keys(main.characters).forEach((item) => {
         switch (query) {
-          case main[item].chineseTrad:
-          case main[item].chineseSimp:
-          case main[item].pinyin:
-          case flattenPinyin(main[item].pinyin)[0]:
-          case main[item].english[0]:
-          case main[item].english[1]:
-          case main[item].english[2]:
+          case main.characters[item].chineseTrad:
+          case main.characters[item].chineseSimp:
+          case main.characters[item].pinyin:
+          case toneChecker(main.characters[item].pinyin)[0]:
+          case main.characters[item].english[0]:
+          case main.characters[item].english[1]:
+          case main.characters[item].english[2]:
             resultList = resultList.concat(item);
             break;
           default:
             break;
         }
       });
-      setSearchResults(resultList);
+      Object.keys(main.words).forEach((item) => {
+        switch (query) {
+          case main.words[item].chineseTrad.join(''):
+          case main.words[item].chineseSimp.join(''):
+          case main.words[item].pinyin.join(''):
+          case main.words[item].english[0]:
+          case main.words[item].english[1]:
+          case main.words[item].english[2]:
+            resultList = resultList.concat(item);
+            break;
+          default:
+            break;
+        }
+        if (main.words[item].chineseTrad.includes(query)
+        || main.words[item].chineseSimp.includes(query)
+        || main.words[item].pinyin.includes(query)
+        || toneChecker(main.words[item].pinyin)[0] === query) {
+          resultList = resultList.concat(item);
+        }
+      });
+      const uniqResultList = resultList.filter((item, pos) => resultList.indexOf(item) === pos);
+      setSearchResults(uniqResultList);
     }
   };
 

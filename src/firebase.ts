@@ -44,6 +44,7 @@ const createUserWithEmailAndPasswordHandler = async (
     }).then(() => {
       const newObject = {
         characters: 'α',
+        words: 'α',
         profileData: { currentStage: 1 },
       };
       axios.put(`/${user.uid}.json?auth=${token}`, newObject)

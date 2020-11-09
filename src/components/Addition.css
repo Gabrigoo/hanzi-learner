@@ -1,10 +1,11 @@
 #addition-grid-card {
   margin: auto;
   margin-top: 15vh;
-  height: 460px;
+  height: 480px;
   width: 400px;
   text-align: left;
   padding: 30px;
+  padding-top: 10px;
   padding-bottom: 15px;
   background: rgba(224, 187, 66, 0.8);
   border: solid rgb(32, 109, 145) 4px;
@@ -24,9 +25,25 @@ textarea {
   width: 55.5%;
   height: 54px;
 }
+#top-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#button-character {
+  border-color: rgb(45, 99, 14);
+  background:  rgb(30, 145, 58);
+}
+#button-word {
+  border-color: rgb(104, 36, 168);
+  background:  rgb(137, 47, 221);
+}
+#button-character, #button-word {
+  width: 100px;
+}
 .add-h1 {
   margin: auto;
-  margin-top: -15px;
+  margin-top: -5px;
   margin-bottom: 0px;
 }
 .hanzi-input {
@@ -58,9 +75,9 @@ textarea {
   background:  rgb(75, 112, 155);
   cursor: pointer;
 }
-#bottom-flex {
+.bottom-flex {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
 }
 #add-message {
@@ -68,6 +85,10 @@ textarea {
   text-align: center;
   color: red;
 }
+.hanzi-input-short {
+  margin-top: 5px;
+}
+
 /* The switch - the box around the slider */
 .switch {
   position: relative;

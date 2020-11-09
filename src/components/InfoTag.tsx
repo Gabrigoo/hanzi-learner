@@ -1,5 +1,5 @@
 import React, { useState, ReactElement } from 'react';
-import './Character.css';
+import './InfoTag.css';
 import history from '../history';
 
 interface MainCharacterInt {
@@ -11,6 +11,15 @@ interface MainCharacterInt {
   tone: string,
 }
 
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
+}
+
 interface UserCharacterInt {
   lastPract: number,
   level: number,
@@ -18,14 +27,20 @@ interface UserCharacterInt {
   memoRead: string,
 }
 
-interface CharacterProps {
+interface InfoTagProps {
   mainData: {
     characters: {
       [key: string]: MainCharacterInt,
     },
+    words: {
+      [key: string]: MainWordInt,
+    },
   },
   userData: {
     characters: {
+      [key: string]: UserCharacterInt,
+    },
+    words: {
       [key: string]: UserCharacterInt,
     },
     profileData: {
@@ -36,9 +51,13 @@ interface CharacterProps {
   value?: string
 }
 
-const Character: React.FC<CharacterProps> = (props): ReactElement => {
-  const mainData = props.mainData.characters;
-  const userData = props.userData.characters;
+const InfoTag: React.FC<InfoTagProps> = (props): ReactElement => {
+  // checking type of display, setting correct datasource according to it
+  const type = Object.keys(props.mainData.characters).includes(props.character) ? 'Character' : 'Word';
+  const mainData = type === 'Character'
+    ? props.mainData.characters : props.mainData.words;
+  const userData = type === 'Character'
+    ? props.userData.characters : props.userData.words;
   // these are for the small popup box when hovering over a character
   const [showBox, setShowBox] = useState(false);
 
@@ -53,6 +72,11 @@ const Character: React.FC<CharacterProps> = (props): ReactElement => {
     const path = `/info/${props.character}`;
     history.push(path);
   };
+  // modifier for level advance
+  let modifier = 0;
+  if (props.value === 'true') {
+    modifier = 1;
+  }
   // background color indicating status
   let backColor:string;
   if (props.value === 'true') {
@@ -97,7 +121,7 @@ const Character: React.FC<CharacterProps> = (props): ReactElement => {
                 <p className="short-hint">
                   Level:
                   {' '}
-                  {userData[props.character].level}
+                  {userData[props.character].level + modifier}
                 </p>
               )
               : ''}
@@ -108,8 +132,8 @@ const Character: React.FC<CharacterProps> = (props): ReactElement => {
   );
 };
 
-Character.defaultProps = {
+InfoTag.defaultProps = {
   value: '',
 };
 
-export default Character;
+export default InfoTag;

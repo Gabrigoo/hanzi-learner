@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import './Stage.css';
-import Character from './Character';
+import InfoTag from './InfoTag';
 
 interface MainCharacterInt {
   chineseSimp: string,
@@ -9,6 +9,15 @@ interface MainCharacterInt {
   pinyin: string,
   stage: number,
   tone: string,
+}
+
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
 }
 
 interface UserCharacterInt {
@@ -24,9 +33,15 @@ interface StageProps {
     characters: {
       [key: string]: MainCharacterInt,
     },
+    words: {
+      [key: string]: MainWordInt,
+    },
   },
   userData: {
     characters: {
+      [key: string]: UserCharacterInt,
+    },
+    words: {
       [key: string]: UserCharacterInt,
     },
     profileData: {
@@ -44,7 +59,7 @@ const Stage: React.FC<StageProps> = (props): ReactElement => (
     </h1>
     <div className="stage-flex">
       {props.stageData.map((item, index) => (
-        <Character
+        <InfoTag
           mainData={props.mainData}
           userData={props.userData}
           character={item}

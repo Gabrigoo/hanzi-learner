@@ -13,6 +13,15 @@ interface MainCharacterInt {
   tone: string,
 }
 
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
+}
+
 interface UserCharacterInt {
   lastPract: number,
   level: number,
@@ -25,15 +34,26 @@ interface LearnProps {
     characters: {
       [key: string]: MainCharacterInt,
     },
+    words: {
+      [key: string]: MainWordInt,
+    },
   },
   newKeys: string[],
   putUserNewCharacter: (character: string, object: UserCharacterInt) => void,
+  putUserNewWord: (word: string, object: UserCharacterInt) => void,
 }
 
 const Learn: React.FC<LearnProps> = (props): ReactElement => {
-  const mainData = props.mainData.characters;
   // starts with first element of to-learn list
   const [current, setCurrent] = useState(props.newKeys[0]);
+  const [mainData, setMainData] = useState<
+  {[key: string]: MainCharacterInt} | {[key: string]: MainWordInt}
+  >(
+    Object.keys(props.mainData.characters).includes(current)
+      ? props.mainData.characters
+      : props.mainData.words,
+  );
+
   // memonics in case they are changed
   const [meaningMemonic, setMeaningMemonic] = useState('');
   const [readingMemonic, setReadingMemonic] = useState('');
@@ -48,8 +68,18 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
       memoMean: meaningMemonic,
       memoRead: readingMemonic,
     };
-    props.putUserNewCharacter(current, newObj);
-    setCurrent(props.newKeys[props.newKeys.indexOf(current) + 1]);
+    if (Object.keys(props.mainData.characters).includes(current)) {
+      props.putUserNewCharacter(current, newObj);
+    } else {
+      props.putUserNewWord(current, newObj);
+    }
+    const next = props.newKeys[props.newKeys.indexOf(current) + 1];
+    setCurrent(next);
+    if (Object.keys(props.mainData.characters).includes(next)) {
+      setMainData(props.mainData.characters);
+    } else {
+      setMainData(props.mainData.words);
+    }
     setMeaningMemonic('');
     setReadingMemonic('');
     setRemainingNum(remaningNum - 1);
@@ -78,7 +108,7 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
   return (
     <div className="card" id="learn-card">
       <p id="chinese-simplified-label">Simplified:</p>
-      <h3 id="chinese-simplified">{mainData[current].chineseSimp}</h3>
+      <h2 id="chinese-simplified">{mainData[current].chineseSimp}</h2>
       <h1 id="chinese-traditional">{mainData[current].chineseTrad}</h1>
       <p id="remaining">
         Remanining:
@@ -99,9 +129,9 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
           value="Continue"
         />
       </form>
-      <p id="meaning-learn">
+      <p id="meaning-display">
         {mainData[current].english.filter(
-          (x) => typeof x === 'string' && x.length > 0,
+          (x: string) => x.length > 0,
         )
           .join(', ')}
       </p>
@@ -120,7 +150,7 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
         value={meaningMemonic}
         onChange={handleChange}
       />
-      <p id="reading-learn">
+      <p id="reading-display">
         {mainData[current].pinyin}
         {' '}
         (tone:

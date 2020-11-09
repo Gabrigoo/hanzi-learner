@@ -61,7 +61,7 @@ const TitleBox = (): ReactElement => {
         className="standard-button"
         onClick={switchScreen}
       >
-        Add character
+        Add new
       </button>
       <button
         name="start-search"

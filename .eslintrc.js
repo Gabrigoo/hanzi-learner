@@ -61,5 +61,7 @@ module.exports = {
     "react/prop-types": "off",
     "react/jsx-filename-extension": "off",
     "import/extensions": [1, "never"],
+    "no-unused-vars": 1,
+    "prefer-template": 1,
   },
 };

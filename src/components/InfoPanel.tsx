@@ -18,14 +18,29 @@ interface UserCharacterInt {
   memoRead: string,
 }
 
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
+}
+
 interface InfoPanelProps {
   mainData: {
     characters: {
       [key: string]: MainCharacterInt,
     },
+    words: {
+      [key: string]: MainWordInt,
+    },
   },
   userData: {
     characters: {
+      [key: string]: UserCharacterInt,
+    },
+    words: {
       [key: string]: UserCharacterInt,
     },
     profileData: {
@@ -37,10 +52,14 @@ interface InfoPanelProps {
 }
 
 const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
-  // getting character the panel is supposed to display
+  // getting data the panel is supposed to display
   const current = props.id;
-  const mainData = props.mainData.characters;
-  const userData = props.userData.characters;
+  // getting type, character or word, setting currect datascources
+  const type = Object.keys(props.mainData.characters).includes(current) ? 'Character' : 'Word';
+  const mainData = (type === 'Character')
+    ? props.mainData.characters : props.mainData.words;
+  const userData = type === 'Character'
+    ? props.userData.characters : props.userData.words;
   // memonics in case they are changed
   const [changeMemonic, setChangeMemonic] = useState(false);
   const [meaningMemonic, setMeaningMemonic] = useState('');
@@ -55,7 +74,7 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
       setReadingMemonic(userData[current].memoRead);
     }
   };
-
+  // updates memonic in the database
   const sendMemonic = () => {
     const object = {
       lastPract: userData[current].lastPract,
@@ -81,19 +100,19 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
         break;
     }
   };
-  // convert JSON date into the displayed date
-  // const dateToString = (jason:string) => {
-  //   const date = new Date(jason);
-  //   const year = date.getFullYear();
-  //   let currentMonth:string = (date.getMonth() + 1).toString();
-  //   let currentDay:string = (date.getDate()).toString();
-  //   const hours = date.getHours();
-  //   const minutes = date.getMinutes();
-  //   if (parseInt(currentMonth, 10) < 10) { currentMonth = `0${currentMonth}`; }
-  //   if (parseInt(currentDay, 10) < 10) { currentDay = `0${currentDay}`; }
+  // convert numeric date into the displayed date
+  const dateToString = (numericDate: number) => {
+    const date = new Date(numericDate);
+    const year = date.getFullYear();
+    let currentMonth:string = (date.getMonth() + 1).toString();
+    let currentDay:string = (date.getDate()).toString();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    if (parseInt(currentMonth, 10) < 10) { currentMonth = `0${currentMonth}`; }
+    if (parseInt(currentDay, 10) < 10) { currentDay = `0${currentDay}`; }
 
-  //   return `${year}/${currentMonth}/${currentDay} ${hours}:${minutes}`;
-  // };
+    return `${year}/${currentMonth}/${currentDay} ${hours}:${minutes}`;
+  };
 
   let userContent = <p>This character is not yet learned.</p>;
 
@@ -117,11 +136,13 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
 
       <div className="horiz-div">
         <p className="margin-right-30">Reading:</p>
-        <p className="read-info">{mainData[current].pinyin}</p>
+        <p className="read-info">
+          {type === 'Character' ? mainData[current].pinyin : mainData[current].pinyin}
+        </p>
         <p>{mainData[current].tone}</p>
       </div>
     </>
-  );
+  ); // from here is only displayed if user already has relevant learning data
   if (userData[current]) {
     userContent = (
       <>
@@ -182,7 +203,7 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
           )}
         <div className="horiz-div">
           <p className="margin-right-30">Last practiced:</p>
-          <p>{userData[current].lastPract}</p>
+          <p>{dateToString(userData[current].lastPract)}</p>
         </div>
         <div className="horiz-div">
           <p className="margin-right-30">User level:</p>

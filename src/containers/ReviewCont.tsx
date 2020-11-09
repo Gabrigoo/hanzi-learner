@@ -8,6 +8,18 @@ import Review from '../components/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';
 
+interface UserInt {
+  characters: {
+    [key: string]: UserCharacterInt,
+  },
+  words: {
+    [key: string]: UserCharacterInt,
+  },
+  profileData: {
+    currentStage: number
+  }
+}
+
 interface UserCharacterInt {
   lastPract: number,
   level: number,
@@ -73,17 +85,28 @@ const ReviewCont = (): ReactElement => {
     history.push('/main');
   };
   // takes in user data and return the list of characters that need reviewing
-  const dataToReview = (data: { [key: string]: UserCharacterInt }) => {
+  const dataToReview = (data: UserInt): string[] => {
     const review: string[] = [];
     const currentDate = new Date().getTime();
 
-    Object.keys(data).forEach((item) => {
-      const storedDate = data[item].lastPract;
-      if (data[item].level === 9) {
+    Object.keys(data.characters).forEach((item) => {
+      const storedDate = data.characters[item].lastPract;
+      if (data.characters[item].level === 9) {
         // Good job! No need to review this anymore
       } else if (
         Math.round((currentDate - storedDate) / (1000 * 60 * 60))
-          >= levels[data[item].level][0]
+          >= levels[data.characters[item].level][0]
+      ) {
+        review.push(item);
+      }
+    });
+    Object.keys(data.words).forEach((item) => {
+      const storedDate = data.words[item].lastPract;
+      if (data.words[item].level === 9) {
+        // Good job! No need to review this anymore
+      } else if (
+        Math.round((currentDate - storedDate) / (1000 * 60 * 60))
+          >= levels[data.words[item].level][0]
       ) {
         review.push(item);
       }
@@ -91,10 +114,15 @@ const ReviewCont = (): ReactElement => {
     return review;
   };
   // as name suggests, uploads the results of the review
-  const uploadReviewResults = (character: string, object: UserCharacterInt) => {
+  const putUserNewCharacter = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
-      .then(() => console.log('PUT: upload to database'))
-      .catch((error: any) => console.error(`Error refreshing database: ${error}`));
+      .then(() => { console.log('PUT: new user data uploaded'); })
+      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
+  };
+  const putUserNewWord = (word: string, object: UserCharacterInt) => {
+    axios.put(`/${userId}/words/${word}.json?auth=${token}`, object)
+      .then(() => { console.log('PUT: new user data uploaded'); })
+      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
   };
 
   let content;
@@ -102,15 +130,16 @@ const ReviewCont = (): ReactElement => {
   if (mainData && userData) {
     if (userData.characters === 'α') {
       content = <Strip message="You do not have any characters to review yet. Please visit Learn first." backTrack="/main" timeout={4000} />;
-    } else if (Object.keys(dataToReview(userData.characters)).length === 0) {
+    } else if (dataToReview(userData).length === 0) {
       content = <Strip message="No characters to review right now" backTrack="/main" timeout={4000} />;
     } else {
       content = (
         <Review
           mainData={mainData}
           userData={userData}
-          reviewData={dataToReview(userData.characters)}
-          uploadReviewResults={uploadReviewResults}
+          reviewData={dataToReview(userData)}
+          putUserNewCharacter={putUserNewCharacter}
+          putUserNewWord={putUserNewWord}
           mainMenu={mainMenu}
         />
       );

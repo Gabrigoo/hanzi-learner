@@ -12,18 +12,39 @@ interface MainCharacterInt {
   tone: string,
 }
 
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
+}
+
+interface MainInt {
+  characters: {
+    [key: string]: MainCharacterInt,
+  },
+  words: {
+    [key: string]: MainWordInt,
+  },
+}
+
 interface SearchProps {
   mainData: {
     characters: {
       [key: string]: MainCharacterInt,
     },
+    words: {
+      [key: string]: MainWordInt,
+    },
   },
   searchResults: string[],
-  handleSearch: (event: any, query: string, main: {[key: string]: MainCharacterInt}) => void,
+  handleSearch: (event: any, query: string, main: MainInt) => void,
 }
 
 const Search: React.FC<SearchProps> = (props): ReactElement => {
-  const mainData = props.mainData.characters;
+  const mainData = props.mainData;
   // query is the currently searched string by the user
   const [query, setQuery] = useState('');
 
@@ -44,20 +65,24 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
     props.handleSearch(event, '', mainData);
   };
   // all search results mapped
-  const resultList = props.searchResults.map((item, index) => (
-    <div id="result-flex" key={item + index}>
-      <div id="smallflex-1">
-        <p>{mainData[item].chineseTrad}</p>
-        <p>{mainData[item].chineseSimp}</p>
-        <p>{mainData[item].pinyin}</p>
+  const resultList = props.searchResults.map((item, index) => {
+    const data = Object.keys(mainData.characters).includes(item)
+      ? mainData.characters : mainData.words;
+    return (
+      <div id="result-flex" key={item + index}>
+        <div id="smallflex-1">
+          <p>{data[item].chineseTrad}</p>
+          <p>{data[item].chineseSimp}</p>
+          <p>{data[item].pinyin}</p>
+        </div>
+        <div id="smallflex-2">
+          <p>{data[item].english[0]}</p>
+          <p>{data[item].english[1]}</p>
+          <p>{data[item].english[2]}</p>
+        </div>
       </div>
-      <div id="smallflex-2">
-        <p>{mainData[item].english[0]}</p>
-        <p>{mainData[item].english[1]}</p>
-        <p>{mainData[item].english[2]}</p>
-      </div>
-    </div>
-  ));
+    );
+  });
 
   return (
     <div id="search-card" className="card">

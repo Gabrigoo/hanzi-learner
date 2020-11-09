@@ -15,6 +15,15 @@ interface MainCharacterInt {
   tone: string,
 }
 
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
+}
+
 interface UserCharacterInt {
   lastPract: number,
   level: number,
@@ -26,10 +35,16 @@ interface MainInt {
   characters: {
     [key: string]: MainCharacterInt,
   },
+  words: {
+    [key: string]: MainWordInt,
+  },
 }
 
 interface UserInt {
   characters: {
+    [key: string]: UserCharacterInt,
+  },
+  words: {
     [key: string]: UserCharacterInt,
   },
   profileData: {
@@ -66,14 +81,23 @@ const LearnCont = (): ReactElement => {
   // determines which items are to be learned by user level
   const getNewItems = (main: MainInt, user: UserInt) => {
     const userStage = user.profileData.currentStage;
-    const dataKeys = Object.keys(main.characters)
+    const dataCharKeys = Object.keys(main.characters)
       .filter((char) => main.characters[char].stage <= userStage);
-    const userKeys = Object.keys(user.characters);
+    const dataWordKeys = Object.keys(main.words)
+      .filter((char) => main.words[char].stage <= userStage);
+    const dataKeys = dataCharKeys.concat(dataWordKeys);
+    const userKeys = Object.keys(user.characters).concat(Object.keys(user.words));
+
     return dataKeys.filter((char) => !userKeys.includes(char));
   };
   // adds learned character from main DB to user DB
   const putUserNewCharacter = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
+      .then(() => { console.log('PUT: new user data uploaded'); })
+      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
+  };
+  const putUserNewWord = (word: string, object: UserCharacterInt) => {
+    axios.put(`/${userId}/words/${word}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
       .catch((error: any) => console.error(`Error uploading new data: ${error}`));
   };
@@ -88,6 +112,7 @@ const LearnCont = (): ReactElement => {
         <Learn
           mainData={mainData}
           putUserNewCharacter={putUserNewCharacter}
+          putUserNewWord={putUserNewWord}
           newKeys={getNewItems(mainData, userData)}
         />
       );

@@ -50,10 +50,9 @@
 }
 #mapped-character {
     height: 35px;
-    width: 35px;
     font-size: 20px;
     margin: 0px;
-    padding: 1px 3px 1px 3px;
+    padding: 1px 5px 1px 5px;
 }
 #mapped-character:hover {
     cursor: pointer;

@@ -15,6 +15,15 @@ interface MainCharacterInt {
   tone: string,
 }
 
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
+}
+
 const AdditionCont = (): ReactElement => {
   // setting up user status
   const currentUser = useContext(UserContext);
@@ -42,10 +51,22 @@ const AdditionCont = (): ReactElement => {
       .catch((error: any) => console.error(`Error adding new entry: ${error}`));
   };
 
+  const uploadNewWord = (word: string, object: MainWordInt) => {
+    axios.put(`/main-data/words/${word}.json?auth=${token}`, object)
+      .then(() => { console.log('PUT: Upload complete'); })
+      .catch((error: any) => console.error(`Error adding new entry: ${error}`));
+  };
+
   let content;
 
   if (mainData) {
-    content = <Addition mainData={mainData} uploadNewCharacter={uploadNewCharacter} />;
+    content = (
+      <Addition
+        mainData={mainData}
+        uploadNewCharacter={uploadNewCharacter}
+        uploadNewWord={uploadNewWord}
+      />
+    );
   } else if (!token) {
     content = <Strip message="No user is signed in" timeout={4000} />;
   } else {

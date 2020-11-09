@@ -15,9 +15,21 @@ interface MainCharacterInt {
   tone: string,
 }
 
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
+}
+
 interface MainInt {
   characters: {
     [key: string]: MainCharacterInt,
+  },
+  words: {
+    [key: string]: MainWordInt,
   },
 }
 
@@ -30,6 +42,9 @@ interface UserCharacterInt {
 
 interface UserInt {
   characters: {
+    [key: string]: UserCharacterInt,
+  },
+  words: {
     [key: string]: UserCharacterInt,
   },
   profileData: {
@@ -73,10 +88,15 @@ const StagesCont = (): ReactElement => {
     return highest;
   };
   // only returns data that is the same as current stage
-  const sortDataToStage = (data: {[key: string]: MainCharacterInt}, currentStage: number) => {
+  const sortDataToStage = (data: MainInt, currentStage: number) => {
     const stageArray: string[] = [];
-    Object.keys(data).forEach((item) => {
-      if (data[item].stage === currentStage) {
+    Object.keys(data.characters).forEach((item) => {
+      if (data.characters[item].stage === currentStage) {
+        stageArray.push(item);
+      }
+    });
+    Object.keys(data.words).forEach((item) => {
+      if (data.words[item].stage === currentStage) {
         stageArray.push(item);
       }
     });
@@ -86,7 +106,7 @@ const StagesCont = (): ReactElement => {
   const loopThrough = (highestStage: number, main: MainInt, user: UserInt) => {
     const items = [];
     for (let i = 1; i <= highestStage; i += 1) {
-      items.push(<Stage level={i.toString()} stageData={sortDataToStage(main.characters, i)} mainData={main} userData={user} key={`stage${i}`} />);
+      items.push(<Stage level={i.toString()} stageData={sortDataToStage(main, i)} mainData={main} userData={user} key={`stage${i}`} />);
     }
     return items;
   };

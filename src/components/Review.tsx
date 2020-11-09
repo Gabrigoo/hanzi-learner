@@ -1,19 +1,28 @@
 import React, {
   useState, ChangeEvent, FormEvent, ReactElement,
 } from 'react';
-import Character from './Character';
+import InfoTag from './InfoTag';
 import './Review.css';
 import { similarity, editDistance } from '../assets/levenshtein_distance';
-import { flattenPinyin } from '../assets/tones';
+import { toneChecker } from '../assets/tones';
 
 interface MainCharacterInt {
-    chineseSimp: string,
-    chineseTrad: string,
-    english: string[],
-    pinyin: string,
-    stage: number,
-    tone: string,
-  }
+  chineseSimp: string,
+  chineseTrad: string,
+  english: string[],
+  pinyin: string,
+  stage: number,
+  tone: string,
+}
+
+interface MainWordInt {
+  chineseSimp: string[],
+  chineseTrad: string[],
+  english: string[],
+  pinyin: string[],
+  stage: number,
+  tone: string[],
+}
 
 interface UserCharacterInt {
   lastPract: number,
@@ -27,9 +36,15 @@ interface ReviewProps {
     characters: {
       [key: string]: MainCharacterInt,
     },
+    words: {
+      [key: string]: MainWordInt,
+    },
   },
   userData: {
       characters: {
+        [key: string]: UserCharacterInt,
+      },
+      words: {
         [key: string]: UserCharacterInt,
       },
       profileData: {
@@ -37,17 +52,28 @@ interface ReviewProps {
       }
     };
   reviewData: string[];
-  uploadReviewResults: (character: string, object: UserCharacterInt) => void,
+  putUserNewCharacter: (character: string, object: UserCharacterInt) => void,
+  putUserNewWord: (character: string, object: UserCharacterInt) => void,
   mainMenu: () => void,
 }
 
 const Review: React.FC<ReviewProps> = (props): ReactElement => {
-  const mainData = props.mainData.characters;
-  const userData = props.userData.characters;
   // randomizes the sequence
   const [shuffledDeck] = useState(shuffle(props.reviewData));
   // current character being tested
   const [current, setCurrent] = useState(shuffledDeck[0]);
+  const [mainData, setMainData] = useState<
+  {[key: string]: MainCharacterInt} | {[key: string]: MainWordInt}
+  >(
+    Object.keys(props.mainData.characters).includes(current)
+      ? props.mainData.characters
+      : props.mainData.words,
+  );
+  const [userData, setUserData] = useState<{[key: string]: UserCharacterInt}>(
+    Object.keys(props.mainData.characters).includes(current)
+      ? props.userData.characters
+      : props.userData.words,
+  );
   // how many time an answer was given to this particular character so far
   const [tries, setTries] = useState(0);
   // solution is currently submitted for judgement
@@ -117,51 +143,49 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
 
     if (meanInput === '' || readInput === '') {
       // do nothing
-    } else if (solutionSubmitted) {
-      handleContinue(event);
     } else { // evaluates the given answer and displays results
-      (document.getElementById('meaning-input-box') as HTMLInputElement).disabled = true;
-      (document.getElementById('reading-input-box') as HTMLInputElement).disabled = true;
+      (document.getElementById('meaning-input') as HTMLInputElement).disabled = true;
+      (document.getElementById('reading-input') as HTMLInputElement).disabled = true;
 
       setTries(tries + 1);
 
       let meanCorrect = 0; // 0: incorrect, 1: partially correct, 2: completely correct
       let readCorrect = 0;
+      // remove accidental spaces
+      const formattedMeanInput = meanInput.trim();
+      const formattedReadInput = readInput.trim();
 
       // check if meaning is correct first
       for (let i = 0; i < 3; i += 1) { // loop through possible correct solutions from DB
         // use levensthein method to check
-        const editDist = editDistance(mainData[current].english[i], meanInput);
-        const similar = similarity(mainData[current].english[i], meanInput);
+        const editDist = editDistance(mainData[current].english[i], formattedMeanInput);
+        const similar = similarity(mainData[current].english[i], formattedMeanInput);
         // check if input and data difference are inside tolerance
-        if (meanInput.length > 1 && (editDist < 2 || similar > 0.75)) {
+        if (formattedMeanInput.length > 1 && (editDist < 2 || similar > 0.75)) {
           meanCorrect += 1;
-          if (mainData[current].english[i] === meanInput) {
+          if (mainData[current].english[i] === formattedMeanInput) {
             meanCorrect += 1;
           }
         }
       }
-
       // then check reading
-      let toneInput = '5';
-      let readingInputFlat:string;
-      // check if user marked tone at the end
-      if ((!Number.isNaN(readInput.slice(-1)))
-          && parseInt(readInput.slice(-1), 10) < 6
-          && parseInt(readInput.slice(-1), 10) > 0) {
-        readingInputFlat = readInput.substring(0, readInput.length - 1);
-        toneInput = readInput.split('').splice(-1)[0];
-      } else { // else check if tone is in character
-        readingInputFlat = flattenPinyin(readInput)[0];
-        toneInput = flattenPinyin(readInput)[1];
-      }
+      // remove tone from input in order to compare
+      const readingInputFlat = toneChecker(formattedReadInput)[0];
+      const toneInput = toneChecker(formattedReadInput)[1];
+      // have to turn into an array in case we have an array as data
+      const toneInputArray = Array(5).fill('');
+      toneInputArray.splice(0, toneInput.length, ...toneInput.split(''));
       // remove tone from solution in order to compare
-      const readDataFlat = flattenPinyin(mainData[current].pinyin)[0];
+      const readDataFlat = toneChecker(mainData[current].pinyin)[0];
       // check if reading is correct without tone
       if (readDataFlat === readingInputFlat) {
         readCorrect += 1;
         // check if tone is also correct
-        if (mainData[current].tone === toneInput) {
+        if (mainData[current].tone instanceof Array) {
+          if (JSON.stringify(mainData[current].tone) === JSON.stringify(toneInputArray)) {
+            readCorrect += 1;
+          }
+        } else if (mainData[current].tone === toneInput) {
           readCorrect += 1;
         }
       }
@@ -172,24 +196,24 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       // color input boxes depending on result
       switch (meanCorrect) {
         case 0:
-          (document.getElementById('meaning-input-box') as HTMLInputElement).style.backgroundColor = 'red';
+          (document.getElementById('meaning-input') as HTMLInputElement).style.backgroundColor = 'red';
           break;
         case 1:
-          (document.getElementById('meaning-input-box') as HTMLInputElement).style.backgroundColor = 'yellow';
+          (document.getElementById('meaning-input') as HTMLInputElement).style.backgroundColor = 'yellow';
           break;
         default:
-          (document.getElementById('meaning-input-box') as HTMLInputElement).style.backgroundColor = 'green';
+          (document.getElementById('meaning-input') as HTMLInputElement).style.backgroundColor = 'green';
           break;
       }
       switch (readCorrect) {
         case 0:
-          (document.getElementById('reading-input-box') as HTMLInputElement).style.backgroundColor = 'red';
+          (document.getElementById('reading-input') as HTMLInputElement).style.backgroundColor = 'red';
           break;
         case 1:
-          (document.getElementById('reading-input-box') as HTMLInputElement).style.backgroundColor = 'yellow';
+          (document.getElementById('reading-input') as HTMLInputElement).style.backgroundColor = 'yellow';
           break;
         default:
-          (document.getElementById('reading-input-box') as HTMLInputElement).style.backgroundColor = 'green';
+          (document.getElementById('reading-input') as HTMLInputElement).style.backgroundColor = 'green';
           break;
       }
       // this is needed so we can advance to the next step
@@ -201,10 +225,10 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   const handleContinue = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
-    (document.getElementById('meaning-input-box') as HTMLInputElement).style.backgroundColor = 'white';
-    (document.getElementById('reading-input-box') as HTMLInputElement).style.backgroundColor = 'white';
-    (document.getElementById('meaning-input-box') as HTMLInputElement).disabled = false;
-    (document.getElementById('reading-input-box') as HTMLInputElement).disabled = false;
+    (document.getElementById('meaning-input') as HTMLInputElement).style.backgroundColor = 'white';
+    (document.getElementById('reading-input') as HTMLInputElement).style.backgroundColor = 'white';
+    (document.getElementById('meaning-input') as HTMLInputElement).disabled = false;
+    (document.getElementById('reading-input') as HTMLInputElement).disabled = false;
 
     // this is only activates when the user finally gets it right (regardless of number of tries)
     if (solutionCorrect) {
@@ -219,6 +243,10 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       if (changeMemonic) {
         userCharObject.memoMean = newMeaningMemonic;
         userCharObject.memoRead = newReadingMemonic;
+      }
+      // user will always advance to level 1, regardless of performance
+      if (userCharObject.level === 0) {
+        userCharObject.level = 1;
       }
       if (tries === 1) { // correct solution on first try, advance level
         userCharObject.level += 1;
@@ -236,14 +264,31 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
         setIncorrectList(inCorrectList.concat(current));
       }
       // refresh database with results
-      props.uploadReviewResults(current, userCharObject);
-
+      if (Object.keys(props.mainData.characters).includes(current)) {
+        props.putUserNewCharacter(current, userCharObject);
+      } else {
+        props.putUserNewWord(current, userCharObject);
+      }
       // resets most things
       setChangeMemonic(false);
       setNewReadingMemonic('');
       setNewMeaningMemonic('');
+      // uploads result
+      if (Object.keys(props.mainData.characters).includes(current)) {
+        props.putUserNewCharacter(current, userCharObject);
+      } else {
+        props.putUserNewWord(current, userCharObject);
+      }
       // advances to next character
-      setCurrent(shuffledDeck[shuffledDeck.indexOf(current) + 1]);
+      const next = shuffledDeck[shuffledDeck.indexOf(current) + 1];
+      if (Object.keys(props.mainData.characters).includes(next)) {
+        setMainData(props.mainData.characters);
+        setUserData(props.userData.characters);
+      } else {
+        setMainData(props.mainData.words);
+        setUserData(props.userData.words);
+      }
+      setCurrent(next);
       setTries(0);
       setRemainingNum(remaningNum - 1);
     }
@@ -252,7 +297,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     setMeaning('');
     setReading('');
 
-    (document.getElementById('meaning-input-box') as HTMLInputElement).focus();
+    (document.getElementById('meaning-input') as HTMLInputElement).focus();
   };
 
   // go into summary when no characters left to review
@@ -264,7 +309,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           <div className="mapping-div" id="correct-map">
             {correctList.length === 0 ? 'No items'
               : correctList.map((item, index) => (
-                <Character
+                <InfoTag
                   mainData={props.mainData}
                   userData={props.userData}
                   character={item}
@@ -277,7 +322,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           <div className="mapping-div" id="incorrect-map">
             {inCorrectList.length === 0 ? 'No items'
               : inCorrectList.map((item, index) => (
-                <Character
+                <InfoTag
                   mainData={props.mainData}
                   userData={props.userData}
                   character={item}
@@ -301,15 +346,13 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   return (
     <div>
       <div className="card" id="review-card">
-        <div id="summary-flex">
-          <button
-            id="summary-button"
-            className="standard-button"
-            onClick={goToSummary}
-          >
-            Summary
-          </button>
-        </div>
+        <button
+          id="summary-button"
+          className="standard-button"
+          onClick={goToSummary}
+        >
+          Summary
+        </button>
         <p id="chinese-simplified-label">Simplified:</p>
         <h2 id="chinese-simplified">{mainData[current].chineseSimp}</h2>
         <h1 id="chinese-traditional">{mainData[current].chineseTrad}</h1>
@@ -341,14 +384,14 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           {remaningNum}
         </p>
         <label
-          id="meaning-input-box-label"
+          id="meaning-label"
           form="submit-button-form"
-          htmlFor="meaning-input-box"
+          htmlFor="meaning-input"
         >
           Meaning:
         </label>
         <input
-          id="meaning-input-box"
+          id="meaning-input"
           form="submit-button-form"
           type="text"
           name="meaning"
@@ -356,14 +399,14 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           onChange={handleChange}
         />
         <label
-          id="reading-input-box-label"
+          id="reading-label"
           form="submit-button-form"
-          htmlFor="reading-input-box-label"
+          htmlFor="reading-input-box"
         >
           Reading:
         </label>
         <input
-          id="reading-input-box"
+          id="reading-input"
           form="submit-button-form"
           type="text"
           name="reading"
@@ -373,7 +416,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
         <form
           id="submit-button-form"
           autoComplete="off"
-          onSubmit={handleSubmit}
+          onSubmit={solutionSubmitted ? handleContinue : handleSubmit}
         >
           <input
             id="board-submit-button"
