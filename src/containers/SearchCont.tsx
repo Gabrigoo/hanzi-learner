@@ -1,38 +1,12 @@
 import React, {
-  useEffect, useState, useContext, MouseEvent, ReactElement,
+  useEffect, useState, useContext, MouseEvent, FormEvent, ReactElement,
 } from 'react';
 import { instance as axios, getMainData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
+import { MainInt } from '../interfaces';
 import Strip from '../components/Strip';
-import Search from '../components/Search';
+import Search from '../components/Info/Search';
 import { toneChecker } from '../assets/tones';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
-
-interface MainInt {
-  characters: {
-    [key: string]: MainCharacterInt,
-  },
-  words: {
-    [key: string]: MainWordInt,
-  },
-}
 
 const SearchCont = (): ReactElement => {
   // setting up user status
@@ -61,7 +35,7 @@ const SearchCont = (): ReactElement => {
   const [searchResults, setSearchResults] = useState<string[]>([]);
   // handles search by input and refreshes search results
   const handleSearch = (
-    event: MouseEvent<HTMLButtonElement>,
+    event: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>,
     query: string,
     main: MainInt,
   ) => {

@@ -1,56 +1,12 @@
 import React, {
   useContext, useState, useEffect, ReactElement,
 } from 'react';
+import { AxiosError } from 'axios';
 import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
+import { UserCharacterInt, MainInt, UserInt } from '../interfaces';
 import Learn from '../components/Learn';
 import Strip from '../components/Strip';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
-
-interface UserCharacterInt {
-  lastPract: number,
-  level: number,
-  memoMean: string,
-  memoRead: string,
-}
-
-interface MainInt {
-  characters: {
-    [key: string]: MainCharacterInt,
-  },
-  words: {
-    [key: string]: MainWordInt,
-  },
-}
-
-interface UserInt {
-  characters: {
-    [key: string]: UserCharacterInt,
-  },
-  words: {
-    [key: string]: UserCharacterInt,
-  },
-  profileData: {
-    currentStage: number
-  }
-}
 
 const LearnCont = (): ReactElement => {
   // setting up user status
@@ -94,12 +50,12 @@ const LearnCont = (): ReactElement => {
   const putUserNewCharacter = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
+      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
   };
   const putUserNewWord = (word: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/words/${word}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
+      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
   };
 
   let content;

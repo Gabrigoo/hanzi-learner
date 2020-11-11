@@ -1,28 +1,12 @@
 import React, {
   useContext, useState, useEffect, ReactElement,
 } from 'react';
+import { AxiosError } from 'axios';
 import { instance as axios, getMainData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
+import { MainCharacterInt, MainWordInt } from '../interfaces';
 import Addition from '../components/Addition';
 import Strip from '../components/Strip';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
 
 const AdditionCont = (): ReactElement => {
   // setting up user status
@@ -48,13 +32,13 @@ const AdditionCont = (): ReactElement => {
   const uploadNewCharacter = (character: string, object: MainCharacterInt) => {
     axios.put(`/main-data/characters/${character}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: Upload complete'); })
-      .catch((error: any) => console.error(`Error adding new entry: ${error}`));
+      .catch((error: AxiosError) => console.error(`Error adding new entry: ${error}`));
   };
 
   const uploadNewWord = (word: string, object: MainWordInt) => {
     axios.put(`/main-data/words/${word}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: Upload complete'); })
-      .catch((error: any) => console.error(`Error adding new entry: ${error}`));
+      .catch((error: AxiosError) => console.error(`Error adding new entry: ${error}`));
   };
 
   let content;

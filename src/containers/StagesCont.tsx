@@ -3,54 +3,9 @@ import React, {
 } from 'react';
 import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
+import { MainCharacterInt, MainInt, UserInt } from '../interfaces';
 import Strip from '../components/Strip';
-import Stage from '../components/Stage';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
-
-interface MainInt {
-  characters: {
-    [key: string]: MainCharacterInt,
-  },
-  words: {
-    [key: string]: MainWordInt,
-  },
-}
-
-interface UserCharacterInt {
-  lastPract: number,
-  level: number,
-  memoMean: string,
-  memoRead: string,
-}
-
-interface UserInt {
-  characters: {
-    [key: string]: UserCharacterInt,
-  },
-  words: {
-    [key: string]: UserCharacterInt,
-  },
-  profileData: {
-    currentStage: number
-  }
-}
+import Stage from '../components/Info/Stage';
 
 const StagesCont = (): ReactElement => {
   // setting up user status

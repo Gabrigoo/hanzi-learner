@@ -2,8 +2,9 @@ import React, { FormEvent, MouseEvent } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import history from './history';
+import { AxiosError } from 'axios';
 import { instance as axios } from './axios-instance';
+import history from './history';
 import handleError from './components/Authentication/HandleAuthError';
 
 const firebaseConfig = {
@@ -49,7 +50,7 @@ const createUserWithEmailAndPasswordHandler = async (
       };
       axios.put(`/${user.uid}.json?auth=${token}`, newObject)
         .then(() => { console.log('PUT: new user data created!'); })
-        .catch((error: any) => console.error(`Error uploading new data: ${error}`));
+        .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
       history.push('/main');
     }).catch((error) => {
       console.error('Error updating profile data: ', error);
@@ -87,9 +88,9 @@ const signInWithGoogle = async (
       };
       axios.put(`/${userID}.json?auth=${token}`, newObject)
         .then(() => { console.log('PUT: new user data created!'); })
-        .catch((error: any) => {
+        .catch((error: AxiosError) => {
           console.error(`Error creating new user data: ${error}`);
-          throw new Error(error);
+          throw error;
         });
     }
     history.push('/main');
@@ -107,7 +108,7 @@ const signInWithEmailAndPasswordHandler = (
 
   auth.signInWithEmailAndPassword(email, password).then(() => {
     history.push('/main');
-  }).catch((error) => {
+  }).catch((error: AxiosError) => {
     console.error('Error signing in with email and password: ', error);
     handleError(error, setError);
   });
@@ -119,7 +120,7 @@ const linkWithGoogle = (): void => {
   }
   auth.currentUser.linkWithPopup(googleProvider).then(() => {
     history.push('/main');
-  }).catch((error) => {
+  }).catch((error: AxiosError) => {
     console.log(`Error linking with google: ${error}`);
   });
 };
@@ -127,7 +128,7 @@ const linkWithGoogle = (): void => {
 const signInWithFacebook = (): void => {
   auth.signInWithPopup(facebookProvider).then(() => {
     history.push('/main');
-  }).catch((error) => {
+  }).catch((error: AxiosError) => {
     console.log(error.message);
   });
 };
@@ -145,7 +146,7 @@ const sendResetEmail = (
     setEmail('');
     setMessage('An email has been sent to you!');
     setTimeout(() => { setMessage(''); }, 4000);
-  }).catch((error) => {
+  }).catch((error: AxiosError) => {
     console.error('Error resetting password:', error);
     handleError(error, setError);
   });

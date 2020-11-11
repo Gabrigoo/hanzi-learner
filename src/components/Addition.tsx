@@ -2,25 +2,8 @@ import React, {
   useState, useEffect, ChangeEvent, FormEvent, ReactElement, MouseEvent,
 } from 'react';
 import './Addition.css';
+import { MainCharacterInt, MainWordInt } from '../interfaces';
 import { TONES } from '../assets/tones';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
 
 interface AdditionProps {
   mainData: {
@@ -191,8 +174,8 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
 
     if (chineseTrad[0] === '') {
       alert('Insert a valid character');
-    } else if (chineseTrad.length > 1 && inputType === 'Character') {
-      alert('For multiple characters, please use Word input');
+    } else if (chineseTrad[0].length > 1) {
+      alert('For multiple characters, please input them separately in Word');
     } else if (!chineseSimp || !english[0] || !pinyin || !stage) {
       alert('Please fill all fields');
     } else if (dataKeys.includes(chineseTrad.join('')) && overwrite === false) {

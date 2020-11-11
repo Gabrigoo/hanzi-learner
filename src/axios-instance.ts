@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const instance: any = axios.create({
   baseURL: 'https://fir-sample-project-5efcf.firebaseio.com/',
@@ -17,7 +17,7 @@ const getMainData = (
   }).then((res: any) => {
     setData(res.data);
     console.log('GET: main data loaded');
-  }).catch((error: any) => {
+  }).catch((error: AxiosError) => {
     if (instance.isCancel(error)) {
       console.log(error);
     } else {
@@ -37,7 +37,7 @@ const getUserData = (
   }).then((res: any) => {
     setData(res.data);
     console.log('GET: user data loaded');
-  }).catch((error: any) => {
+  }).catch((error: AxiosError) => {
     if (instance.isCancel(error)) {
       console.log(error);
     } else {

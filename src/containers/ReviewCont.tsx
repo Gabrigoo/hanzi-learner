@@ -1,31 +1,14 @@
 import React, {
   useEffect, useState, useContext, ReactElement,
 } from 'react';
+import { AxiosError } from 'axios';
 import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import history from '../history';
 import { UserContext } from '../components/providers/UserProvider';
+import { UserCharacterInt, UserInt } from '../interfaces';
 import Review from '../components/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';
-
-interface UserInt {
-  characters: {
-    [key: string]: UserCharacterInt,
-  },
-  words: {
-    [key: string]: UserCharacterInt,
-  },
-  profileData: {
-    currentStage: number
-  }
-}
-
-interface UserCharacterInt {
-  lastPract: number,
-  level: number,
-  memoMean: string,
-  memoRead: string,
-}
 
 const ReviewCont = (): ReactElement => {
   // setting up user status
@@ -57,7 +40,7 @@ const ReviewCont = (): ReactElement => {
     if (mainData && userData) {
       const userLevel = userData.profileData.currentStage;
 
-      axios.get(`/${userId}/characters.json?auth=${token}`).then((res:any) => {
+      axios.get(`/${userId}/characters.json?auth=${token}`).then((res: any) => {
         console.log('GET user data loaded');
         // possible characters from main DB for users current level
         const currentLevelKeys = Object.keys(mainData.characters)
@@ -75,9 +58,9 @@ const ReviewCont = (): ReactElement => {
           axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, userLevel + 1)
             .then(() => {
               console.log('PUT database overwritten');
-            }).catch((error: any) => console.error(`Error updating database: ${error}`));
+            }).catch((error: AxiosError) => console.error(`Error updating database: ${error}`));
         }
-      }).catch((error: any) => console.error(`Error loading user data: ${error}`));
+      }).catch((error: AxiosError) => console.error(`Error loading user data: ${error}`));
     }
   });
 
@@ -117,12 +100,12 @@ const ReviewCont = (): ReactElement => {
   const putUserNewCharacter = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
+      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
   };
   const putUserNewWord = (word: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/words/${word}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
+      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
   };
 
   let content;

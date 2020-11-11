@@ -2,32 +2,8 @@ import React, {
   useState, ChangeEvent, FormEvent, ReactElement,
 } from 'react';
 import './Learn.css';
+import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../interfaces';
 import Strip from './Strip';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
-
-interface UserCharacterInt {
-  lastPract: number,
-  level: number,
-  memoMean: string,
-  memoRead: string,
-}
 
 interface LearnProps {
   mainData: {

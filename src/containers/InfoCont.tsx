@@ -2,17 +2,12 @@ import React, {
   useContext, useState, useEffect, ReactElement,
 } from 'react';
 import { useParams } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
-import InfoPanel from '../components/InfoPanel';
+import { UserCharacterInt } from '../interfaces';
+import InfoPanel from '../components/Info/InfoPanel';
 import Strip from '../components/Strip';
-
-interface UserCharacterInt {
-  lastPract: number,
-  level: number,
-  memoMean: string,
-  memoRead: string,
-}
 
 const InfoCont = (): ReactElement => {
   // getting character the panel is supposed to display
@@ -46,7 +41,7 @@ const InfoCont = (): ReactElement => {
   const putUserNewMemonic = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
       .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: any) => console.error(`Error uploading new data: ${error}`));
+      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
   };
 
   let content;

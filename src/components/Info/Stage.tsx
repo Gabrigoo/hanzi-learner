@@ -1,31 +1,7 @@
 import React, { ReactElement } from 'react';
 import './Stage.css';
+import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 import InfoTag from './InfoTag';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
-
-interface UserCharacterInt {
-  lastPract: number,
-  level: number,
-  memoMean: string,
-  memoRead: string,
-}
 
 interface StageProps {
   stageData: string[];

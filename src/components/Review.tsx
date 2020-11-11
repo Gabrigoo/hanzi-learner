@@ -1,35 +1,11 @@
 import React, {
   useState, ChangeEvent, FormEvent, ReactElement,
 } from 'react';
-import InfoTag from './InfoTag';
+import InfoTag from './Info/InfoTag';
 import './Review.css';
+import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../interfaces';
 import { similarity, editDistance } from '../assets/levenshtein_distance';
 import { toneChecker } from '../assets/tones';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
-
-interface UserCharacterInt {
-  lastPract: number,
-  level: number,
-  memoMean: string,
-  memoRead: string,
-}
 
 interface ReviewProps {
   mainData: {

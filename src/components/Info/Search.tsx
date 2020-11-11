@@ -1,34 +1,8 @@
 import React, {
-  useState, ChangeEvent, MouseEvent, ReactElement,
+  useState, ChangeEvent, MouseEvent, FormEvent, ReactElement,
 } from 'react';
+import { MainCharacterInt, MainWordInt, MainInt } from '../../interfaces';
 import './Search.css';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
-
-interface MainInt {
-  characters: {
-    [key: string]: MainCharacterInt,
-  },
-  words: {
-    [key: string]: MainWordInt,
-  },
-}
 
 interface SearchProps {
   mainData: {
@@ -40,7 +14,11 @@ interface SearchProps {
     },
   },
   searchResults: string[],
-  handleSearch: (event: any, query: string, main: MainInt) => void,
+  handleSearch: (
+    event: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>,
+    query: string,
+    main: MainInt
+    ) => void,
 }
 
 const Search: React.FC<SearchProps> = (props): ReactElement => {

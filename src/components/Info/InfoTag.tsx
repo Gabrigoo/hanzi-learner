@@ -1,31 +1,7 @@
 import React, { useState, ReactElement } from 'react';
 import './InfoTag.css';
-import history from '../history';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
-
-interface UserCharacterInt {
-  lastPract: number,
-  level: number,
-  memoMean: string,
-  memoRead: string,
-}
+import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
+import history from '../../history';
 
 interface InfoTagProps {
   mainData: {

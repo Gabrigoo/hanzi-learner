@@ -1,31 +1,8 @@
 import React, { useState, ChangeEvent, ReactElement } from 'react';
 import './InfoPanel.css';
-import LEVELS from '../assets/levels';
-
-interface MainCharacterInt {
-  chineseSimp: string,
-  chineseTrad: string,
-  english: string[],
-  pinyin: string,
-  stage: number,
-  tone: string,
-}
-
-interface UserCharacterInt {
-  lastPract: number,
-  level: number,
-  memoMean: string,
-  memoRead: string,
-}
-
-interface MainWordInt {
-  chineseSimp: string[],
-  chineseTrad: string[],
-  english: string[],
-  pinyin: string[],
-  stage: number,
-  tone: string[],
-}
+import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
+import InfoTag from './InfoTag';
+import LEVELS from '../../assets/levels';
 
 interface InfoPanelProps {
   mainData: {
@@ -141,6 +118,20 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
         </p>
         <p>{mainData[current].tone}</p>
       </div>
+      {type === 'Word' ? (
+        <>
+          <div className="horiz-div">
+            <p className="margin-right-30">Components:</p>
+            {current.split('').map((item) => (
+              <InfoTag
+                mainData={props.mainData}
+                userData={props.userData}
+                character={item}
+              />
+            ))}
+          </div>
+        </>
+      ) : <div />}
     </>
   ); // from here is only displayed if user already has relevant learning data
   if (userData[current]) {
