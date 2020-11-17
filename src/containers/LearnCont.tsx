@@ -36,16 +36,33 @@ const LearnCont = (): ReactElement => {
 
   // determines which items are to be learned by user level
   const getNewItems = (main: MainInt, user: UserInt) => {
+  // which level our user is on
     const userStage = user.profileData.currentStage;
+    // characters that are right for the user's level
     const dataCharKeys = Object.keys(main.characters)
       .filter((char) => main.characters[char].stage <= userStage);
+    // words that are right for the user's level
     const dataWordKeys = Object.keys(main.words)
-      .filter((char) => main.words[char].stage <= userStage);
-    const dataKeys = dataCharKeys.concat(dataWordKeys);
+      .filter((word) => main.words[word].stage <= userStage);
+    // checks if all elements of the word are at least GURU level
+    const dataWordKeysGuru = dataWordKeys.filter((item) => {
+      let applicable = true;
+      main.words[item].chineseTrad.forEach((comp) => {
+        if (!Object.keys(user.characters).includes(comp)) {
+          applicable = false;
+        } else if (user.characters[comp].level < 5) {
+          applicable = false;
+        }
+      });
+      return applicable;
+    });
+
+    const dataKeys = dataCharKeys.concat(dataWordKeysGuru);
     const userKeys = Object.keys(user.characters).concat(Object.keys(user.words));
 
     return dataKeys.filter((char) => !userKeys.includes(char));
   };
+
   // adds learned character from main DB to user DB
   const putUserNewCharacter = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)

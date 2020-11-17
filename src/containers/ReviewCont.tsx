@@ -52,7 +52,7 @@ const ReviewCont = (): ReactElement => {
         console.log(`Full: ${fullLength}`);
         console.log(`Known: ${knownLength}`);
         const ratio = (knownLength / fullLength) * 100;
-        console.log(`asessing user data... level completion: ${ratio}`);
+        console.log(`asessing user data... level completion: ${ratio}%`);
         if (ratio > 90) {
           console.log(`User level increased to: ${userLevel + 1}`);
           axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, userLevel + 1)
@@ -77,6 +77,7 @@ const ReviewCont = (): ReactElement => {
       if (data.characters[item].level === 9) {
         // Good job! No need to review this anymore
       } else if (
+        // Item is not ready to be rewieved
         Math.round((currentDate - storedDate) / (1000 * 60 * 60))
           >= levels[data.characters[item].level][0]
       ) {
@@ -88,6 +89,7 @@ const ReviewCont = (): ReactElement => {
       if (data.words[item].level === 9) {
         // Good job! No need to review this anymore
       } else if (
+        // Item is not ready to be rewieved
         Math.round((currentDate - storedDate) / (1000 * 60 * 60))
           >= levels[data.words[item].level][0]
       ) {

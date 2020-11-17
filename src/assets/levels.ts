@@ -1,5 +1,5 @@
 interface Levels {
-  [key: string]: (number|string)[]
+  [key: string]: [number, string]
 }
 
 const LEVELS:Levels = {
