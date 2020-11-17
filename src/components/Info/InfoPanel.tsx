@@ -122,11 +122,12 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
         <>
           <div className="horiz-div">
             <p className="margin-right-30">Components:</p>
-            {current.split('').map((item) => (
+            {current.split('').map((item, index) => (
               <InfoTag
                 mainData={props.mainData}
                 userData={props.userData}
                 character={item}
+                key={item + index}
               />
             ))}
           </div>
@@ -197,12 +198,19 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
           <p>{dateToString(userData[current].lastPract)}</p>
         </div>
         <div className="horiz-div">
+          <p className="margin-right-30">Next practice:</p>
+          <p>
+            {dateToString(userData[current].lastPract
+              + (LEVELS[userData[current].level][0] * (1000 * 60 * 60)))}
+          </p>
+        </div>
+        <div className="horiz-div">
           <p className="margin-right-30">User level:</p>
           {' '}
           <p className="read-info">{userData[current].level}</p>
           <p>
             &quot;
-            {LEVELS[userData[current].level.toString()][1]}
+            {LEVELS[userData[current].level][1]}
             &quot;
           </p>
         </div>

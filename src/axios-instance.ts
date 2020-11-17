@@ -15,7 +15,17 @@ const getMainData = (
   instance.get(`/main-data.json?auth=${token}`, {
     cancelToken: source.token,
   }).then((res: any) => {
-    setData(res.data);
+    const fullData = {
+      characters: {},
+      words: {},
+    };
+    if ('characters' in res.data) {
+      fullData.characters = res.data.characters;
+    }
+    if ('words' in res.data) {
+      fullData.words = res.data.words;
+    }
+    setData(fullData);
     console.log('GET: main data loaded');
   }).catch((error: AxiosError) => {
     if (instance.isCancel(error)) {
@@ -35,7 +45,18 @@ const getUserData = (
   instance.get(`/${userId}.json?auth=${token}`, {
     cancelToken: source.token,
   }).then((res: any) => {
-    setData(res.data);
+    const fullData = {
+      characters: {},
+      profileData: res.data.profileData,
+      words: {},
+    };
+    if ('characters' in res.data) {
+      fullData.characters = res.data.characters;
+    }
+    if ('words' in res.data) {
+      fullData.words = res.data.words;
+    }
+    setData(fullData);
     console.log('GET: user data loaded');
   }).catch((error: AxiosError) => {
     if (instance.isCancel(error)) {

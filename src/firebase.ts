@@ -44,9 +44,9 @@ const createUserWithEmailAndPasswordHandler = async (
       photoURL: '',
     }).then(() => {
       const newObject = {
-        characters: 'α',
-        words: 'α',
-        profileData: { currentStage: 1 },
+        profileData: {
+          currentStage: 1,
+        },
       };
       axios.put(`/${user.uid}.json?auth=${token}`, newObject)
         .then(() => { console.log('PUT: new user data created!'); })
@@ -83,8 +83,9 @@ const signInWithGoogle = async (
 
     if (isNew) {
       const newObject = {
-        characters: 'α',
-        profileData: { currentStage: 1 },
+        profileData: {
+          currentStage: 1,
+        },
       };
       axios.put(`/${userID}.json?auth=${token}`, newObject)
         .then(() => { console.log('PUT: new user data created!'); })
