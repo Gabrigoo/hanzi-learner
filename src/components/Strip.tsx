@@ -39,7 +39,7 @@ const Strip: React.FC<StripProps> = (props): ReactElement => {
 
   return (
     <div id="strip-card" onClick={clickHandler} onKeyPress={handleKey} role="button" tabIndex={0}>
-      <p>{props.message}</p>
+      <p className="center-text">{props.message}</p>
     </div>
   );
 };

@@ -11,10 +11,10 @@
   grid-template-columns: 1fr 50px 50px 1fr;
 }
 #summary-card {
+  height: 490px;
   grid-template-rows: 70px 120px 70px 120px 70px 70px;
   grid-template-columns: 33% auto 33%;
   align-content: stretch;
-  padding: 30px;
 }
 .memonic {
   margin: 0px 10px 0px 10px;
@@ -31,11 +31,12 @@
 }
 #summary-button {
   height: 40px;
-  width: 80px;
+  width: 100px;
   margin: 0px;
 }
 #change-memo-button-review {
   margin: auto;
+  height: 60px;
   width: 100%;
 }
 #levels-flex-card {
@@ -47,12 +48,15 @@
 #chinese-traditional {
   padding: 0px 6px 2px 6px;
   font-size: 60px;
-  border: solid rgb(17, 46, 59) 3px;
+  border: solid rgb(17, 47, 59) 3px;
   border-radius: 3px;
-  background-color: rgb(183, 193, 202);
+  background-color: rgb(137, 205, 250);
 }
 #submit-button-form {
   width: 100%;
+}
+#meaning-input, #reading-input {
+  width: 70%;
 }
 #correct-label, #incorrect-label {
   font-size: 22px;
@@ -70,11 +74,11 @@
 }
 #meaning-label {
   grid-row: 5 / 6;
-  grid-column: 1 / 3; 
+  grid-column: 1 / 2; 
 }
 #meaning-display, #meaning-input {
   grid-row: 6 / 7;
-  grid-column: 1 / 3; 
+  grid-column: 1 / 2; 
 }
 #meaning-solution {
   grid-row: 7 / 8;
@@ -90,11 +94,11 @@
 }
 #reading-label {
   grid-row: 5 / 6;
-  grid-column: 3 / 5; 
+  grid-column: 4 / 5; 
 }
 #reading-display, #reading-input {
   grid-row: 6 / 7;
-  grid-column: 3 / 5; 
+  grid-column: 4 / 5; 
 }
 #reading-solution {
   grid-row: 7 / 8;

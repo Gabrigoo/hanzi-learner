@@ -33,7 +33,7 @@ const ProfilePage = (): ReactElement => {
   }
 
   return (
-    <div className="auth-flex-card">
+    <div className="card auth-flex-card">
       <div
         id="profile-image-big"
         style={{

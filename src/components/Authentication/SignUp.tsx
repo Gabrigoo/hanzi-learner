@@ -42,7 +42,7 @@ const SignUp = (): ReactElement => {
   };
 
   return (
-    <div className="auth-flex-card">
+    <div className="card auth-flex-card">
       <h1 className="auth-h1">Sign up</h1>
       <div id="auth-error">{error}</div>
       <label htmlFor="displayName">Display Name:</label>
@@ -91,10 +91,13 @@ const SignUp = (): ReactElement => {
       </form>
       <p className="auth-p">or</p>
       <div className="two-button-flex">
-        <button onClick={(event) => signInWithGoogle(event, setError)} className="standard-button">
+        <button
+          onClick={(event) => signInWithGoogle(event, setError)}
+          className="standard-button wide-button"
+        >
           Sign in with Google
         </button>
-        <button onClick={signInWithFacebook} className="standard-button">
+        <button onClick={signInWithFacebook} className="standard-button wide-button">
           Sign in with Facebook
         </button>
       </div>

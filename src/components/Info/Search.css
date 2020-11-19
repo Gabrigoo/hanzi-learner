@@ -1,8 +1,11 @@
 #result-flex {
-    width: 100%;
+    width: 91%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    margin-top: 4px;
+    border-radius: 7px;
+    background-color: rgb(137, 205, 250);
 }
 #smallflex-1 {
     width: 300px;
@@ -18,6 +21,7 @@
     justify-content: space-between;
 }
 #search-card {
+    height: 490px;
     display: flex;
     flex-direction: column;
 }

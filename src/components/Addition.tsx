@@ -209,7 +209,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
 
   return (
     <div>
-      <form id="addition-grid-card" autoComplete="off" onSubmit={handleSubmit}>
+      <form id="addition-grid-card" className="card" autoComplete="off" onSubmit={handleSubmit}>
         <div id="top-flex">
           <h1 className="add-h1">Add new entry:</h1>
           {inputType === 'Character'
@@ -361,10 +361,11 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
           </label>
           <input
             id="submit-button"
+            className="standard-button"
             type="submit"
             value="Submit"
           />
-          <button type="reset" id="clear-button" onClick={clearInput}>
+          <button type="reset" id="clear-button" className="standard-button" onClick={clearInput}>
             Clear
           </button>
         </div>

@@ -29,8 +29,8 @@ const TitleBox = (): ReactElement => {
   };
 
   return (
-    <div className="card">
-      <h2>Hanzi SRS</h2>
+    <div className="card" id="title-card">
+      <h2 id="title">Hanzi SRS</h2>
       <button
         name="start-learn"
         id="start-learn-button"
