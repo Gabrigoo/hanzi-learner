@@ -251,8 +251,10 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       setNewMeaningMemonic('');
       // uploads result
       if (Object.keys(props.mainData.characters).includes(current)) {
+        console.log('Putting user new character');
         props.putUserNewCharacter(current, userCharObject);
       } else {
+        console.log('Putting user new word');
         props.putUserNewWord(current, userCharObject);
       }
       // advances to next character

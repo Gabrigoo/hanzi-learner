@@ -1,13 +1,17 @@
+.center-text {
+    margin: auto;
+}
 #strip-card {
+    font-size: 30px;
     position: fixed;
+    width: 100vw;
     top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-    font-size: 25px;
     text-align: center;
-    background: rgba(224, 187, 66, 0.8);
-    border: solid rgb(32, 109, 145) 4px;
+    background: rgb(255, 216, 142);
+    border: solid rgb(84, 91, 185) 5px;
     display: flex;
     padding: 20px 40px 20px 40px;
 }

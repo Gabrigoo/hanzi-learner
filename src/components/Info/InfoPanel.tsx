@@ -132,7 +132,30 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
             ))}
           </div>
         </>
-      ) : <div />}
+      )
+        : (
+          <>
+            <div className="horiz-div">
+              <p className="margin-right-30">Found in:</p>
+              {Object.keys(props.userData.words).filter((word) => {
+                let includes = false;
+                word.split('').forEach((comp) => {
+                  if (comp === current) {
+                    includes = true;
+                  }
+                });
+                return includes;
+              }).map((item, index) => (
+                <InfoTag
+                  mainData={props.mainData}
+                  userData={props.userData}
+                  character={item}
+                  key={item + index}
+                />
+              ))}
+            </div>
+          </>
+        )}
     </>
   ); // from here is only displayed if user already has relevant learning data
   if (userData[current]) {

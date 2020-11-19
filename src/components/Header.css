@@ -8,25 +8,32 @@
     padding: 0px;
 }
 #menu-button {
+    display: flex;
+    flex-direction: row;
+    color: rgb(61, 49, 49);
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0px;
-    height: 45px;
-    width: 45px;
+    padding: 3px;
+    height: 51px;
     position: fixed;
-    top: 8px;
+    top: 5px;
     left: 10px;
     z-index: 1;
 }
+#main-menu-icon {
+    height: 100%;
+}
 #header {
-    height: 50px;
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+    color: rgb(61, 49, 49);
+    height: 52px;
     position: fixed;
     top: 0px;
     z-index: 1;
     width: 100vw;
-    background: rgba(224, 187, 66, 0.8);
-    border-bottom: solid rgb(32, 109, 145) 4px;
+    background:rgb(255, 216, 142);
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
@@ -34,9 +41,6 @@
     gap: 12px;
 }
 #profile-img {
-    height: 100%;
-}
-#main-menu-icon {
     height: 100%;
 }
 #sing-in-button, #sing-up-button {

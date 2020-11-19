@@ -4,33 +4,38 @@ body {
     height: 100vh;
     width: 100vw;
     margin: 0px;
-    background-color: rgb(88, 154, 199);
+    background-color: rgb(103, 111, 226);
     background-position: top;
     background-size: 100vw 100vh;
     background-repeat: no-repeat;
 }
+input, textarea {
+    background-color: rgb(218, 218, 218);
+}
 .card {
     margin: auto;
-    margin-top: 20vh;
-    height: 430px;
+    margin-top: 18vh;
+    height: 480px;
     width: 620px;
     text-align: center;
     padding: 10px;
-    background: rgba(224, 187, 66, 0.8);
-    border: solid rgb(32, 109, 145) 4px;
+    background: rgb(255, 216, 142);
+    border-radius: 20px;
     display: grid;
     grid-gap: 0px;
     place-items: center;
 }
 .standard-button {
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
     color: white;
     width: 160px;
     height: 45px;
     margin: 5px;
-    border: solid rgb(59, 87, 119) 3px;
-    border-radius: 5px;
-    background:  rgb(75, 112, 155);
-    font-size: 14px;
+    border: none;
+    border-radius: 7px;
+    box-shadow: 0.5px 1px black;
+    background: rgb(76, 86, 226);
     cursor: pointer;
 }
 .horizontal-flex-div {
