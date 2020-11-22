@@ -48,12 +48,12 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
       ? mainData.characters : mainData.words;
     return (
       <div id="result-flex" key={item + index}>
-        <div id="smallflex-1">
+        <div className="smallflex">
           <p>{data[item].chineseTrad}</p>
           <p>{data[item].chineseSimp}</p>
           <p>{data[item].pinyin}</p>
         </div>
-        <div id="smallflex-2">
+        <div className="smallflex">
           <p>{data[item].english[0]}</p>
           <p>{data[item].english[1]}</p>
           <p>{data[item].english[2]}</p>
@@ -69,8 +69,8 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
         autoComplete="off"
         onSubmit={(event) => props.handleSearch(event, query, mainData)}
       >
-        <label>
-          Search:
+        <label id="search-label">
+          <p id="search-p">Search:</p>
           <input
             id="search-input"
             type="text"
@@ -86,7 +86,7 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
           value="Search"
         />
         <button
-          id="clear-button"
+          id="clear-search-button"
           className="standard-button"
           onClick={clearInput}
         >

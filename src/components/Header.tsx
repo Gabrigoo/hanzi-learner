@@ -69,8 +69,8 @@ const Header = (): ReactElement => {
         <button name="profile" id="profile-button" onClick={switchScreen}>
           <img id="profile-img" src={photoURL} alt="profile" />
         </button>
-        {user !== 'null' ? <p>{user}</p> : ''}
-        {email !== 'null' ? <p>{email}</p> : ''}
+        {user !== 'null' ? <p id="header-user">{user}</p> : ''}
+        {email !== 'null' ? <p id="header-email">{email}</p> : ''}
         <button name="main-menu" id="menu-button" onClick={switchScreen}>
           <img id="main-menu-icon" src={mainMenu} alt="mainmenu" />
         </button>

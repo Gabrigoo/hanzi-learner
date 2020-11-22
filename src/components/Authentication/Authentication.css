@@ -9,7 +9,7 @@
     margin: 10px 0px -20px 0px;
 }
 .auth-h3 {
-    margin: 0px 0px 20px 0px;
+    margin: 25px 0px 20px 0px;
 }
 .auth-p {
     margin: 0px;
@@ -17,6 +17,7 @@
 }
 .auth-input {
     margin-bottom: 5px;
+    width: 250px;
 }
 .two-button-flex {
     display: flex;
@@ -24,12 +25,9 @@
     place-items: center;
     gap: 10px;
 }
-.wide-button {
-    width: 220px;
-}
 #sing-up-in-redirect {
     font-size: 20px;
-    margin: -10px 0px -10px 0px;
+    margin: -16px 0px -10px 0px;
     border: none;
     cursor: pointer;
     background-color: Transparent;

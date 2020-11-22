@@ -78,11 +78,11 @@ const SignIn = (): ReactElement => {
       <div className="two-button-flex">
         <button
           onClick={(event) => signInWithGoogle(event, setError)}
-          className="standard-button wide-button"
+          className="standard-button large-button"
         >
           Sign in with Google
         </button>
-        <button onClick={signInWithFacebook} className="standard-button wide-button">
+        <button onClick={signInWithFacebook} className="standard-button large-button">
           Sign in with Facebook
         </button>
       </div>
@@ -98,7 +98,7 @@ const SignIn = (): ReactElement => {
       <button
         name="password-reset"
         id="password-reset-button"
-        className="standard-button wide-button"
+        className="standard-button large-button"
         onClick={switchScreen}
       >
         Forgot Password?

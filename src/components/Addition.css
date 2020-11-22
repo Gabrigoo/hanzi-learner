@@ -1,30 +1,11 @@
-#addition-grid-card {
-  height: 480px;
+#addition-card {
+  margin-top: 15vh;
+  min-height: 530px;
+  height: auto;
   width: 400px;
-  text-align: left;
-  padding: 30px;
-  padding-top: 10px;
-  padding-bottom: 15px;
-  grid-gap: 5px;
+  padding: 10px 30px 15px 30px;
   place-items: unset;
   font-size: 17px;
-  font-family: Arial, Helvetica, sans-serif;
-}
-input, textarea {
-  font-size: 15px;
-  margin-left: 13px;
-  float: right;
-  width: 55%;
-  height: 18px;
-}
-textarea {
-  width: 55.5%;
-  height: 54px;
-}
-#top-flex {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }
 #button-character {
   border-color: rgb(45, 99, 14);
@@ -37,13 +18,36 @@ textarea {
 #button-character, #button-word {
   width: 100px;
 }
+.addition-label {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  width: 100%;
+  margin: 0px;
+  margin-top: 5px;
+}
+.addition-input {
+  height: 18px;
+  font-size: 20px;
+  min-width: 240px;
+  width: 80%;
+  margin: auto;
+}
+.addition-input-short {
+  height: 18px;
+  font-size: 20px;
+  min-width: 40px;
+  width: 16%;
+  margin: auto;
+}
 .add-h1 {
   margin: auto;
   margin-top: -5px;
   margin-bottom: 0px;
 }
-.hanzi-input {
-  font-size: 20px;
+.add-p {
+  margin-top: 5px;
+  margin-bottom: 1px;
 }
 .margin-bottom-3 {
   margin-bottom: 3px;
@@ -52,23 +56,34 @@ textarea {
   margin-bottom: 2px;
 }
 #clear-button {
-  height: 50px;
-  width: 60px;
-  margin: 0px 0px 0px 20px;
+  width: 3.5em;
+  margin: 0px 10px 0px 20px;
   background:  rgb(173, 49, 45);
 }
 #submit-button {
-  height: 50px;
   width: 120px;
-  margin-left: 32px;
 }
-.bottom-flex {
+#two-buttons-div {
   display: flex;
+  flex-direction: row;
+}
+#top-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+#bottom-flex {
+  display: flex;
+  flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
 #add-message {
-  height: 15px;
+  height: 25px;
   text-align: center;
   color: red;
 }
@@ -79,7 +94,8 @@ textarea {
 /* The switch - the box around the slider */
 .switch {
   position: relative;
-  margin-left: 20px;
+  margin-left: 5px;
+  margin-right: 25px;
   display: inline-block;
   width: 60px;
   height: 28px;
@@ -130,5 +146,17 @@ input:checked + .slider:before {
 }
 .slider.round:before {
   border-radius: 50%;
+}
+
+@media (max-width: 500px) { 
+  #addition-card {
+      width: 80vw;
+  }
+}
+
+@media (max-width: 330px) { 
+  .add-h1 {
+      font-size: 10vw;
+  }
 }
 

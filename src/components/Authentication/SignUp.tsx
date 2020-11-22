@@ -93,11 +93,11 @@ const SignUp = (): ReactElement => {
       <div className="two-button-flex">
         <button
           onClick={(event) => signInWithGoogle(event, setError)}
-          className="standard-button wide-button"
+          className="standard-button large-button"
         >
           Sign in with Google
         </button>
-        <button onClick={signInWithFacebook} className="standard-button wide-button">
+        <button onClick={signInWithFacebook} className="standard-button large-button">
           Sign in with Facebook
         </button>
       </div>

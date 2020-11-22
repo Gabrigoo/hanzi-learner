@@ -1,5 +1,4 @@
 #info-card {
-    width: 500px;
     padding: 30px;
     display: flex;
     flex-direction: column;
@@ -48,4 +47,15 @@
 }
 .memo-info {
     min-height: 60px;
+}
+
+@media (max-width: 750px) { 
+    #info-card {
+        width: 80vw;
+    }
+}
+@media (max-width: 425px) { 
+    #change-memo-button {
+        width: 90%;
+    }
 }

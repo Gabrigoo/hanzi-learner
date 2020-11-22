@@ -68,8 +68,8 @@
     transform: translate(-50%);
     text-align: left;
     padding: 3px;
-    background: rgba(209, 196, 154, 1);
-    border: solid rgb(182, 149, 100) 2px;
+    background: rgb(186, 229, 241);
+    border: solid rgb(122, 176, 190) 2px;
 }
 .short-hint {
     margin: 0px;

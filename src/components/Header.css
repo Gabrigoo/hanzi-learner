@@ -51,3 +51,9 @@
     background-color: Transparent;
     outline: none;
 }
+
+@media (max-width: 425px) { 
+    #header-email {
+        display: none;
+    }
+ }

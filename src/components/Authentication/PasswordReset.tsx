@@ -21,7 +21,7 @@ const PasswordReset = (): ReactElement => {
   };
 
   return (
-    <div className="auth-flex-card">
+    <div className="card">
       <h1 className="auth-h1">Reset your Password</h1>
       {error
         ? <div id="auth-error">{error}</div>
@@ -37,10 +37,13 @@ const PasswordReset = (): ReactElement => {
         placeholder="Input your email"
         onChange={handleChange}
       />
-      <form id="password-reset-form" onSubmit={(event) => sendResetEmail(event, email, setEmail, setMessage, setError)}>
-        <button className="standard-button" type="submit">Send me a reset link</button>
+      <form
+        id="password-reset-form"
+        onSubmit={(event) => sendResetEmail(event, email, setEmail, setMessage, setError)}
+      >
+        <button className="standard-button large-button" type="submit">Send me a reset link</button>
       </form>
-      <button className="standard-button" onClick={backToSignIn}>Back to sign in page</button>
+      <button className="standard-button large-button" onClick={backToSignIn}>Back to sign in page</button>
     </div>
   );
 };

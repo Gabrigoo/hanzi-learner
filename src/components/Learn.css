@@ -3,7 +3,7 @@
   height: 60%;  
 }
 #learn-card {
-    height: 440px;
+    height: 490px;
     grid-template-rows: 100px repeat(3, 30px) repeat(3, 40px) 150px;
     grid-template-columns: 1fr 50px 50px 1fr;
 }
