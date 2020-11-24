@@ -21,6 +21,7 @@ const handleError = (error: any, setError: React.Dispatch<React.SetStateAction<s
       setError('Google sign-in not finished');
       break;
     default:
+      alert(`Unhandled error:${error.code}`);
       setError('Unhandled error');
       break;
   }

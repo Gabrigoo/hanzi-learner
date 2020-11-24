@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { MainCharacterInt, MainWordInt, MainInt } from '../../interfaces';
 import './Search.css';
+import history from '../../history';
 
 interface SearchProps {
   mainData: {
@@ -42,12 +43,16 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
     setQuery('');
     props.handleSearch(event, '', mainData);
   };
+  const clickResult = (event: MouseEvent<HTMLButtonElement>) => {
+    const path = `/info/${event.currentTarget.name}`;
+    history.push(path);
+  };
   // all search results mapped
   const resultList = props.searchResults.map((item, index) => {
     const data = Object.keys(mainData.characters).includes(item)
       ? mainData.characters : mainData.words;
     return (
-      <div id="result-flex" key={item + index}>
+      <button id="result-flex" name={item} key={item + index} onClick={clickResult}>
         <div className="smallflex">
           <p>{data[item].chineseTrad}</p>
           <p>{data[item].chineseSimp}</p>
@@ -58,7 +63,7 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
           <p>{data[item].english[1]}</p>
           <p>{data[item].english[2]}</p>
         </div>
-      </div>
+      </button>
     );
   });
 

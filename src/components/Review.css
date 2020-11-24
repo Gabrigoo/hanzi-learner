@@ -6,7 +6,7 @@
   flex-wrap: wrap;
 }
 #review-card {
-  height: 490px;
+  min-height: 490px;
   grid-template-rows: 100px repeat(3, 30px) repeat(4, 40px) 150px;;
   grid-template-columns: 1fr 50px 50px 1fr;
 }
@@ -20,8 +20,8 @@
   margin: 0px 10px 0px 10px;
 }
 #board-submit-button {
-  width: 100%;
-  height: 50px;
+  width: 5em;
+  height: 2.3em;
   margin: 0px;
 }
 #summary-flex {
@@ -30,14 +30,14 @@
   flex-direction: row;
 }
 #summary-button {
-  height: 40px;
-  width: 100px;
+  width: 5em;
+  height: 2em;
   margin: 0px;
 }
 #change-memo-button-review {
   margin: auto;
-  height: 60px;
-  width: 100%;
+  width: 5.2em;
+  height: 3em;
 }
 #levels-flex-card {
   display: flex;
@@ -55,8 +55,14 @@
 #submit-button-form {
   width: 100%;
 }
+#meaning-label, #reading-label, #meaning-memonic-label, #reading-memonic-label {
+  margin-top: 20px;
+}
 #meaning-input, #reading-input {
   width: 70%;
+}
+#reading-solution, #meaning-solution {
+  margin-bottom: 30px;
 }
 #correct-label, #incorrect-label {
   font-size: 22px;
@@ -128,10 +134,9 @@
 }
 #remaining {
   grid-row: 2 / 3;
-  grid-column: 4 / 5; 
 }
 #correct, #incorrect, #remaining {
-  grid-column: 4 / 5;
+  grid-column: 3 / 5;
 }
 #correct-label {
   grid-row: 1 / 2;
@@ -146,4 +151,21 @@
 #incorrect-map {
   grid-row: 4 / 5;
   grid-column: 1 / 4;
+}
+
+@media (max-width: 400px) {
+  #correct, #incorrect, #remaining {
+      font-size: 14px;
+  }
+  #meaning-input, #meaning-memonic-input, #reading-input, #reading-memonic-input {
+    width: 80%;
+  }
+  #correct-label, #incorrect-label, #correct-map, #incorrect-map {
+    margin-left: 20px;
+  }
+}
+@media (max-width: 350px) {
+  #meaning-input, #meaning-memonic-input, #reading-input, #reading-memonic-input {
+    width: 90%;
+  }
 }

@@ -12,6 +12,12 @@ body {
 input, textarea {
     background-color: rgb(219, 245, 250);
 }
+textarea {
+    font-size: 15px;
+}
+input {
+    font-size: 16px;
+}
 p {
     font-family: 'Roboto', sans-serif;
 }
