@@ -37,8 +37,7 @@ const ProfilePage = (): ReactElement => {
       <div
         id="profile-image-big"
         style={{
-          background:
-                          `url(${photoURL})  no-repeat center center`,
+          background: `url(${photoURL})  no-repeat center center`,
           backgroundSize: 'cover',
         }}
       />

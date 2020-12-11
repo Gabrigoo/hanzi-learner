@@ -4,23 +4,23 @@ import history from '../history';
 
 interface StripProps {
   message?: string,
-  backTrack?: any,
+  backTrack?: string,
   timeout?: number | null,
 }
 
-const Strip: React.FC<StripProps> = (props): ReactElement => {
+const Strip: React.FC<StripProps> = ({ message = '', backTrack = '/main', timeout = null }): ReactElement => {
   // on the jump to whatever url saven in backtract
   const clickHandler = (event: SyntheticEvent<HTMLDivElement>) => {
     event.preventDefault();
-    if (props.timeout) {
-      history.push(props.backTrack);
+    if (timeout) {
+      history.push(backTrack);
     }
   };
   // set up and clear a timeout for jumping to backtract automatically
   useEffect(() => {
     let myTimeout: ReturnType<typeof setTimeout>;
-    if (props.timeout) {
-      myTimeout = setTimeout(() => { history.push(props.backTrack); }, props.timeout);
+    if (timeout) {
+      myTimeout = setTimeout(() => { history.push(backTrack); }, timeout);
     }
     return () => {
       clearTimeout(myTimeout);
@@ -28,26 +28,20 @@ const Strip: React.FC<StripProps> = (props): ReactElement => {
   });
 
   const handleKey = () => {
-    history.push(props.backTrack);
+    history.push(backTrack);
   };
 
   useEffect(() => {
-    if (props.timeout) {
+    if (timeout) {
       (document.getElementById('strip-card') as HTMLDivElement).focus();
     }
   });
 
   return (
     <div id="strip-card" onClick={clickHandler} onKeyPress={handleKey} role="button" tabIndex={0}>
-      <p className="center-text">{props.message}</p>
+      <p className="center-text">{message}</p>
     </div>
   );
-};
-
-Strip.defaultProps = {
-  message: '',
-  backTrack: '/main',
-  timeout: null,
 };
 
 export default Strip;

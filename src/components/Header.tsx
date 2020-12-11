@@ -56,9 +56,9 @@ const Header = (): ReactElement => {
   let content;
 
   if (currentUser) {
-    let photoURL:any;
+    let photoURL: string;
 
-    if (photo === 'null') {
+    if (photo === 'null' || !photo) {
       photoURL = unknownUser;
     } else {
       photoURL = photo;

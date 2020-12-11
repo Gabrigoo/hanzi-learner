@@ -137,7 +137,8 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
         const editDist = editDistance(mainData[current].english[i], formattedMeanInput);
         const similar = similarity(mainData[current].english[i], formattedMeanInput);
         // check if input and data difference are inside tolerance
-        if (formattedMeanInput.length > 1 && (editDist < 2 || similar > 0.75)) {
+        if ((formattedMeanInput.length > 1 && (editDist < 2 || similar > 0.75))
+        || mainData[current].english[i] === formattedMeanInput) {
           meanCorrect += 1;
           if (mainData[current].english[i] === formattedMeanInput) {
             meanCorrect += 1;

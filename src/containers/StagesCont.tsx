@@ -1,9 +1,9 @@
 import React, {
-  useState, useContext, useEffect, ReactElement,
+  useState, useContext, ReactElement,
 } from 'react';
-import { instance as axios, getMainData, getUserData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import { MainCharacterInt, MainInt, UserInt } from '../interfaces';
+import GetData from '../customhooks/GetData';
 import Strip from '../components/Strip';
 import Stage from '../components/Info/Stage';
 
@@ -14,24 +14,11 @@ const StagesCont = (): ReactElement => {
   const [userId, setUserID] = useState(localStorage.getItem('userId'));
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  useEffect(() => {
-    setToken(localStorage.getItem('token'));
-    setUserID(localStorage.getItem('userId'));
-  }, [currentUser]);
+  const [mainData, setMainData] = useState<MainInt|null>(null);
+  const [userData, setUserData] = useState<UserInt|null>(null);
 
-  const [mainData, setMainData] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
-  // setting up data
-  useEffect(() => {
-    const source = axios.CancelToken.source();
-    if (token && userId) {
-      getMainData(source, token, setMainData);
-      getUserData(source, token, userId, setUserData);
-    }
-    return () => {
-      source.cancel('GET request cancelled');
-    };
-  }, [token, userId]);
+  GetData(currentUser, token, userId, setToken, setUserID, setMainData, setUserData);
+
   // finds the highest stage level among all data
   const findHighestStage = (data: {[key: string]: MainCharacterInt}) => {
     let highest = 0;

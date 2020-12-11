@@ -1,9 +1,9 @@
 import React, {
-  useEffect, useState, useContext, MouseEvent, FormEvent, ReactElement,
+  useState, useContext, MouseEvent, FormEvent, ReactElement,
 } from 'react';
-import { instance as axios, getMainData } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import { MainInt } from '../interfaces';
+import GetData from '../customhooks/GetData';
 import Strip from '../components/Strip';
 import Search from '../components/Info/Search';
 import { toneChecker } from '../assets/tones';
@@ -15,22 +15,9 @@ const SearchCont = (): ReactElement => {
   const [userId, setUserID] = useState(localStorage.getItem('userId'));
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  useEffect(() => {
-    setToken(localStorage.getItem('token'));
-    setUserID(localStorage.getItem('userId'));
-  }, [currentUser]);
-  // setting up data
-  const [mainData, setMainData] = useState<any>(null);
+  const [mainData, setMainData] = useState<MainInt|null>(null);
 
-  useEffect(() => {
-    const source = axios.CancelToken.source();
-    if (token) {
-      getMainData(source, token, setMainData);
-    }
-    return () => {
-      source.cancel('GET request cancelled');
-    };
-  }, [token, userId]);
+  GetData(currentUser, token, userId, setToken, setUserID, setMainData, null);
 
   const [searchResults, setSearchResults] = useState<string[]>([]);
   // handles search by input and refreshes search results

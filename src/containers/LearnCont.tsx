@@ -1,10 +1,11 @@
 import React, {
-  useContext, useState, useEffect, ReactElement,
+  useContext, useState, ReactElement,
 } from 'react';
 import { AxiosError } from 'axios';
-import { instance as axios, getMainData, getUserData } from '../axios-instance';
+import { instance as axios } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
 import { UserCharacterInt, MainInt, UserInt } from '../interfaces';
+import GetData from '../customhooks/GetData';
 import Learn from '../components/Learn';
 import Strip from '../components/Strip';
 
@@ -12,27 +13,13 @@ const LearnCont = (): ReactElement => {
   // setting up user status
   const currentUser = useContext(UserContext);
 
-  const [userId, setUserID] = useState(localStorage.getItem('userId'));
+  const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  useEffect(() => {
-    setToken(localStorage.getItem('token'));
-    setUserID(localStorage.getItem('userId'));
-  }, [currentUser]);
-  // setting up data
-  const [mainData, setMainData] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
+  const [mainData, setMainData] = useState<MainInt|null>(null);
+  const [userData, setUserData] = useState<UserInt|null>(null);
 
-  useEffect(() => {
-    const source = axios.CancelToken.source();
-    if (token && userId) {
-      getMainData(source, token, setMainData);
-      getUserData(source, token, userId, setUserData);
-    }
-    return () => {
-      source.cancel('GET request cancelled');
-    };
-  }, [token, userId]);
+  GetData(currentUser, token, userId, setToken, setUserId, setMainData, setUserData);
 
   // determines which items are to be learned by user level
   const getNewItems = (main: MainInt, user: UserInt) => {

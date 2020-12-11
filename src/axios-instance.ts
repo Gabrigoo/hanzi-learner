@@ -1,6 +1,7 @@
 import React from 'react';
-import axios, { AxiosError } from 'axios';
-
+import axios, { AxiosError, AxiosResponse, CancelTokenSource } from 'axios';
+import { MainInt, UserInt } from './interfaces';
+// I cannot give any other type than any here because neither instance types work :(
 const instance: any = axios.create({
   baseURL: 'https://fir-sample-project-5efcf.firebaseio.com/',
 });
@@ -8,13 +9,13 @@ instance.CancelToken = axios.CancelToken;
 instance.isCancel = axios.isCancel;
 
 const getMainData = (
-  source: any,
+  source: CancelTokenSource,
   token: string,
-  setData: React.Dispatch<React.SetStateAction<any>>,
+  setData: React.Dispatch<React.SetStateAction<MainInt|null>>,
 ): void => {
   instance.get(`/main-data.json?auth=${token}`, {
     cancelToken: source.token,
-  }).then((res: any) => {
+  }).then((res: AxiosResponse) => {
     const fullData = {
       characters: {},
       words: {},
@@ -37,14 +38,14 @@ const getMainData = (
 };
 
 const getUserData = (
-  source: any,
+  source: CancelTokenSource,
   token: string,
   userId: string,
-  setData: React.Dispatch<React.SetStateAction<any>>,
+  setData: React.Dispatch<React.SetStateAction<UserInt|null>>,
 ): void => {
   instance.get(`/${userId}.json?auth=${token}`, {
     cancelToken: source.token,
-  }).then((res: any) => {
+  }).then((res: AxiosResponse) => {
     const fullData = {
       characters: {},
       profileData: res.data.profileData,

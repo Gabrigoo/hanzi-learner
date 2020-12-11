@@ -1,11 +1,12 @@
 import React, {
-  useContext, useState, useEffect, ReactElement,
+  useContext, useState, ReactElement,
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { AxiosError } from 'axios';
-import { instance as axios, getMainData, getUserData } from '../axios-instance';
+import { instance as axios } from '../axios-instance';
+import GetData from '../customhooks/GetData';
 import { UserContext } from '../components/providers/UserProvider';
-import { UserCharacterInt } from '../interfaces';
+import { MainInt, UserInt, UserCharacterInt } from '../interfaces';
 import InfoPanel from '../components/Info/InfoPanel';
 import Strip from '../components/Strip';
 
@@ -16,27 +17,14 @@ const InfoCont = (): ReactElement => {
   // setting up user status
   const currentUser = useContext(UserContext);
 
-  const [userId, setUserID] = useState(localStorage.getItem('userId'));
+  const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  useEffect(() => {
-    setToken(localStorage.getItem('token'));
-    setUserID(localStorage.getItem('userId'));
-  }, [currentUser]);
-  // setting up data
-  const [mainData, setMainData] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
+  const [mainData, setMainData] = useState<MainInt|null>(null);
+  const [userData, setUserData] = useState<UserInt|null>(null);
 
-  useEffect(() => {
-    const source = axios.CancelToken.source();
-    if (token && userId) {
-      getMainData(source, token, setMainData);
-      getUserData(source, token, userId, setUserData);
-    }
-    return () => {
-      source.cancel('GET request cancelled');
-    };
-  }, [token, userId]);
+  GetData(currentUser, token, userId, setToken, setUserId, setMainData, setUserData);
+
   // function for uploading memonic changes by the user
   const putUserNewMemonic = (character: string, object: UserCharacterInt) => {
     axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)

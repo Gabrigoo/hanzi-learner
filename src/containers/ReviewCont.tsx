@@ -1,11 +1,12 @@
 import React, {
   useEffect, useState, useContext, ReactElement,
 } from 'react';
-import { AxiosError } from 'axios';
-import { instance as axios, getMainData, getUserData } from '../axios-instance';
+import { AxiosError, AxiosResponse } from 'axios';
+import { instance as axios } from '../axios-instance';
 import history from '../history';
 import { UserContext } from '../components/providers/UserProvider';
-import { UserCharacterInt, UserInt } from '../interfaces';
+import { UserCharacterInt, MainInt, UserInt } from '../interfaces';
+import GetData from '../customhooks/GetData';
 import Review from '../components/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';
@@ -17,30 +18,16 @@ const ReviewCont = (): ReactElement => {
   const [userId, setUserID] = useState(localStorage.getItem('userId'));
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  useEffect(() => {
-    setToken(localStorage.getItem('token'));
-    setUserID(localStorage.getItem('userId'));
-  }, [currentUser]);
-  // setting up data
-  const [mainData, setMainData] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
+  const [mainData, setMainData] = useState<MainInt|null>(null);
+  const [userData, setUserData] = useState<UserInt|null>(null);
 
-  useEffect(() => {
-    const source = axios.CancelToken.source();
-    if (token && userId) {
-      getMainData(source, token, setMainData);
-      getUserData(source, token, userId, setUserData);
-    }
-    return () => {
-      source.cancel('GET request cancelled');
-    };
-  }, [token, userId]);
+  GetData(currentUser, token, userId, setToken, setUserID, setMainData, setUserData);
   // after component unmounts user progress is checked advancement is determined
   useEffect(() => () => {
     if (mainData && userData) {
       const userLevel = userData.profileData.currentStage;
 
-      axios.get(`/${userId}/characters.json?auth=${token}`).then((res: any) => {
+      axios.get(`/${userId}/characters.json?auth=${token}`).then((res: AxiosResponse) => {
         console.log('GET user data loaded');
         // possible characters from main DB for users current level
         const currentLevelKeys = Object.keys(mainData.characters)
@@ -113,7 +100,7 @@ const ReviewCont = (): ReactElement => {
   let content;
 
   if (mainData && userData) {
-    if (userData.characters === 'α') {
+    if (!userData.characters) {
       content = <Strip message="You do not have any characters to review yet. Please visit Learn first." backTrack="/main" timeout={4000} />;
     } else if (dataToReview(userData).length === 0) {
       content = <Strip message="No characters to review right now" backTrack="/main" timeout={4000} />;

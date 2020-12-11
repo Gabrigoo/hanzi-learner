@@ -1,10 +1,13 @@
 import React, {
-  useContext, useState, useEffect, ReactElement,
+  useContext, useState, ReactElement,
 } from 'react';
 import { AxiosError } from 'axios';
-import { instance as axios, getMainData } from '../axios-instance';
+import { instance as axios } from '../axios-instance';
 import { UserContext } from '../components/providers/UserProvider';
-import { MainCharacterInt, MainWordInt } from '../interfaces';
+import {
+  MainInt, MainCharacterInt, MainWordInt,
+} from '../interfaces';
+import GetData from '../customhooks/GetData';
 import Addition from '../components/Addition';
 import Strip from '../components/Strip';
 
@@ -13,21 +16,11 @@ const AdditionCont = (): ReactElement => {
   const currentUser = useContext(UserContext);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  useEffect(() => {
-    setToken(localStorage.getItem('token'));
-  }, [currentUser]);
-  // setting up data
-  const [mainData, setMainData] = useState<any>(null);
+  const [userId, setUserId] = useState(localStorage.getItem('userId'));
+  const [mainData, setMainData] = useState<MainInt|null>(null);
 
-  useEffect(() => {
-    const source = axios.CancelToken.source();
-    if (token) {
-      getMainData(source, token, setMainData);
-    }
-    return () => {
-      source.cancel('GET request cancelled');
-    };
-  }, [token]);
+  GetData(currentUser, token, userId, setToken, setUserId, setMainData, null);
+
   // function for data upload when next character is added to DB
   const uploadNewCharacter = (character: string, object: MainCharacterInt) => {
     axios.put(`/main-data/characters/${character}.json?auth=${token}`, object)
