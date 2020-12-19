@@ -10,11 +10,11 @@ import SignIn from './components/Authentication/SignIn';
 import SignUp from './components/Authentication/SignUp';
 import ProfilePage from './components/Authentication/ProfilePage';
 import PasswordReset from './components/Authentication/PasswordReset';
-import Header from './components/Header';
 import StagesCont from './containers/StagesCont';
 import LearnCont from './containers/LearnCont';
 import InfoCont from './containers/InfoCont';
 import SearchCont from './containers/SearchCont';
+import Layout from './hoc/Layout/Layout';
 
 const App = () => {
   const routing = (
@@ -34,12 +34,7 @@ const App = () => {
     </Switch>
   );
 
-  return (
-    <div>
-      <Header />
-      {routing}
-    </div>
-  );
+  return <Layout>{routing}</Layout>;
 };
 
 export default withRouter(App);

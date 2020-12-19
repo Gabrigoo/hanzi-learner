@@ -17,7 +17,7 @@ const AdditionCont = (): ReactElement => {
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
-  const [mainData, setMainData] = useState<MainInt|null>(null);
+  const [mainData, setMainData] = useState<MainInt | null>(null);
 
   GetData(currentUser, token, userId, setToken, setUserId, setMainData, null);
 

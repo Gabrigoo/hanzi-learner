@@ -1,0 +1,10 @@
+.content {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(103, 111, 226);
+    background-position: top;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
