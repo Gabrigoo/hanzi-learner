@@ -1,59 +1,69 @@
 import React, {
-  useEffect, useState, useContext, ReactElement,
+  useEffect, ReactElement,
 } from 'react';
-import { AxiosError, AxiosResponse } from 'axios';
+import { connect } from 'react-redux';
+import { CancelTokenSource } from 'axios';
+
 import { instance as axios } from '../axios-instance';
-import history from '../history';
-import { UserContext } from '../components/providers/UserProvider';
-import { UserCharacterInt, MainInt, UserInt } from '../interfaces';
-import GetData from '../customhooks/GetData';
+import {
+  UserCharacterInt, MainInt, UserInt, ReactFullState,
+} from '../interfaces';
+import { DataActionTypes } from '../redux/actions/types';
+import { loadUserData, updateUserData, updateUserLevel } from '../redux/actions';
 import Review from '../components/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';
 
-const ReviewCont = (): ReactElement => {
-  // setting up user status
-  const currentUser = useContext(UserContext);
+interface ReactProps {
+  token: string,
+  userId: string,
+  mainData: MainInt,
+  userData: UserInt,
+  loadUserData: (source: CancelTokenSource, token: string, userId: string) => any,
+  updateUserData: (
+    word: string,
+    object: UserCharacterInt,
+    token: string,
+    userId: string
+    ) => DataActionTypes,
+  updateUserLevel: (level: number, token: string, userId: string) => DataActionTypes,
+}
 
-  const [userId, setUserID] = useState(localStorage.getItem('userId'));
-  const [token, setToken] = useState(localStorage.getItem('token'));
+const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
+  // Loading user data
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    if (!props.userData) {
+      props.loadUserData(source, props.token, props.userId);
+    }
+    return () => {
+      source.cancel('GET request cancelled');
+    };
+  }, [props.userData]);
 
-  const [mainData, setMainData] = useState<MainInt|null>(null);
-  const [userData, setUserData] = useState<UserInt|null>(null);
-
-  GetData(currentUser, token, userId, setToken, setUserID, setMainData, setUserData);
-  // after component unmounts user progress is checked advancement is determined
+  // After component unmounts user progress is checked for advancement
   useEffect(() => () => {
-    if (mainData && userData) {
-      const userLevel = userData.profileData.currentStage;
+    if (props.mainData && props.userData) {
+      const userChar = props.userData.characters;
+      const userLevel = props.userData.profileData.currentStage;
 
-      axios.get(`/${userId}/characters.json?auth=${token}`).then((res: AxiosResponse) => {
-        console.log('GET user data loaded');
-        // possible characters from main DB for users current level
-        const currentLevelKeys = Object.keys(mainData.characters)
-          .filter((char) => mainData.characters[char].stage === userLevel);
-        // character that are known by the user at least at Guru level
-        const learnedKeys = Object.keys(res.data).filter((char) => res.data[char].level > 4);
-        const fullLength = currentLevelKeys.length;
-        const knownLength = currentLevelKeys.filter((char) => learnedKeys.includes(char)).length;
-        console.log(`Full: ${fullLength}`);
-        console.log(`Known: ${knownLength}`);
-        const ratio = (knownLength / fullLength) * 100;
-        console.log(`asessing user data... level completion: ${ratio}%`);
-        if (ratio > 90) {
-          console.log(`User level increased to: ${userLevel + 1}`);
-          axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, userLevel + 1)
-            .then(() => {
-              console.log('PUT database overwritten');
-            }).catch((error: AxiosError) => console.error(`Error updating database: ${error}`));
-        }
-      }).catch((error: AxiosError) => console.error(`Error loading user data: ${error}`));
+      // possible characters from main DB for users current level
+      const currentLevelKeys = Object.keys(props.mainData.characters)
+        .filter((char) => props.mainData.characters[char].stage === userLevel);
+      // character that are known by the user at least at Guru level
+      const guruKeys = Object.keys(userChar).filter((char) => userChar[char].level > 4);
+      const fullLength = currentLevelKeys.length;
+      const knownLength = currentLevelKeys.filter((char) => guruKeys.includes(char)).length;
+      const ratio = (knownLength / fullLength) * 100;
+      console.log(`All characters: ${fullLength}, known:${knownLength}, (${Math.floor(ratio)}%)`);
+
+      if (ratio > 90) {
+        console.log(`User level increased to: ${userLevel + 1}`);
+        props.updateUserLevel(userLevel + 1, props.token, props.userId);
+      }
     }
   });
 
-  const mainMenu = () => {
-    history.push('/main');
-  };
   // takes in user data and return the list of characters that need reviewing
   const dataToReview = (data: UserInt): string[] => {
     const review: string[] = [];
@@ -85,38 +95,29 @@ const ReviewCont = (): ReactElement => {
     });
     return review;
   };
-  // as name suggests, uploads the results of the review
-  const putUserNewCharacter = (character: string, object: UserCharacterInt) => {
-    axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
-      .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
-  };
-  const putUserNewWord = (word: string, object: UserCharacterInt) => {
-    axios.put(`/${userId}/words/${word}.json?auth=${token}`, object)
-      .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
+  // As name suggests, uploads the results of the review
+  const uploadReviewResults = (word: string, object: UserCharacterInt) => {
+    props.updateUserData(word, object, props.token, props.userId);
   };
 
   let content;
 
-  if (mainData && userData) {
-    if (!userData.characters) {
+  if (props.mainData && props.userData) {
+    if (!props.userData.characters) {
       content = <Strip message="You do not have any characters to review yet. Please visit Learn first." backTrack="/main" timeout={4000} />;
-    } else if (dataToReview(userData).length === 0) {
+    } else if (dataToReview(props.userData).length === 0) {
       content = <Strip message="No characters to review right now" backTrack="/main" timeout={4000} />;
     } else {
       content = (
         <Review
-          mainData={mainData}
-          userData={userData}
-          reviewData={dataToReview(userData)}
-          putUserNewCharacter={putUserNewCharacter}
-          putUserNewWord={putUserNewWord}
-          mainMenu={mainMenu}
+          mainData={props.mainData}
+          userData={props.userData}
+          reviewData={dataToReview(props.userData)}
+          uploadReviewResults={uploadReviewResults}
         />
       );
     }
-  } else if (!token) {
+  } else if (!props.token) {
     content = <Strip message="No user is signed in" timeout={4000} />;
   } else {
     content = <Strip message="Loading..." />;
@@ -129,4 +130,14 @@ const ReviewCont = (): ReactElement => {
   );
 };
 
-export default ReviewCont;
+const mapStateToProps = (state: ReactFullState) => ({
+  token: state.auth.token,
+  userId: state.auth.userId,
+  mainData: state.data.mainData,
+  userData: state.data.userData,
+});
+
+export default connect(
+  mapStateToProps,
+  { loadUserData, updateUserData, updateUserLevel },
+)(ReviewCont);

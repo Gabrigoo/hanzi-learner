@@ -1,11 +1,13 @@
 import React, {
-  useState, ChangeEvent, FormEvent, ReactElement,
+  useState, FormEvent, ReactElement,
 } from 'react';
-import InfoTag from './Info/InfoTag';
-import './Review.css';
+import { Link } from 'react-router-dom';
+
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../interfaces';
 import { similarity, editDistance } from '../assets/levenshtein_distance';
 import { toneChecker } from '../assets/tones';
+import InfoTag from './Info/InfoTag';
+import './Review.css';
 
 interface ReviewProps {
   mainData: {
@@ -28,14 +30,12 @@ interface ReviewProps {
       }
     };
   reviewData: string[];
-  putUserNewCharacter: (character: string, object: UserCharacterInt) => void,
-  putUserNewWord: (character: string, object: UserCharacterInt) => void,
-  mainMenu: () => void,
+  uploadReviewResults: (character: string, object: UserCharacterInt) => void,
 }
 
 const Review: React.FC<ReviewProps> = (props): ReactElement => {
   // randomizes the sequence
-  const [shuffledDeck] = useState(shuffle(props.reviewData));
+  const [shuffledDeck] = useState(shuffleDeck(props.reviewData));
   // current character being tested
   const [current, setCurrent] = useState(shuffledDeck[0]);
   const [mainData, setMainData] = useState<
@@ -71,34 +71,12 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   const [newMeaningMemonic, setNewMeaningMemonic] = useState('');
   const [newReadingMemonic, setNewReadingMemonic] = useState('');
 
-  // handle input
-  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value }: { name: string, value: string } = event.currentTarget;
-
-    switch (name) {
-      case 'meaning':
-        setMeaning(value);
-        break;
-      case 'reading':
-        setReading(value);
-        break;
-      case 'meaning-memo':
-        setNewMeaningMemonic(value);
-        break;
-      case 'reading-memo':
-        setNewReadingMemonic(value);
-        break;
-      default:
-        break;
-    }
-  };
-
   // finishes current session
   const goToSummary = () => {
     setCurrent('undefined');
   };
   // shuffles deck in the beginning
-  function shuffle(sourceArray: string[]): string[] {
+  function shuffleDeck(sourceArray: string[]): string[] {
     const newArray = [...sourceArray];
     if (newArray.length > 1) {
       for (let i = newArray.length - 1; i > 0; i -= 1) {
@@ -241,23 +219,11 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
         setIncorrectList(inCorrectList.concat(current));
       }
       // refresh database with results
-      if (Object.keys(props.mainData.characters).includes(current)) {
-        props.putUserNewCharacter(current, userCharObject);
-      } else {
-        props.putUserNewWord(current, userCharObject);
-      }
+      props.uploadReviewResults(current, userCharObject);
       // resets most things
       setChangeMemonic(false);
       setNewReadingMemonic('');
       setNewMeaningMemonic('');
-      // uploads result
-      if (Object.keys(props.mainData.characters).includes(current)) {
-        console.log('Putting user new character');
-        props.putUserNewCharacter(current, userCharObject);
-      } else {
-        console.log('Putting user new word');
-        props.putUserNewWord(current, userCharObject);
-      }
       // advances to next character
       const next = shuffledDeck[shuffledDeck.indexOf(current) + 1];
       if (Object.keys(props.mainData.characters).includes(next)) {
@@ -291,7 +257,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                 <InfoTag
                   mainData={props.mainData}
                   userData={props.userData}
-                  character={item}
+                  word={item}
                   value="true"
                   key={item + index}
                 />
@@ -304,19 +270,19 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                 <InfoTag
                   mainData={props.mainData}
                   userData={props.userData}
-                  character={item}
+                  word={item}
                   value="false"
                   key={item + index}
                 />
               ))}
           </div>
-          <button
+          <Link
+            to="/main"
             id="main-menu-button"
             className="standard-button"
-            onClick={props.mainMenu}
           >
             Back to Main
-          </button>
+          </Link>
         </div>
       </div>
     );
@@ -375,7 +341,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           type="text"
           name="meaning"
           value={meanInput}
-          onChange={handleChange}
+          onChange={(event) => setMeaning(event.target.value)}
         />
         <label
           id="reading-label"
@@ -390,7 +356,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           type="text"
           name="reading"
           value={readInput}
-          onChange={handleChange}
+          onChange={(event) => setReading(event.target.value)}
         />
         <form
           id="submit-button-form"
@@ -439,14 +405,14 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                     className="memonic-textarea"
                     name="meaning-memo"
                     value={newMeaningMemonic}
-                    onChange={handleChange}
+                    onChange={(event) => setNewMeaningMemonic(event.target.value)}
                   />
                   <textarea
                     id="reading-memonic-input"
                     className="memonic-textarea"
                     name="reading-memo"
                     value={newReadingMemonic}
-                    onChange={handleChange}
+                    onChange={(event) => setNewReadingMemonic(event.target.value)}
                   />
                 </>
               )

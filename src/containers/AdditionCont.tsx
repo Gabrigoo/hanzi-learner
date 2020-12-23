@@ -1,37 +1,37 @@
 import React, {
-  useContext, useState, ReactElement,
+  useState, useEffect, ReactElement,
 } from 'react';
-import { AxiosError } from 'axios';
-import { instance as axios } from '../axios-instance';
-import { UserContext } from '../components/providers/UserProvider';
+import { connect } from 'react-redux';
+
+import { addMainData } from '../redux/actions';
 import {
-  MainInt, MainCharacterInt, MainWordInt,
+  MainInt, MainCharacterInt, MainWordInt, ReactFullState,
 } from '../interfaces';
-import GetData from '../customhooks/GetData';
+import { DataActionTypes } from '../redux/actions/types';
 import Addition from '../components/Addition';
 import Strip from '../components/Strip';
 
-const AdditionCont = (): ReactElement => {
+interface ReactProps {
+  token: string,
+  mainData: MainInt,
+  addMainData: (
+    word: string,
+    object: MainCharacterInt | MainWordInt,
+    token: string
+    ) => DataActionTypes,
+}
+
+const AdditionCont: React.FC<ReactProps> = (props): ReactElement => {
   // setting up user status
-  const currentUser = useContext(UserContext);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [mainData, setMainData] = useState<MainInt | null>(props.mainData);
 
-  const [userId, setUserId] = useState(localStorage.getItem('userId'));
-  const [mainData, setMainData] = useState<MainInt | null>(null);
+  useEffect(() => {
+    setMainData(props.mainData);
+  }, [props.mainData]);
 
-  GetData(currentUser, token, userId, setToken, setUserId, setMainData, null);
-
-  // function for data upload when next character is added to DB
-  const uploadNewCharacter = (character: string, object: MainCharacterInt) => {
-    axios.put(`/main-data/characters/${character}.json?auth=${token}`, object)
-      .then(() => { console.log('PUT: Upload complete'); })
-      .catch((error: AxiosError) => console.error(`Error adding new entry: ${error}`));
-  };
-
-  const uploadNewWord = (word: string, object: MainWordInt) => {
-    axios.put(`/main-data/words/${word}.json?auth=${token}`, object)
-      .then(() => { console.log('PUT: Upload complete'); })
-      .catch((error: AxiosError) => console.error(`Error adding new entry: ${error}`));
+  // Functions for data upload when next character is added to DB
+  const uploadNewWord = (word: string, object: MainCharacterInt | MainWordInt) => {
+    props.addMainData(word, object, props.token);
   };
 
   let content;
@@ -40,11 +40,10 @@ const AdditionCont = (): ReactElement => {
     content = (
       <Addition
         mainData={mainData}
-        uploadNewCharacter={uploadNewCharacter}
         uploadNewWord={uploadNewWord}
       />
     );
-  } else if (!token) {
+  } else if (!props.token) {
     content = <Strip message="No user is signed in" timeout={4000} />;
   } else {
     content = <Strip message="Loading..." />;
@@ -57,4 +56,12 @@ const AdditionCont = (): ReactElement => {
   );
 };
 
-export default AdditionCont;
+const mapStateToProps = (state: ReactFullState) => ({
+  token: state.auth.token,
+  mainData: state.data.mainData,
+});
+
+export default connect(
+  mapStateToProps,
+  { addMainData },
+)(AdditionCont);

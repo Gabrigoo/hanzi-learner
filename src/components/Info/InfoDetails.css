@@ -29,7 +29,8 @@
     align-items: flex-end;
 }
 #stage-count {
-    margin-right: 50px;
+    margin-top: 0px;
+    font-size: 23px;
 }
 #change-memo-button {
     margin: auto;

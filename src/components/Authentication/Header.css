@@ -1,4 +1,4 @@
-#profile-button {
+#profile-link {
     background: none;
     border: none;
     height: 50px;
@@ -7,17 +7,13 @@
     margin: 0px 20px 0px 0px;
     padding: 0px;
 }
-#menu-button {
-    display: flex;
-    flex-direction: row;
+#main-menu-link {
     color: rgb(61, 49, 49);
-    background: none;
-    border: none;
     cursor: pointer;
-    padding: 3px;
-    height: 51px;
-    width: 51px;
+    height: 45px;
+    width: 45px;
     position: fixed;
+    padding: 2px 2px 6px 2px;
     top: 5px;
     left: 10px;
     z-index: 1;
@@ -34,7 +30,7 @@
     top: 0px;
     z-index: 1;
     width: 100vw;
-    background:rgb(255, 216, 142);
+    background:rgb(241, 200, 124);
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
@@ -44,13 +40,16 @@
 #profile-img {
     height: 100%;
 }
-#sing-in-button, #sing-up-button {
-    font-size: 20px;
-    margin: 0px;
-    border: none;
+.signing-button {
+    color: black;
+    font-size: 24px;
+    margin-right: 20px;
     cursor: pointer;
-    background-color: Transparent;
-    outline: none;
+    text-decoration: none;
+}
+
+.grayscale {
+    filter: grayscale(100%);
 }
 
 @media (max-width: 425px) { 

@@ -1,22 +1,25 @@
 #result-flex {
+    color: black;
+    font-size: 18px;
     box-sizing: content-box;
-    border: none;
     width: 91%;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    margin-top: 4px;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
     border-radius: 7px;
     background-color: rgb(137, 205, 250);
-    cursor: pointer;
+    text-decoration: none;
 }
 .smallflex {
-    width: 50%;
-    min-width: 280px;
+    min-width: 400px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+}
+.search-p {
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 #search-card {
     height: 490px;

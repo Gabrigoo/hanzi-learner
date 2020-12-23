@@ -44,6 +44,18 @@ interface UserInt {
   }
 }
 
+interface ReactFullState {
+  auth: {
+    isSignedIn: boolean,
+    userId: string,
+    token: string,
+  }
+  data: {
+    mainData: MainInt,
+    userData: UserInt
+  }
+}
+
 export type {
-  MainCharacterInt, MainWordInt, UserCharacterInt, MainInt, UserInt,
+  MainCharacterInt, MainWordInt, UserCharacterInt, MainInt, UserInt, ReactFullState,
 };

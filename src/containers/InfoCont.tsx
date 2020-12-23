@@ -1,49 +1,65 @@
 import React, {
-  useContext, useState, ReactElement,
+  useEffect, ReactElement,
 } from 'react';
 import { useParams } from 'react-router-dom';
-import { AxiosError } from 'axios';
+import { connect } from 'react-redux';
+import { CancelTokenSource } from 'axios';
+
 import { instance as axios } from '../axios-instance';
-import GetData from '../customhooks/GetData';
-import { UserContext } from '../components/providers/UserProvider';
-import { MainInt, UserInt, UserCharacterInt } from '../interfaces';
-import InfoPanel from '../components/Info/InfoPanel';
+import { loadUserData, updateUserData } from '../redux/actions';
+import {
+  MainInt, UserInt, UserCharacterInt, ReactFullState,
+} from '../interfaces';
+import { DataActionTypes } from '../redux/actions/types';
+import InfoDetails from '../components/Info/InfoDetails';
 import Strip from '../components/Strip';
 
-const InfoCont = (): ReactElement => {
-  // getting character the panel is supposed to display
+interface ReactProps {
+  token: string,
+  userId: string,
+  mainData: MainInt,
+  userData: UserInt,
+  loadUserData: (source: CancelTokenSource, token: string, userId: string) => any,
+  updateUserData: (
+    word: string,
+    object: UserCharacterInt,
+    token: string,
+    userId: string
+    ) => DataActionTypes,
+}
 
+const InfoCont: React.FC<ReactProps> = (props): ReactElement => {
+  // Getting character the panel is supposed to display
   const { id }: { id: string } = useParams();
-  // setting up user status
-  const currentUser = useContext(UserContext);
 
-  const [userId, setUserId] = useState(localStorage.getItem('userId'));
-  const [token, setToken] = useState(localStorage.getItem('token'));
-
-  const [mainData, setMainData] = useState<MainInt|null>(null);
-  const [userData, setUserData] = useState<UserInt|null>(null);
-
-  GetData(currentUser, token, userId, setToken, setUserId, setMainData, setUserData);
+  // Loading user data
+  useEffect(() => {
+    const source: CancelTokenSource = axios.CancelToken.source();
+    if (!props.userData) {
+      props.loadUserData(source, props.token, props.userId);
+    }
+    return () => {
+      source.cancel('GET request cancelled');
+    };
+  }, [props.userData]);
 
   // function for uploading memonic changes by the user
-  const putUserNewMemonic = (character: string, object: UserCharacterInt) => {
-    axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
-      .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
+  const updateMemonic = (word: string, object: UserCharacterInt) => {
+    props.updateUserData(word, object, props.token, props.userId);
   };
 
   let content;
 
-  if (mainData && userData) {
+  if (props.mainData && props.userData) {
     content = (
-      <InfoPanel
+      <InfoDetails
         id={id}
-        mainData={mainData}
-        userData={userData}
-        putUserNewMemonic={putUserNewMemonic}
+        mainData={props.mainData}
+        userData={props.userData}
+        updateMemonic={updateMemonic}
       />
     );
-  } else if (!token) {
+  } else if (!props.token) {
     content = <Strip message="No user is signed in" timeout={4000} />;
   } else {
     content = <Strip message="Loading..." />;
@@ -56,4 +72,14 @@ const InfoCont = (): ReactElement => {
   );
 };
 
-export default InfoCont;
+const mapStateToProps = (state: ReactFullState) => ({
+  token: state.auth.token,
+  userId: state.auth.userId,
+  mainData: state.data.mainData,
+  userData: state.data.userData,
+});
+
+export default connect(
+  mapStateToProps,
+  { loadUserData, updateUserData },
+)(InfoCont);

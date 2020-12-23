@@ -35,6 +35,9 @@ p {
     place-items: center;
 }
 .standard-button {
+    display:flex;
+    justify-content: center;
+    align-items: center;
     font-family: 'Roboto', sans-serif;
     font-size: 20px;
     color: white;
@@ -46,9 +49,11 @@ p {
     box-shadow: 0.5px 1px black;
     background: rgb(76, 86, 226);
     cursor: pointer;
+    text-decoration: none;
 }
 .large-button {
     width: 11em;
+    text-decoration: none;
 }
 .horizontal-flex-div {
     display: flex;

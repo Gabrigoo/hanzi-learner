@@ -1,23 +1,25 @@
 import React, {
-  useState, useContext, MouseEvent, FormEvent, ReactElement,
+  useState, useEffect, MouseEvent, FormEvent, ReactElement,
 } from 'react';
-import { UserContext } from '../components/providers/UserProvider';
-import { MainInt } from '../interfaces';
-import GetData from '../customhooks/GetData';
+import { connect } from 'react-redux';
+
+import { MainInt, ReactFullState } from '../interfaces';
 import Strip from '../components/Strip';
 import Search from '../components/Info/Search';
 import { toneChecker } from '../assets/tones';
 
-const SearchCont = (): ReactElement => {
+interface ReactProps {
+  token: string,
+  mainData: MainInt,
+}
+
+const SearchCont: React.FC<ReactProps> = (props): ReactElement => {
   // setting up user status
-  const currentUser = useContext(UserContext);
+  const [mainData, setMainData] = useState<MainInt|null>(props.mainData);
 
-  const [userId, setUserID] = useState(localStorage.getItem('userId'));
-  const [token, setToken] = useState(localStorage.getItem('token'));
-
-  const [mainData, setMainData] = useState<MainInt|null>(null);
-
-  GetData(currentUser, token, userId, setToken, setUserID, setMainData, null);
+  useEffect(() => {
+    setMainData(props.mainData);
+  }, [props.mainData]);
 
   const [searchResults, setSearchResults] = useState<string[]>([]);
   // handles search by input and refreshes search results
@@ -83,7 +85,7 @@ const SearchCont = (): ReactElement => {
         handleSearch={handleSearch}
       />
     );
-  } else if (!token) {
+  } else if (!props.token) {
     content = <Strip message="No user is signed in" timeout={4000} />;
   } else {
     content = <Strip message="Loading..." />;
@@ -96,4 +98,11 @@ const SearchCont = (): ReactElement => {
   );
 };
 
-export default SearchCont;
+const mapStateToProps = (state: ReactFullState) => ({
+  token: state.auth.token,
+  mainData: state.data.mainData,
+});
+
+export default connect(
+  mapStateToProps,
+)(SearchCont);

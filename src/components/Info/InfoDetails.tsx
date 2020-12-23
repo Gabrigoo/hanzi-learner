@@ -1,10 +1,12 @@
-import React, { useState, ChangeEvent, ReactElement } from 'react';
-import './InfoPanel.css';
+import React, { useState, ReactElement } from 'react';
+import { Link } from 'react-router-dom';
+
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 import InfoTag from './InfoTag';
 import LEVELS from '../../assets/levels';
+import './InfoDetails.css';
 
-interface InfoPanelProps {
+interface InfoDetailsProps {
   mainData: {
     characters: {
       [key: string]: MainCharacterInt,
@@ -25,17 +27,17 @@ interface InfoPanelProps {
     }
   };
   id: string,
-  putUserNewMemonic: (character: string, object: UserCharacterInt) => void,
+  updateMemonic: (character: string, object: UserCharacterInt) => void,
 }
 
-const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
+const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
   // getting data the panel is supposed to display
   const current = props.id;
   // getting type, character or word, setting currect datascources
-  const type = Object.keys(props.mainData.characters).includes(current) ? 'Character' : 'Word';
-  const mainData = (type === 'Character')
+  const type = current.length > 1 ? 'word' : 'character';
+  const mainData = type === 'character'
     ? props.mainData.characters : props.mainData.words;
-  const userData = type === 'Character'
+  const userData = type === 'character'
     ? props.userData.characters : props.userData.words;
   // memonics in case they are changed
   const [changeMemonic, setChangeMemonic] = useState(false);
@@ -59,24 +61,10 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
       memoMean: meaningMemonic,
       memoRead: readingMemonic,
     };
-    props.putUserNewMemonic(current, object);
+    props.updateMemonic(current, object);
     setChangeMemonic(false);
   };
 
-  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value }: { name: string; value: string } = event.currentTarget;
-
-    switch (name) {
-      case 'meaning-memo':
-        setMeaningMemonic(value);
-        break;
-      case 'reading-memo':
-        setReadingMemonic(value);
-        break;
-      default:
-        break;
-    }
-  };
   // convert numeric date into the displayed date
   const dateToString = (numericDate: number) => {
     const date = new Date(numericDate);
@@ -100,11 +88,19 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
           <h1 id="chinese-trad-info">{current}</h1>
           <h2 id="chinese-simp-info">{mainData[current].chineseSimp}</h2>
         </div>
-        <p id="stage-count">
-          Stage:
-          {' '}
-          {mainData[current].stage}
-        </p>
+        <div>
+          <p id="stage-count">
+            Stage:
+            {' '}
+            {mainData[current].stage}
+          </p>
+          <Link
+            to="/stages"
+            className="standard-button"
+          >
+            Stages
+          </Link>
+        </div>
       </div>
       <div className="horiz-div">
         <p className="margin-right-30">Meaning:</p>
@@ -114,11 +110,11 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
       <div className="horiz-div">
         <p className="margin-right-30">Reading:</p>
         <p className="read-info">
-          {type === 'Character' ? mainData[current].pinyin : mainData[current].pinyin}
+          {type === 'character' ? mainData[current].pinyin : mainData[current].pinyin}
         </p>
         <p>{mainData[current].tone}</p>
       </div>
-      {type === 'Word' ? (
+      {type === 'word' ? (
         <>
           <div className="horiz-div">
             <p className="margin-right-30">Components:</p>
@@ -126,7 +122,7 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
               <InfoTag
                 mainData={props.mainData}
                 userData={props.userData}
-                character={item}
+                word={item}
                 key={item + index}
               />
             ))}
@@ -149,7 +145,7 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
                 <InfoTag
                   mainData={props.mainData}
                   userData={props.userData}
-                  character={item}
+                  word={item}
                   key={item + index}
                 />
               ))}
@@ -170,7 +166,7 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
                 className="memo-info"
                 name="meaning-memo"
                 value={meaningMemonic}
-                onChange={handleChange}
+                onChange={(event) => setMeaningMemonic(event.target.value)}
               />
               <p>Reading memonic:</p>
               <textarea
@@ -178,7 +174,7 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
                 className="memo-info"
                 name="reading-memo"
                 value={readingMemonic}
-                onChange={handleChange}
+                onChange={(event) => setReadingMemonic(event.target.value)}
               />
               <button
                 id="change-memo-button"
@@ -249,4 +245,4 @@ const InfoPanel: React.FC<InfoPanelProps> = (props): ReactElement => {
   );
 };
 
-export default InfoPanel;
+export default InfoDetails;

@@ -1,9 +1,10 @@
 import React, {
-  useState, ChangeEvent, MouseEvent, FormEvent, ReactElement,
+  useState, MouseEvent, FormEvent, ReactElement,
 } from 'react';
+import { Link } from 'react-router-dom';
+
 import { MainCharacterInt, MainWordInt, MainInt } from '../../interfaces';
 import './Search.css';
-import history from '../../history';
 
 interface SearchProps {
   mainData: {
@@ -27,43 +28,28 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
   // query is the currently searched string by the user
   const [query, setQuery] = useState('');
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value }: { name: string, value: string } = event.currentTarget;
-
-    switch (name) {
-      case 'search':
-        setQuery(value);
-        break;
-      default:
-        break;
-    }
-  };
-
   const clearInput = (event: MouseEvent<HTMLButtonElement>) => {
     setQuery('');
     props.handleSearch(event, '', mainData);
   };
-  const clickResult = (event: MouseEvent<HTMLButtonElement>) => {
-    const path = `/info/${event.currentTarget.name}`;
-    history.push(path);
-  };
+
   // all search results mapped
   const resultList = props.searchResults.map((item, index) => {
     const data = Object.keys(mainData.characters).includes(item)
       ? mainData.characters : mainData.words;
     return (
-      <button id="result-flex" name={item} key={item + index} onClick={clickResult}>
+      <Link id="result-flex" key={item + index} to={`/info/${item}`}>
         <div className="smallflex">
-          <p>{data[item].chineseTrad}</p>
-          <p>{data[item].chineseSimp}</p>
-          <p>{data[item].pinyin}</p>
+          <p className="search-p">{data[item].chineseTrad}</p>
+          <p className="search-p">{data[item].chineseSimp}</p>
+          <p className="search-p">{data[item].pinyin}</p>
         </div>
         <div className="smallflex">
-          <p>{data[item].english[0]}</p>
-          <p>{data[item].english[1]}</p>
-          <p>{data[item].english[2]}</p>
+          <p className="search-p">{data[item].english[0]}</p>
+          <p className="search-p">{data[item].english[1]}</p>
+          <p className="search-p">{data[item].english[2]}</p>
         </div>
-      </button>
+      </Link>
     );
   });
 
@@ -81,7 +67,7 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
             type="text"
             name="search"
             value={query}
-            onChange={handleChange}
+            onChange={(event) => setQuery(event.target.value)}
           />
         </label>
         <input

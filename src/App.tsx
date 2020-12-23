@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import './App.css';
 import {
-  Route, Switch, withRouter, Redirect,
+  Route, Router, Switch, Redirect,
 } from 'react-router-dom';
-import MainMenu from './containers/MainMenu';
+import history from './history';
+import HomePage from './containers/HomePage';
 import ReviewCont from './containers/ReviewCont';
 import AdditionCont from './containers/AdditionCont';
 import SignIn from './components/Authentication/SignIn';
@@ -16,25 +17,29 @@ import InfoCont from './containers/InfoCont';
 import SearchCont from './containers/SearchCont';
 import Layout from './hoc/Layout/Layout';
 
-const App = () => {
+const App = (): ReactElement => {
   const routing = (
-    <Switch>
-      <Route path="/main" component={MainMenu} />
-      <Route path="/review" component={ReviewCont} />
-      <Route path="/add" component={AdditionCont} />
-      <Route path="/learn" component={LearnCont} />
-      <Route path="/signUp" component={SignUp} />
-      <Route path="/signIn" component={SignIn} />
-      <Route path="/passwordReset" component={PasswordReset} />
-      <Route path="/user" component={ProfilePage} />
-      <Route path="/search" component={SearchCont} />
-      <Route path="/stages" component={StagesCont} />
-      <Route path="/info/:id" component={InfoCont} />
-      <Redirect to="/main" />
-    </Switch>
+    <Router history={history}>
+      <Layout>
+        <Switch>
+          <Route path="/main" component={HomePage} />
+          <Route path="/review" component={ReviewCont} />
+          <Route path="/add" component={AdditionCont} />
+          <Route path="/learn" component={LearnCont} />
+          <Route path="/sign-up" component={SignUp} />
+          <Route path="/sign-in" component={SignIn} />
+          <Route path="/password-reset" component={PasswordReset} />
+          <Route path="/user" component={ProfilePage} />
+          <Route path="/search" component={SearchCont} />
+          <Route path="/stages" component={StagesCont} />
+          <Route path="/info/:id" component={InfoCont} />
+          <Redirect to="/main" />
+        </Switch>
+      </Layout>
+    </Router>
   );
 
-  return <Layout>{routing}</Layout>;
+  return routing;
 };
 
-export default withRouter(App);
+export default App;

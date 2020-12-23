@@ -1,44 +1,15 @@
 import React, {
-  useState, ChangeEvent, MouseEvent, ReactElement,
+  useState, ReactElement,
 } from 'react';
+import { Link } from 'react-router-dom';
+
 import { signInWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler } from '../../firebase';
-import history from '../../history';
 import './Authentication.css';
 
 const SignIn = (): ReactElement => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value }: { name: string, value: string } = event.currentTarget;
-
-    switch (name) {
-      case 'userEmail':
-        setEmail(value);
-        break;
-      case 'userPassword':
-        setPassword(value);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const switchScreen = (event: MouseEvent<HTMLButtonElement>) => {
-    let path = '';
-    switch (event.currentTarget.name) {
-      case 'password-reset':
-        path = '/passwordReset';
-        break;
-      case 'sign-up':
-        path = '/signUp';
-        break;
-      default:
-        break;
-    }
-    history.push(path);
-  };
 
   return (
     <div className="card auth-flex-card">
@@ -53,7 +24,7 @@ const SignIn = (): ReactElement => {
         placeholder="E.g: ilearnchinese@gmail.com"
         id="userEmail"
         className="auth-input"
-        onChange={handleChange}
+        onChange={(event) => setEmail(event.target.value)}
       />
       <label htmlFor="userPassword">Password:</label>
       <input
@@ -64,7 +35,7 @@ const SignIn = (): ReactElement => {
         placeholder="Your password"
         id="userPassword"
         className="auth-input"
-        onChange={handleChange}
+        onChange={(event) => setPassword(event.target.value)}
       />
       <form
         id="sign-in-button-form"
@@ -87,22 +58,20 @@ const SignIn = (): ReactElement => {
         </button>
       </div>
       <p className="auth-p">Don&apos;t have an account?</p>
-      <button
-        name="sign-up"
+      <Link
+        to="/sign-up"
         id="sing-up-in-redirect"
         className="standard-button"
-        onClick={switchScreen}
       >
         Sign up here
-      </button>
-      <button
-        name="password-reset"
+      </Link>
+      <Link
+        to="password-reset"
         id="password-reset-button"
         className="standard-button large-button"
-        onClick={switchScreen}
       >
         Forgot Password?
-      </button>
+      </Link>
     </div>
   );
 };

@@ -1,23 +1,36 @@
 import React, {
-  useState, useContext, ReactElement,
+  useEffect, ReactElement,
 } from 'react';
-import { UserContext } from '../components/providers/UserProvider';
-import { MainCharacterInt, MainInt, UserInt } from '../interfaces';
-import GetData from '../customhooks/GetData';
+import { connect } from 'react-redux';
+import { CancelTokenSource } from 'axios';
+
+import { instance as axios } from '../axios-instance';
+import {
+  MainCharacterInt, MainInt, UserInt, ReactFullState,
+} from '../interfaces';
+import { loadUserData } from '../redux/actions';
 import Strip from '../components/Strip';
 import Stage from '../components/Info/Stage';
 
-const StagesCont = (): ReactElement => {
-  // setting up user status
-  const currentUser = useContext(UserContext);
+interface ReactProps {
+  token: string,
+  userId: string,
+  mainData: MainInt,
+  userData: UserInt,
+  loadUserData: (source: CancelTokenSource, token: string, userId: string) => any,
+}
 
-  const [userId, setUserID] = useState(localStorage.getItem('userId'));
-  const [token, setToken] = useState(localStorage.getItem('token'));
-
-  const [mainData, setMainData] = useState<MainInt|null>(null);
-  const [userData, setUserData] = useState<UserInt|null>(null);
-
-  GetData(currentUser, token, userId, setToken, setUserID, setMainData, setUserData);
+const StagesCont: React.FC<ReactProps> = (props): ReactElement => {
+  // Loading user data
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    if (!props.userData) {
+      props.loadUserData(source, props.token, props.userId);
+    }
+    return () => {
+      source.cancel('GET request cancelled');
+    };
+  }, [props.userData]);
 
   // finds the highest stage level among all data
   const findHighestStage = (data: {[key: string]: MainCharacterInt}) => {
@@ -45,7 +58,7 @@ const StagesCont = (): ReactElement => {
     return stageArray;
   };
   // steps through the stages until the current highest
-  const loopThrough = (highestStage: number, main: MainInt, user: UserInt) => {
+  const mapAllStages = (highestStage: number, main: MainInt, user: UserInt) => {
     const items = [];
     for (let i = 1; i <= highestStage; i += 1) {
       items.push(<Stage level={i.toString()} stageData={sortDataToStage(main, i)} mainData={main} userData={user} key={`stage${i}`} />);
@@ -55,13 +68,13 @@ const StagesCont = (): ReactElement => {
 
   let content;
 
-  if (mainData && userData) {
+  if (props.mainData && props.userData) {
     content = (
       <div className="card" id="stage-flex-card">
-        {loopThrough(findHighestStage(mainData.characters), mainData, userData)}
+        {mapAllStages(findHighestStage(props.mainData.characters), props.mainData, props.userData)}
       </div>
     );
-  } else if (!token) {
+  } else if (!props.token) {
     content = <Strip message="No user is signed in" timeout={4000} />;
   } else {
     content = <Strip message="Loading..." />;
@@ -74,4 +87,14 @@ const StagesCont = (): ReactElement => {
   );
 };
 
-export default StagesCont;
+const mapStateToProps = (state: ReactFullState) => ({
+  token: state.auth.token,
+  userId: state.auth.userId,
+  mainData: state.data.mainData,
+  userData: state.data.userData,
+});
+
+export default connect(
+  mapStateToProps,
+  { loadUserData },
+)(StagesCont);

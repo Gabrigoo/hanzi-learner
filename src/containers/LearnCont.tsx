@@ -1,28 +1,46 @@
 import React, {
-  useContext, useState, ReactElement,
+  useEffect, ReactElement,
 } from 'react';
-import { AxiosError } from 'axios';
+import { connect } from 'react-redux';
+import { CancelTokenSource } from 'axios';
+
 import { instance as axios } from '../axios-instance';
-import { UserContext } from '../components/providers/UserProvider';
-import { UserCharacterInt, MainInt, UserInt } from '../interfaces';
-import GetData from '../customhooks/GetData';
+import {
+  UserCharacterInt, MainInt, UserInt, ReactFullState,
+} from '../interfaces';
+import { DataActionTypes } from '../redux/actions/types';
+import { loadUserData, updateUserData } from '../redux/actions';
 import Learn from '../components/Learn';
 import Strip from '../components/Strip';
 
-const LearnCont = (): ReactElement => {
-  // setting up user status
-  const currentUser = useContext(UserContext);
+interface ReactProps {
+  token: string,
+  userId: string,
+  mainData: MainInt,
+  userData: UserInt,
+  loadUserData: (source: CancelTokenSource, token: string, userId: string) => any,
+  updateUserData: (
+    word: string,
+    object: UserCharacterInt,
+    token: string,
+    userId: string
+    ) => DataActionTypes,
+}
 
-  const [userId, setUserId] = useState(localStorage.getItem('userId'));
-  const [token, setToken] = useState(localStorage.getItem('token'));
-
-  const [mainData, setMainData] = useState<MainInt|null>(null);
-  const [userData, setUserData] = useState<UserInt|null>(null);
-
-  GetData(currentUser, token, userId, setToken, setUserId, setMainData, setUserData);
+const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
+  // Loading user data
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    if (!props.userData) {
+      props.loadUserData(source, props.token, props.userId);
+    }
+    return () => {
+      source.cancel('GET request cancelled');
+    };
+  }, [props.userData]);
 
   // determines which items are to be learned by user level
-  const getNewItems = (main: MainInt, user: UserInt) => {
+  const filterNewItems = (main: MainInt, user: UserInt) => {
   // which level our user is on
     const userStage = user.profileData.currentStage;
     // characters that are right for the user's level
@@ -51,33 +69,25 @@ const LearnCont = (): ReactElement => {
   };
 
   // adds learned character from main DB to user DB
-  const putUserNewCharacter = (character: string, object: UserCharacterInt) => {
-    axios.put(`/${userId}/characters/${character}.json?auth=${token}`, object)
-      .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
-  };
-  const putUserNewWord = (word: string, object: UserCharacterInt) => {
-    axios.put(`/${userId}/words/${word}.json?auth=${token}`, object)
-      .then(() => { console.log('PUT: new user data uploaded'); })
-      .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
+  const learnNewWord = (word: string, object: UserCharacterInt) => {
+    props.updateUserData(word, object, props.token, props.userId);
   };
 
   let content;
 
-  if (mainData && userData) {
-    if (Object.keys(getNewItems(mainData, userData)).length === 0) {
+  if (props.mainData && props.userData) {
+    if (Object.keys(filterNewItems(props.mainData, props.userData)).length === 0) {
       content = <Strip message="No new characters to learn right now" backTrack="/main" timeout={4000} />;
     } else {
       content = (
         <Learn
-          mainData={mainData}
-          putUserNewCharacter={putUserNewCharacter}
-          putUserNewWord={putUserNewWord}
-          newKeys={getNewItems(mainData, userData)}
+          mainData={props.mainData}
+          learnNewWord={learnNewWord}
+          newItemKeys={filterNewItems(props.mainData, props.userData)}
         />
       );
     }
-  } else if (!token) {
+  } else if (!props.token) {
     content = <Strip message="No user is signed in" timeout={4000} />;
   } else {
     content = <Strip message="Loading..." />;
@@ -90,4 +100,14 @@ const LearnCont = (): ReactElement => {
   );
 };
 
-export default LearnCont;
+const mapStateToProps = (state: ReactFullState) => ({
+  token: state.auth.token,
+  userId: state.auth.userId,
+  mainData: state.data.mainData,
+  userData: state.data.userData,
+});
+
+export default connect(
+  mapStateToProps,
+  { loadUserData, updateUserData },
+)(LearnCont);

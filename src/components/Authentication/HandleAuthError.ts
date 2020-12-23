@@ -11,6 +11,9 @@ const handleError = (error: any, setError: React.Dispatch<React.SetStateAction<s
     case 'auth/user-not-found':
       setError('User not registered');
       break;
+    case 'auth/too-many-requests':
+      setError('Too many requests, please wait');
+      break;
     case 'auth/wrong-password':
       setError('Password is incorrect');
       break;

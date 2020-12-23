@@ -1,5 +1,7 @@
 import React, { Component, createContext } from 'react';
 import { auth } from '../../firebase';
+import { connect } from 'react-redux';
+import { signIn, signOut } from '../../redux/actions';
 
 export const UserContext = createContext({
   user: null,
@@ -8,10 +10,10 @@ export const UserContext = createContext({
 export const TokenContext = createContext(null);
 
 class UserProvider extends Component {
-    state = {
-      user: null,
-      token: null,
-    };
+  state = {
+    user: null,
+    token: null,
+  };
 
 componentDidMount = () => {
   auth.onAuthStateChanged((userAuth) => {
@@ -19,23 +21,30 @@ componentDidMount = () => {
     this.setState({ user: userAuth });
 
     if (userAuth) {
-      console.log('user logged in');
-      localStorage.setItem('user', this.state.user.displayName);
+      this.props.signIn(this.state.user.uid);
+
+      localStorage.setItem('userName', this.state.user.displayName);
       localStorage.setItem('email', this.state.user.email);
       localStorage.setItem('photo', this.state.user.photoURL);
       localStorage.setItem('userId', this.state.user.uid);
+
       userAuth.getIdToken().then((idToken) => {
         localStorage.setItem('token', idToken);
         this.setState({ token: idToken });
       }).catch((error) => console.log(error));
+
+      console.log('user logged in');
     } else {
-      console.log('user logged out');
-      localStorage.removeItem('user');
+      this.props.signOut();
+
+      localStorage.removeItem('userName');
       localStorage.removeItem('email');
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
+
+      console.log('user logged out');
     }
-  });
+  })
 };
 
 render() {
@@ -49,4 +58,11 @@ render() {
 }
 }
 
-export default UserProvider;
+const mapStateToProps = (state) => {
+  return { isSignedIn: state.auth.isSignedIn };
+}
+
+export default connect(
+  mapStateToProps,
+  { signIn, signOut }
+)(UserProvider);

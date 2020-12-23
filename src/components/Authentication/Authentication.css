@@ -36,6 +36,7 @@
     box-shadow: none;
 }
 #auth-error {
+    margin: 15px 0px -10px 0px;
     height: 25px;
     color: red;
 }

@@ -1,7 +1,8 @@
 import React, { ReactElement } from 'react';
-import './Stage.css';
+
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 import InfoTag from './InfoTag';
+import './Stage.css';
 
 interface StageProps {
   stageData: string[];
@@ -38,7 +39,7 @@ const Stage: React.FC<StageProps> = (props): ReactElement => (
         <InfoTag
           mainData={props.mainData}
           userData={props.userData}
-          character={item}
+          word={item}
           key={item + index}
         />
       ))}

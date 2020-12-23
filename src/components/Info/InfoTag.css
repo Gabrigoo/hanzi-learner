@@ -43,16 +43,18 @@
     border-radius: 3px;
     background: #b4a991;
 }
-#mapped-character-div {
+#mapped-word-div {
     position: relative;
     margin-left: 10px;
     margin-top: 10px;
 }
-#mapped-character {
+#mapped-word {
+    color: black;
     height: 35px;
-    font-size: 20px;
+    font-size: 22px;
     margin: 0px;
     padding: 1px 5px 1px 5px;
+    text-decoration: none;
 }
 #mapped-character:hover {
     cursor: pointer;
@@ -64,12 +66,23 @@
     position: absolute;
     z-index: 1;
     top: 40px;
-    left: 15px;
     transform: translate(-50%);
     text-align: left;
     padding: 3px;
     background: rgb(186, 229, 241);
     border: solid rgb(122, 176, 190) 2px;
+}
+.left-16 {
+    left: 16px;
+}
+.left-32 {
+    left: 32px;
+}
+.left-48 {
+    left: 48px;
+}
+.left-64 {
+    left: 64px;
 }
 .short-hint {
     margin: 0px;

@@ -1,9 +1,10 @@
 import React, {
-  useState, ChangeEvent, FormEvent, ReactElement,
+  useState, FormEvent, ReactElement,
 } from 'react';
-import './Learn.css';
+
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../interfaces';
 import Strip from './Strip';
+import './Learn.css';
 
 interface LearnProps {
   mainData: {
@@ -14,14 +15,13 @@ interface LearnProps {
       [key: string]: MainWordInt,
     },
   },
-  newKeys: string[],
-  putUserNewCharacter: (character: string, object: UserCharacterInt) => void,
-  putUserNewWord: (word: string, object: UserCharacterInt) => void,
+  newItemKeys: string[],
+  learnNewWord: (word: string, object: UserCharacterInt) => void,
 }
 
 const Learn: React.FC<LearnProps> = (props): ReactElement => {
   // starts with first element of to-learn list
-  const [current, setCurrent] = useState(props.newKeys[0]);
+  const [current, setCurrent] = useState(props.newItemKeys[0]);
   const [mainData, setMainData] = useState<
   {[key: string]: MainCharacterInt} | {[key: string]: MainWordInt}
   >(
@@ -33,7 +33,7 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
   // memonics in case they are changed
   const [meaningMemonic, setMeaningMemonic] = useState('');
   const [readingMemonic, setReadingMemonic] = useState('');
-  const [remaningNum, setRemainingNum] = useState(props.newKeys.length);
+  const [remaningNum, setRemainingNum] = useState(props.newItemKeys.length);
   // on continue uploads new character to use DB and continue to next one
   const handleContinue = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,12 +44,8 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
       memoMean: meaningMemonic,
       memoRead: readingMemonic,
     };
-    if (Object.keys(props.mainData.characters).includes(current)) {
-      props.putUserNewCharacter(current, newObj);
-    } else {
-      props.putUserNewWord(current, newObj);
-    }
-    const next = props.newKeys[props.newKeys.indexOf(current) + 1];
+    props.learnNewWord(current, newObj);
+    const next = props.newItemKeys[props.newItemKeys.indexOf(current) + 1];
     setCurrent(next);
     if (Object.keys(props.mainData.characters).includes(next)) {
       setMainData(props.mainData.characters);
@@ -59,21 +55,6 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
     setMeaningMemonic('');
     setReadingMemonic('');
     setRemainingNum(remaningNum - 1);
-  };
-
-  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value }: { name: string, value: string} = event.currentTarget;
-
-    switch (name) {
-      case 'meaning':
-        setMeaningMemonic(value);
-        break;
-      case 'reading':
-        setReadingMemonic(value);
-        break;
-      default:
-        break;
-    }
   };
 
   if (remaningNum === 0) {
@@ -124,7 +105,7 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
         form="continue-button-form"
         name="meaning"
         value={meaningMemonic}
-        onChange={handleChange}
+        onChange={(event) => setMeaningMemonic(event.target.value)}
       />
       <p id="reading-display">
         {mainData[current].pinyin}
@@ -146,7 +127,7 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
         form="continue-button-form"
         name="reading"
         value={readingMemonic}
-        onChange={handleChange}
+        onChange={(event) => setReadingMemonic(event.target.value)}
       />
     </div>
   );

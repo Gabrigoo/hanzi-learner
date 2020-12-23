@@ -1,8 +1,9 @@
 import React, {
-  useState, ChangeEvent, MouseEvent, ReactElement,
+  useState, ReactElement,
 } from 'react';
+import { Link } from 'react-router-dom';
+
 import { signInWithGoogle, signInWithFacebook, createUserWithEmailAndPasswordHandler } from '../../firebase';
-import history from '../../history';
 import './Authentication.css';
 
 const SignUp = (): ReactElement => {
@@ -10,36 +11,6 @@ const SignUp = (): ReactElement => {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value }: { name: string, value: string } = event.currentTarget;
-
-    switch (name) {
-      case 'userEmail':
-        setEmail(value);
-        break;
-      case 'userPassword':
-        setPassword(value);
-        break;
-      case 'displayName':
-        setDisplayName(value);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const switchScreen = (event: MouseEvent<HTMLButtonElement>) => {
-    let path = '';
-    switch (event.currentTarget.name) {
-      case 'sign-in':
-        path = '/signIn';
-        break;
-      default:
-        break;
-    }
-    history.push(path);
-  };
 
   return (
     <div className="card auth-flex-card">
@@ -53,7 +24,7 @@ const SignUp = (): ReactElement => {
         placeholder="E.g: Johnathan"
         id="displayname"
         className="auth-input"
-        onChange={handleChange}
+        onChange={(event) => setDisplayName(event.target.value)}
       />
       <label htmlFor="userEmail">Email:</label>
       <input
@@ -64,7 +35,7 @@ const SignUp = (): ReactElement => {
         placeholder="E.g: ilearnchinese@gmail.com"
         id="userEmail"
         className="auth-input"
-        onChange={handleChange}
+        onChange={(event) => setEmail(event.target.value)}
       />
       <label htmlFor="userPassword">Password:</label>
       <input
@@ -75,7 +46,7 @@ const SignUp = (): ReactElement => {
         placeholder="Your password"
         id="userPassword"
         className="auth-input"
-        onChange={handleChange}
+        onChange={(event) => setPassword(event.target.value)}
       />
       <form
         id="sign-up-button-form"
@@ -102,14 +73,13 @@ const SignUp = (): ReactElement => {
         </button>
       </div>
       <p className="auth-p">Already have an account?</p>
-      <button
-        name="sign-in"
+      <Link
+        to="/sign-in"
         id="sing-up-in-redirect"
         className="standard-button"
-        onClick={switchScreen}
       >
         Sign in here
-      </button>
+      </Link>
     </div>
   );
 };

@@ -1,5 +1,6 @@
-import React, { useState, ChangeEvent, ReactElement } from 'react';
-import history from '../../history';
+import React, { useState, ReactElement } from 'react';
+import { Link } from 'react-router-dom';
+
 import { sendResetEmail } from '../../firebase';
 import './Authentication.css';
 
@@ -7,18 +8,6 @@ const PasswordReset = (): ReactElement => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value }: { name: string, value: string } = event.currentTarget;
-
-    if (name === 'userEmail') {
-      setEmail(value);
-    }
-  };
-
-  const backToSignIn = () => {
-    history.push('/signIn');
-  };
 
   return (
     <div className="card">
@@ -35,7 +24,7 @@ const PasswordReset = (): ReactElement => {
         className="auth-input"
         value={email}
         placeholder="Input your email"
-        onChange={handleChange}
+        onChange={(event) => setEmail(event.target.value)}
       />
       <form
         id="password-reset-form"
@@ -43,7 +32,7 @@ const PasswordReset = (): ReactElement => {
       >
         <button className="standard-button large-button" type="submit">Send me a reset link</button>
       </form>
-      <button className="standard-button large-button" onClick={backToSignIn}>Back to sign in page</button>
+      <Link to="/sign-in" className="standard-button large-button">Back to sign in page</Link>
     </div>
   );
 };

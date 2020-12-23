@@ -1,6 +1,7 @@
 import React, { useEffect, SyntheticEvent, ReactElement } from 'react';
-import './Strip.css';
+
 import history from '../history';
+import './Strip.css';
 
 interface StripProps {
   message?: string,

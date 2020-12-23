@@ -1,9 +1,10 @@
 import React, {
   useState, useEffect, ChangeEvent, FormEvent, ReactElement, MouseEvent,
 } from 'react';
-import './Addition.css';
+
 import { MainCharacterInt, MainWordInt } from '../interfaces';
 import { TONES } from '../assets/tones';
+import './Addition.css';
 
 interface AdditionProps {
   mainData: {
@@ -14,8 +15,7 @@ interface AdditionProps {
       [key: string]: MainWordInt,
     },
   },
-  uploadNewCharacter: (character: string, object: MainCharacterInt) => void,
-  uploadNewWord: (word: string, object: MainWordInt) => void,
+  uploadNewWord: (character: string, object: MainCharacterInt | MainWordInt) => void,
 }
 
 const Addition: React.FC<AdditionProps> = (props): ReactElement => {
@@ -31,6 +31,10 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
   const [dataKeys, setDataKeys] = useState(
     Object.keys(props.mainData.characters).concat(Object.keys(props.mainData.words)),
   );
+  useEffect(() => {
+    setDataKeys(Object.keys(props.mainData.characters).concat(Object.keys(props.mainData.words)));
+  }, [props.mainData.characters, props.mainData.words]);
+
   // set if already existing entry should be overwritten or not
   const [overwrite, setOverwrite] = useState(false);
   // a message warning the user if character is already in db
@@ -46,7 +50,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
       setInputType('Character');
     }
   };
-
+  // Checks if current input is already in database
   useEffect(() => {
     const currentString = chineseTrad.join('');
     if (dataKeys.includes(currentString) && chineseTrad[0] !== '') {
@@ -56,7 +60,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
     }
   }, [dataKeys, chineseTrad]);
 
-  // automatically checks the tone and fills tone input box
+  // Automatically checks the tone and fills tone input box
   const toneCheck = (input: string): string => {
     for (let i = 0; i < input.length; i += 1) {
       for (let j = 0; j < Object.keys(TONES).length; j += 1) {
@@ -70,7 +74,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
     }
     return '5';
   };
-  const autoFill = (origin: string, desired: string): string => {
+  const autoFillField = (origin: string, desired: string): string => {
     let output = '';
     if (Object.keys(props.mainData.characters).includes(origin)) {
       switch (desired) {
@@ -89,7 +93,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
     }
     return output;
   };
-  // handles state change
+  // Handles state change
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value }: { name: string, value: string } = event.currentTarget;
     switch (name) {
@@ -101,11 +105,11 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
         const arrIndex = parseInt(name.slice(-1), 10) - 1;
         setChineseTrad(Object.assign([], chineseTrad, { [arrIndex]: value }));
         setChineseSimp(Object.assign([], chineseSimp,
-          { [arrIndex]: autoFill(value, 'chineseSimp') }));
+          { [arrIndex]: autoFillField(value, 'chineseSimp') }));
         setPinyin(Object.assign([], pinyin,
-          { [arrIndex]: autoFill(value, 'pinyin') }));
+          { [arrIndex]: autoFillField(value, 'pinyin') }));
         setTone(Object.assign([], tone,
-          { [arrIndex]: autoFill(value, 'tone') }));
+          { [arrIndex]: autoFillField(value, 'tone') }));
         break;
       }
       case 'chineseSimp-1':
@@ -189,8 +193,8 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
         stage: parseInt(stage, 10),
         tone: tone[0].trim(),
       };
-      props.uploadNewCharacter(chineseTrad[0], newObj);
-      setDataKeys(dataKeys.concat(chineseTrad));
+      // This is important, this is where the upload happens!
+      props.uploadNewWord(chineseTrad[0], newObj);
       clearInput();
     } else {
       const newObj = {
@@ -201,8 +205,8 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
         stage: parseInt(stage, 10),
         tone: tone.map((item) => item.trim()),
       };
+      // This is important, this is where the upload happens!
       props.uploadNewWord(chineseTrad.join(''), newObj);
-      // would be a datakeys concat here
       clearInput();
     }
   };
