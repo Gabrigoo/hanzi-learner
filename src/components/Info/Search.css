@@ -1,6 +1,6 @@
 #result-flex {
     color: black;
-    font-size: 18px;
+    font-size: 20px;
     box-sizing: content-box;
     width: 91%;
     display: flex;
@@ -18,8 +18,8 @@
     justify-content: space-around;
 }
 .search-p {
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
 #search-card {
     height: 490px;

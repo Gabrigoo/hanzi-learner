@@ -15,7 +15,6 @@ import mainMenu from '../../assets/main-menu.png';
 import './Header.css';
 
 interface ReactProps {
-  isSignedIn: boolean
   token: string
   loadMainData: (source: CancelTokenSource, token: string) => any,
   getToken: (userAuth: firebase.User) => any,
@@ -94,7 +93,6 @@ const Header = (props: ReactProps): ReactElement => {
 };
 
 const mapStateToProps = (state: ReactFullState) => ({
-  isSignedIn: state.auth.isSignedIn,
   token: state.auth.token,
 });
 

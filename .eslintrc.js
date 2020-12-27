@@ -56,12 +56,9 @@ module.exports = {
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-noninteractive-element-interactions": "off",
     "no-nested-ternary": "off",
-    "react/no-unused-prop-types": 1,
     "no-console": "off",
     "react/prop-types": "off",
     "react/jsx-filename-extension": "off",
     "import/extensions": [1, "never"],
-    "no-unused-vars": 1,
-    "prefer-template": 1,
   },
 };

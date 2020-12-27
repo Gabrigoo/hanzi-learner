@@ -45,11 +45,6 @@ const InfoTag: React.FC<InfoTagProps> = (props): ReactElement => {
     setShowBox(false);
   };
 
-  // modifier for level advance
-  let modifier = 0;
-  if (props.value === 'true') {
-    modifier = 1;
-  }
   // background color indicating status
   let backColor:string;
   if (props.value === 'true') {
@@ -109,7 +104,7 @@ const InfoTag: React.FC<InfoTagProps> = (props): ReactElement => {
                 <p className="short-hint">
                   Level:
                   {' '}
-                  {userData[props.word].level + modifier}
+                  {userData[props.word].level}
                 </p>
               )
               : ''}

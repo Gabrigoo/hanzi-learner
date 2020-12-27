@@ -13,21 +13,25 @@ const getMainData = async (
   source: CancelTokenSource,
   token: string,
 ): Promise<MainInt> => {
-  const response: AxiosResponse = await instance.get(`/main-data.json?auth=${token}`, {
-    cancelToken: source.token,
-  });
-
   const fullData = {
     characters: {},
     words: {},
   };
-  if ('characters' in response.data) {
-    fullData.characters = response.data.characters;
+  try {
+    const response: AxiosResponse = await instance.get(`/main-data.json?auth=${token}`, {
+      cancelToken: source.token,
+    });
+
+    if ('characters' in response.data) {
+      fullData.characters = response.data.characters;
+    }
+    if ('words' in response.data) {
+      fullData.words = response.data.words;
+    }
+    console.log('GET: main data loaded');
+  } catch (error) {
+    return error;
   }
-  if ('words' in response.data) {
-    fullData.words = response.data.words;
-  }
-  console.log('GET: main data loaded');
   // How do I put an error handling here???
   return fullData;
 };
@@ -37,21 +41,26 @@ const getUserData = async (
   token: string,
   userId: string,
 ): Promise<UserInt> => {
-  const response: AxiosResponse = await instance.get(`/${userId}.json?auth=${token}`, {
-    cancelToken: source.token,
-  });
   const fullData = {
     characters: {},
-    profileData: response.data.profileData,
+    profileData: { currentStage: 0 },
     words: {},
   };
-  if ('characters' in response.data) {
-    fullData.characters = response.data.characters;
+  try {
+    const response: AxiosResponse = await instance.get(`/${userId}.json?auth=${token}`, {
+      cancelToken: source.token,
+    });
+    fullData.profileData = response.data.profileData;
+    if ('characters' in response.data) {
+      fullData.characters = response.data.characters;
+    }
+    if ('words' in response.data) {
+      fullData.words = response.data.words;
+    }
+    console.log('GET: user data loaded');
+  } catch (error) {
+    return error;
   }
-  if ('words' in response.data) {
-    fullData.words = response.data.words;
-  }
-  console.log('GET: user data loaded');
   // How do I put an error handling here???
   return fullData;
 };

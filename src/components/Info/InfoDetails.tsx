@@ -80,6 +80,76 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
   };
 
   let userContent = <p>This character is not yet learned.</p>;
+  // From here it's rendering
+  const renderMemonic = () => {
+    if (changeMemonic) {
+      return (
+        <>
+          <p>Meaning memonic:</p>
+          <textarea
+            id="meaning-memonic-input"
+            className="memo-info"
+            name="meaning-memo"
+            value={meaningMemonic}
+            onChange={(event) => setMeaningMemonic(event.target.value)}
+          />
+          <p>Reading memonic:</p>
+          <textarea
+            id="reading-memonic-input"
+            className="memo-info"
+            name="reading-memo"
+            value={readingMemonic}
+            onChange={(event) => setReadingMemonic(event.target.value)}
+          />
+          <button
+            id="change-memo-button"
+            className="standard-button"
+            onClick={sendMemonic}
+          >
+            Save memonics
+          </button>
+        </>
+      );
+    }
+
+    let meanMemRendered;
+    if (meaningMemonic !== '') {
+      meanMemRendered = meaningMemonic;
+    } else if (userData[current].memoMean === '') {
+      meanMemRendered = 'Currently no meaning memonic added';
+    } else {
+      meanMemRendered = userData[current].memoMean;
+    }
+
+    let readMemRendered;
+    if (readingMemonic !== '') {
+      readMemRendered = readingMemonic;
+    } else if (userData[current].memoRead === '') {
+      readMemRendered = 'Currently no reading memonic added';
+    } else {
+      readMemRendered = userData[current].memoRead;
+    }
+
+    return (
+      <>
+        <p>Meaning memonic:</p>
+        <div className="memo-info">
+          {meanMemRendered}
+        </div>
+        <p>Reading memonic:</p>
+        <div className="memo-info">
+          {readMemRendered}
+        </div>
+        <button
+          id="change-memo-button"
+          className="standard-button"
+          onClick={switchChangeMemonics}
+        >
+          Change memonics
+        </button>
+      </>
+    );
+  };
 
   const content = (
     <>
@@ -157,61 +227,7 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
   if (userData[current]) {
     userContent = (
       <>
-        {changeMemonic
-          ? (
-            <>
-              <p>Meaning memonic:</p>
-              <textarea
-                id="meaning-memonic-input"
-                className="memo-info"
-                name="meaning-memo"
-                value={meaningMemonic}
-                onChange={(event) => setMeaningMemonic(event.target.value)}
-              />
-              <p>Reading memonic:</p>
-              <textarea
-                id="reading-memonic-input"
-                className="memo-info"
-                name="reading-memo"
-                value={readingMemonic}
-                onChange={(event) => setReadingMemonic(event.target.value)}
-              />
-              <button
-                id="change-memo-button"
-                className="standard-button"
-                onClick={sendMemonic}
-              >
-                Save memonics
-              </button>
-            </>
-          )
-          : (
-            <>
-              <p>Meaning memonic:</p>
-              <div className="memo-info">
-                {meaningMemonic !== ''
-                  ? meaningMemonic
-                  : userData[current].memoMean === ''
-                    ? 'Currently no meaning memonic added'
-                    : userData[current].memoMean}
-              </div>
-              <p>Reading memonic:</p>
-              <div className="memo-info">
-                {readingMemonic !== ''
-                  ? readingMemonic
-                  : userData[current].memoRead === ''
-                    ? 'Currently no reading memonic added'
-                    : userData[current].memoRead}
-              </div>
-              <button
-                id="change-memo-button"
-                className="standard-button"
-                onClick={switchChangeMemonics}
-              >
-                Change memonics
-              </button>
-            </>
-          )}
+        {renderMemonic()}
         <div className="horiz-div">
           <p className="margin-right-30">Last practiced:</p>
           <p>{dateToString(userData[current].lastPract)}</p>

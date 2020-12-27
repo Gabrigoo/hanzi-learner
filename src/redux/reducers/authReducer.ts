@@ -3,13 +3,13 @@ import {
 } from '../actions/types';
 
 interface AuthState {
-  isSignedIn: boolean,
+  isSignedIn: boolean | null,
   userId: string | null,
   token: string | null,
 }
 
 const INITIAL_STATE: AuthState = {
-  isSignedIn: false,
+  isSignedIn: null,
   userId: null,
   token: null,
 };

@@ -10,7 +10,7 @@ interface StripProps {
 }
 
 const Strip: React.FC<StripProps> = ({ message = '', backTrack = '/main', timeout = null }): ReactElement => {
-  // on the jump to whatever url saven in backtract
+  // on the jump to whatever url saven in backtrack
   const clickHandler = (event: SyntheticEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (timeout) {

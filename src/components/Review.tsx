@@ -367,7 +367,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
             id="board-submit-button"
             className="standard-button"
             type="submit"
-            value={solutionSubmitted ? 'Continue' : 'Submit'}
+            value={!solutionSubmitted ? 'Submit' : solutionCorrect ? 'Continue' : 'Again'}
           />
         </form>
         {!solutionSubmitted ? '' : (

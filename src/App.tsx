@@ -4,7 +4,7 @@ import {
   Route, Router, Switch, Redirect,
 } from 'react-router-dom';
 import history from './history';
-import HomePage from './containers/HomePage';
+import MainCont from './containers/MainCont';
 import ReviewCont from './containers/ReviewCont';
 import AdditionCont from './containers/AdditionCont';
 import SignIn from './components/Authentication/SignIn';
@@ -22,7 +22,7 @@ const App = (): ReactElement => {
     <Router history={history}>
       <Layout>
         <Switch>
-          <Route path="/main" component={HomePage} />
+          <Route path="/main" component={MainCont} />
           <Route path="/review" component={ReviewCont} />
           <Route path="/add" component={AdditionCont} />
           <Route path="/learn" component={LearnCont} />
