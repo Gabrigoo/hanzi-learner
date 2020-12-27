@@ -24,13 +24,13 @@ const StagesCont: React.FC<ReactProps> = (props): ReactElement => {
   // Loading user data
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (!props.userData) {
+    if (!props.userData && props.token) {
       props.loadUserData(source, props.token, props.userId);
     }
     return () => {
       source.cancel('GET request cancelled');
     };
-  }, [props.userData]);
+  }, [props.userData, props.token]);
 
   // finds the highest stage level among all data
   const findHighestStage = (data: {[key: string]: MainCharacterInt}) => {

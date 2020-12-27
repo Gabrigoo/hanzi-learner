@@ -10,7 +10,6 @@ import { loadUserData, updateUserData } from '../redux/actions';
 import {
   MainInt, UserInt, UserCharacterInt, ReactFullState,
 } from '../interfaces';
-import { DataActionTypes } from '../redux/actions/types';
 import InfoDetails from '../components/Info/InfoDetails';
 import Strip from '../components/Strip';
 
@@ -25,7 +24,7 @@ interface ReactProps {
     object: UserCharacterInt,
     token: string,
     userId: string
-    ) => DataActionTypes,
+    ) => any,
 }
 
 const InfoCont: React.FC<ReactProps> = (props): ReactElement => {
@@ -35,13 +34,13 @@ const InfoCont: React.FC<ReactProps> = (props): ReactElement => {
   // Loading user data
   useEffect(() => {
     const source: CancelTokenSource = axios.CancelToken.source();
-    if (!props.userData) {
+    if (!props.userData && props.token) {
       props.loadUserData(source, props.token, props.userId);
     }
     return () => {
       source.cancel('GET request cancelled');
     };
-  }, [props.userData]);
+  }, [props.userData, props.token]);
 
   // function for uploading memonic changes by the user
   const updateMemonic = (word: string, object: UserCharacterInt) => {

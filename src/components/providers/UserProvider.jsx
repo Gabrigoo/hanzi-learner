@@ -17,7 +17,6 @@ class UserProvider extends Component {
 
 componentDidMount = () => {
   auth.onAuthStateChanged((userAuth) => {
-    console.log('auth state changed');
     this.setState({ user: userAuth });
 
     if (userAuth) {
@@ -33,7 +32,7 @@ componentDidMount = () => {
         this.setState({ token: idToken });
       }).catch((error) => console.log(error));
 
-      console.log('user logged in');
+      console.log('user is logged in');
     } else {
       this.props.signOut();
 
@@ -42,7 +41,7 @@ componentDidMount = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
 
-      console.log('user logged out');
+      console.log('user is logged out');
     }
   })
 };

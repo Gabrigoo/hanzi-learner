@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse, CancelTokenSource } from 'axios';
+import axios, { AxiosResponse, CancelTokenSource } from 'axios';
+import AxiosErrorObj from 'axios-error';
 import {
   MainInt, UserInt, MainCharacterInt, MainWordInt, UserCharacterInt,
 } from './interfaces';
@@ -12,16 +13,15 @@ instance.isCancel = axios.isCancel;
 const getMainData = async (
   source: CancelTokenSource,
   token: string,
-): Promise<MainInt> => {
-  const fullData = {
-    characters: {},
-    words: {},
-  };
+): Promise<MainInt | AxiosErrorObj> => {
   try {
     const response: AxiosResponse = await instance.get(`/main-data.json?auth=${token}`, {
       cancelToken: source.token,
     });
-
+    const fullData = {
+      characters: {},
+      words: {},
+    };
     if ('characters' in response.data) {
       fullData.characters = response.data.characters;
     }
@@ -29,27 +29,27 @@ const getMainData = async (
       fullData.words = response.data.words;
     }
     console.log('GET: main data loaded');
+    return fullData;
   } catch (error) {
-    return error;
+    console.error(`Error loading main data: ${error}`);
+    return new AxiosErrorObj(error);
   }
-  // How do I put an error handling here???
-  return fullData;
 };
 
 const getUserData = async (
   source: CancelTokenSource,
   token: string,
   userId: string,
-): Promise<UserInt> => {
-  const fullData = {
-    characters: {},
-    profileData: { currentStage: 0 },
-    words: {},
-  };
+): Promise<UserInt | AxiosErrorObj> => {
   try {
     const response: AxiosResponse = await instance.get(`/${userId}.json?auth=${token}`, {
       cancelToken: source.token,
     });
+    const fullData = {
+      characters: {},
+      profileData: { currentStage: 0 },
+      words: {},
+    };
     fullData.profileData = response.data.profileData;
     if ('characters' in response.data) {
       fullData.characters = response.data.characters;
@@ -58,47 +58,59 @@ const getUserData = async (
       fullData.words = response.data.words;
     }
     console.log('GET: user data loaded');
+    return fullData;
   } catch (error) {
-    return error;
+    console.error(`Error loading user data: ${error}`);
+    return new AxiosErrorObj(error);
   }
-  // How do I put an error handling here???
-  return fullData;
 };
 
-const addNewWord = (
+const addNewWord = async (
   word: string,
   object: MainCharacterInt | MainWordInt,
   token: string,
-): void => {
+): Promise<AxiosResponse<any> | AxiosErrorObj> => {
   const type = word.length > 1 ? 'words' : 'characters';
-
-  instance.put(`/main-data/${type}/${word}.json?auth=${token}`, object)
-    .then(() => { console.log('PUT: Upload complete'); })
-    .catch((error: AxiosError) => console.error(`Error adding new entry: ${error}`));
+  try {
+    const response: AxiosResponse = await instance.put(`/main-data/${type}/${word}.json?auth=${token}`, object);
+    console.log('PUT: New word upload complete');
+    return response;
+  } catch (error) {
+    console.error(`Error adding new entry: ${error}`);
+    return new AxiosErrorObj(error);
+  }
 };
 
-const addUserData = (
+const addUserData = async (
   word: string,
   object: UserCharacterInt,
   token: string,
   userId: string,
-): void => {
+): Promise<AxiosResponse<any> | AxiosErrorObj> => {
   const type = word.length > 1 ? 'words' : 'characters';
-
-  instance.put(`/${userId}/${type}/${word}.json?auth=${token}`, object)
-    .then(() => { console.log('PUT: new user data uploaded'); })
-    .catch((error: AxiosError) => console.error(`Error uploading new data: ${error}`));
+  try {
+    const response: AxiosResponse = await instance.put(`/${userId}/${type}/${word}.json?auth=${token}`, object);
+    console.log('PUT: new user data uploaded');
+    return response;
+  } catch (error) {
+    console.error(`Error uploading new user data: ${error}`);
+    return new AxiosErrorObj(error);
+  }
 };
 
-const setUserLevel = (
+const setUserLevel = async (
   newLevel: number,
   token: string,
   userId: string,
-): void => {
-  axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, newLevel)
-    .then(() => {
-      console.log('PUT database overwritten');
-    }).catch((error: AxiosError) => console.error(`Error updating database: ${error}`));
+): Promise<AxiosResponse<any> | AxiosErrorObj> => {
+  try {
+    const response: AxiosResponse = await axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, newLevel);
+    console.log('PUT database overwritten');
+    return response;
+  } catch (error) {
+    console.error(`Error uploading new user data: ${error}`);
+    return new AxiosErrorObj(error);
+  }
 };
 
 export {

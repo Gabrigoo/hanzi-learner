@@ -8,7 +8,6 @@ import { instance as axios } from '../axios-instance';
 import {
   UserCharacterInt, MainInt, UserInt, ReactFullState,
 } from '../interfaces';
-import { DataActionTypes } from '../redux/actions/types';
 import { loadUserData, updateUserData, updateUserLevel } from '../redux/actions';
 import Review from '../components/Review';
 import Strip from '../components/Strip';
@@ -25,21 +24,21 @@ interface ReactProps {
     object: UserCharacterInt,
     token: string,
     userId: string
-    ) => DataActionTypes,
-  updateUserLevel: (level: number, token: string, userId: string) => DataActionTypes,
+    ) => any,
+  updateUserLevel: (level: number, token: string, userId: string) => any,
 }
 
 const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
   // Loading user data
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (!props.userData) {
+    if (!props.userData && props.token) {
       props.loadUserData(source, props.token, props.userId);
     }
     return () => {
       source.cancel('GET request cancelled');
     };
-  }, [props.userData]);
+  }, [props.userData, props.token]);
 
   // After component unmounts user progress is checked for advancement
   useEffect(() => () => {

@@ -7,7 +7,6 @@ import { addMainData } from '../redux/actions';
 import {
   MainInt, MainCharacterInt, MainWordInt, ReactFullState,
 } from '../interfaces';
-import { DataActionTypes } from '../redux/actions/types';
 import Addition from '../components/Addition';
 import Strip from '../components/Strip';
 
@@ -18,7 +17,7 @@ interface ReactProps {
     word: string,
     object: MainCharacterInt | MainWordInt,
     token: string
-    ) => DataActionTypes,
+    ) => any,
 }
 
 const AdditionCont: React.FC<ReactProps> = (props): ReactElement => {

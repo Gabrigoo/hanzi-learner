@@ -8,7 +8,6 @@ import { instance as axios } from '../axios-instance';
 import {
   UserCharacterInt, MainInt, UserInt, ReactFullState,
 } from '../interfaces';
-import { DataActionTypes } from '../redux/actions/types';
 import { loadUserData, updateUserData } from '../redux/actions';
 import Learn from '../components/Learn';
 import Strip from '../components/Strip';
@@ -24,20 +23,20 @@ interface ReactProps {
     object: UserCharacterInt,
     token: string,
     userId: string
-    ) => DataActionTypes,
+    ) => any,
 }
 
 const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
   // Loading user data
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (!props.userData) {
+    if (!props.userData && props.token) {
       props.loadUserData(source, props.token, props.userId);
     }
     return () => {
       source.cancel('GET request cancelled');
     };
-  }, [props.userData]);
+  }, [props.userData, props.token]);
 
   // determines which items are to be learned by user level
   const filterNewItems = (main: MainInt, user: UserInt) => {
