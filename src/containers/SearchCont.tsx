@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { MainInt, ReactFullState } from '../interfaces';
 import Strip from '../components/Strip';
-import Search from '../components/Info/Search';
+import Search from '../components/info/Search';
 import { toneChecker } from '../assets/tones';
 
 interface ReactProps {

@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import UserProvider from './components/providers/UserProvider';
+import UserProvider from './components/authentication/provider/UserProvider';
 import { rootReducer } from './redux/reducers';
 import './index.css';
 

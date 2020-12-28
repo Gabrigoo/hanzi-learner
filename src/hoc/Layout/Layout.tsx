@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import Header from '../../components/Authentication/Header';
+import Header from '../../components/authentication/Header';
 import './Layout.css';
 
 interface LayoutProps {

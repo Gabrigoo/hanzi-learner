@@ -2,4 +2,4 @@
 /src/history.ts
 /src/assets/*
 /src/App.test.js
-/src/components/providers/
+/src/components/authentication/provider/

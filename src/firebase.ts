@@ -5,7 +5,7 @@ import 'firebase/firestore';
 import { AxiosError } from 'axios';
 import { instance as axios } from './axios-instance';
 import history from './history';
-import handleError from './components/Authentication/HandleAuthError';
+import handleError from './components/authentication/HandleAuthError';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBSdOBDev-GT-SSN_aa6H9IpdpEJBAngao',

@@ -12,9 +12,9 @@ import {
 } from '../../axios-instance';
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 
-export const signIn = (userId: string): AuthActionTypes => ({
+export const signIn = (user: firebase.User): AuthActionTypes => ({
   type: SIGN_IN,
-  payload: userId,
+  payload: user,
 });
 
 export const signOut = (): AuthActionTypes => ({

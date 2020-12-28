@@ -1,66 +1,68 @@
 import React, {
-  useContext, useState, useEffect, ReactElement,
+  useState, useEffect, ReactElement,
 } from 'react';
+import { connect } from 'react-redux';
+import firebase from 'firebase/app';
 
-import { UserContext } from '../providers/UserProvider';
 import { linkWithGoogle, handleSignOut } from '../../firebase';
+import { ReactFullState } from '../../interfaces';
 import unknownUser from '../../assets/unknown-user.png';
 import './Authentication.css';
 
-const ProfilePage = (): ReactElement => {
-  const currentUser = useContext<any>(UserContext);
+interface ProfilePageProps {
+  isSignedIn: boolean,
+  user: firebase.User,
+}
 
-  const [provider, setProvider] = useState(null);
-  const [userName, setUserName] = useState(localStorage.getItem('userName'));
-  const [email, setEmail] = useState(localStorage.getItem('email'));
-  const [photo, setPhoto] = useState(localStorage.getItem('photo'));
+const ProfilePage: React.FC<ProfilePageProps> = (props): ReactElement => {
+  const [provider, setProvider] = useState('');
 
   useEffect(() => {
-    if (currentUser) {
-      setProvider(currentUser.providerData[0].providerId);
-      setUserName(localStorage.getItem('userName'));
-      setEmail(localStorage.getItem('email'));
-      setPhoto(localStorage.getItem('photo'));
-    } else {
-      handleSignOut();
+    if (props.user) {
+      if (props.user.providerData[0]?.providerId) {
+        setProvider(props.user.providerData[0].providerId);
+      }
     }
-  }, [currentUser]);
+  }, [props.user]);
 
-  let photoURL = null;
-  if (photo === 'null') {
-    photoURL = unknownUser;
-  } else {
-    photoURL = photo;
-  }
+  if (props.user) {
+    const photo = props.user.photoURL ? props.user.photoURL : unknownUser;
 
-  return (
-    <div className="card auth-flex-card">
-      <div
-        id="profile-image-big"
-        style={{
-          background: `url(${photoURL})  no-repeat center center`,
-          backgroundSize: 'cover',
-        }}
-      />
-      <h1 className="auth-h1">{userName}</h1>
-      <h3 className="auth-h3">{email}</h3>
-      {provider === 'password' ? (
+    return (
+      <div className="card auth-flex-card">
+        <div
+          id="profile-image-big"
+          style={{
+            background: `url(${photo})  no-repeat center center`,
+            backgroundSize: 'cover',
+          }}
+        />
+        <h1 className="auth-h1">{props.user.displayName}</h1>
+        <h3 className="auth-h3">{props.user.email}</h3>
+        {provider === 'password' ? (
+          <button
+            className="standard-button"
+            onClick={linkWithGoogle}
+          >
+            Link with Google
+          </button>
+        )
+          : '' }
         <button
           className="standard-button"
-          onClick={linkWithGoogle}
+          onClick={handleSignOut}
         >
-          Link with Google
+          Sign out
         </button>
-      )
-        : '' }
-      <button
-        className="standard-button"
-        onClick={handleSignOut}
-      >
-        Sign out
-      </button>
-    </div>
-  );
+      </div>
+    );
+  }
+  return <div />;
 };
 
-export default ProfilePage;
+const mapStateToProps = (state: ReactFullState) => ({
+  isSignedIn: state.auth.isSignedIn,
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(ProfilePage);

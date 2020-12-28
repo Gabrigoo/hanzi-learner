@@ -2,6 +2,7 @@ import React, {
   useEffect, ReactElement,
 } from 'react';
 import { connect } from 'react-redux';
+import firebase from 'firebase/app';
 import { CancelTokenSource } from 'axios';
 
 import { instance as axios } from '../axios-instance';
@@ -15,7 +16,7 @@ import levels from '../assets/levels';
 
 interface ReactProps {
   token: string,
-  userId: string,
+  user: firebase.User,
   mainData: MainInt,
   userData: UserInt,
   loadUserData: (source: CancelTokenSource, token: string, userId: string) => any,
@@ -33,36 +34,32 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (!props.userData && props.token) {
-      props.loadUserData(source, props.token, props.userId);
+      props.loadUserData(source, props.token, props.user.uid);
     }
     return () => {
       source.cancel('GET request cancelled');
     };
   }, [props.userData, props.token]);
 
-  // After component unmounts user progress is checked for advancement
-  useEffect(() => () => {
-    if (props.mainData && props.userData) {
-      const userChar = props.userData.characters;
-      const userLevel = props.userData.profileData.currentStage;
+  const checkForAdvancement = () => {
+    const userChar = props.userData.characters;
+    const userLevel = props.userData.profileData.currentStage;
 
-      // possible characters from main DB for users current level
-      const currentLevelKeys = Object.keys(props.mainData.characters)
-        .filter((char) => props.mainData.characters[char].stage === userLevel);
+    // possible characters from main DB for users current level
+    const currentLevelKeys = Object.keys(props.mainData.characters)
+      .filter((char) => props.mainData.characters[char].stage === userLevel);
       // character that are known by the user at least at Guru level
-      const guruKeys = Object.keys(userChar).filter((char) => userChar[char].level > 4);
-      const fullLength = currentLevelKeys.length;
-      const knownLength = currentLevelKeys.filter((char) => guruKeys.includes(char)).length;
-      const ratio = (knownLength / fullLength) * 100;
-      console.log(`All characters: ${fullLength}, known:${knownLength}, (${Math.floor(ratio)}%)`);
+    const guruKeys = Object.keys(userChar).filter((char) => userChar[char].level > 4);
+    const fullLength = currentLevelKeys.length;
+    const knownLength = currentLevelKeys.filter((char) => guruKeys.includes(char)).length;
+    const ratio = (knownLength / fullLength) * 100;
+    console.log(`All characters: ${fullLength}, known:${knownLength}, (${Math.floor(ratio)}%)`);
 
-      if (ratio > 90) {
-        console.log(`User level increased to: ${userLevel + 1}`);
-        props.updateUserLevel(userLevel + 1, props.token, props.userId);
-      }
+    if (ratio > 90) {
+      console.log(`User level increased to: ${userLevel + 1}`);
+      props.updateUserLevel(userLevel + 1, props.token, props.user.uid);
     }
-  });
-
+  };
   // takes in user data and return the list of characters that need reviewing
   const dataToReview = (data: UserInt): string[] => {
     const review: string[] = [];
@@ -96,7 +93,7 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
   };
   // As name suggests, uploads the results of the review
   const uploadReviewResults = (word: string, object: UserCharacterInt) => {
-    props.updateUserData(word, object, props.token, props.userId);
+    props.updateUserData(word, object, props.token, props.user.uid);
   };
 
   let content;
@@ -113,6 +110,7 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
           userData={props.userData}
           reviewData={dataToReview(props.userData)}
           uploadReviewResults={uploadReviewResults}
+          checkForAdvancement={checkForAdvancement}
         />
       );
     }
@@ -131,7 +129,7 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
 
 const mapStateToProps = (state: ReactFullState) => ({
   token: state.auth.token,
-  userId: state.auth.userId,
+  user: state.auth.user,
   mainData: state.data.mainData,
   userData: state.data.userData,
 });

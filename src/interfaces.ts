@@ -1,3 +1,5 @@
+import firebase from 'firebase/app';
+
 interface MainCharacterInt {
   chineseSimp: string,
   chineseTrad: string,
@@ -47,7 +49,7 @@ interface UserInt {
 interface ReactFullState {
   auth: {
     isSignedIn: boolean,
-    userId: string,
+    user: firebase.User,
     token: string,
   }
   data: {

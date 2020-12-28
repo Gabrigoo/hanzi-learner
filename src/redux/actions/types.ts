@@ -1,5 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
+import firebase from 'firebase/app';
 
 import { RootState } from '../reducers';
 import {
@@ -19,7 +20,7 @@ export const UPDATE_USER_LEVEL = 'UPDATE_USER_LEVEL';
 
 interface SignInAction {
     type: typeof SIGN_IN
-    payload: string
+    payload: firebase.User
 }
 
 interface SignOutAction {

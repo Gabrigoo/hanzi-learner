@@ -1,6 +1,7 @@
 import React, {
   ReactElement,
 } from 'react';
+import firebase from 'firebase/app';
 import { connect } from 'react-redux';
 
 import {
@@ -11,14 +12,14 @@ import MainMenu from '../components/MainMenu';
 
 interface ReactProps {
   isSignedIn: boolean,
-  userId: string,
+  user: firebase.User,
 }
 
 const MainCont: React.FC<ReactProps> = (props): ReactElement => {
   let content;
 
-  if (props.isSignedIn) {
-    content = <MainMenu userId={props.userId} />;
+  if (props.isSignedIn && props.user) {
+    content = <MainMenu userId={props.user.uid} />;
   } else if (props.isSignedIn === false) {
     content = <Strip message="Please sign-in or sign-up first" backTrack="/sign-in" timeout={4000} />;
   } else {
@@ -34,7 +35,7 @@ const MainCont: React.FC<ReactProps> = (props): ReactElement => {
 
 const mapStateToProps = (state: ReactFullState) => ({
   isSignedIn: state.auth.isSignedIn,
-  userId: state.auth.userId,
+  user: state.auth.user,
 });
 
 export default connect(

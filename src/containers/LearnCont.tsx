@@ -2,6 +2,7 @@ import React, {
   useEffect, ReactElement,
 } from 'react';
 import { connect } from 'react-redux';
+import firebase from 'firebase/app';
 import { CancelTokenSource } from 'axios';
 
 import { instance as axios } from '../axios-instance';
@@ -14,7 +15,7 @@ import Strip from '../components/Strip';
 
 interface ReactProps {
   token: string,
-  userId: string,
+  user: firebase.User,
   mainData: MainInt,
   userData: UserInt,
   loadUserData: (source: CancelTokenSource, token: string, userId: string) => any,
@@ -31,7 +32,7 @@ const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (!props.userData && props.token) {
-      props.loadUserData(source, props.token, props.userId);
+      props.loadUserData(source, props.token, props.user.uid);
     }
     return () => {
       source.cancel('GET request cancelled');
@@ -69,7 +70,7 @@ const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
 
   // adds learned character from main DB to user DB
   const learnNewWord = (word: string, object: UserCharacterInt) => {
-    props.updateUserData(word, object, props.token, props.userId);
+    props.updateUserData(word, object, props.token, props.user.uid);
   };
 
   let content;
@@ -101,7 +102,7 @@ const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
 
 const mapStateToProps = (state: ReactFullState) => ({
   token: state.auth.token,
-  userId: state.auth.userId,
+  user: state.auth.user,
   mainData: state.data.mainData,
   userData: state.data.userData,
 });

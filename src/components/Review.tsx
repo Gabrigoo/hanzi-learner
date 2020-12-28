@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../interfaces';
 import { similarity, editDistance } from '../assets/levenshtein_distance';
 import { toneChecker } from '../assets/tones';
-import InfoTag from './Info/InfoTag';
+import InfoTag from './info/InfoTag';
 import './Review.css';
 
 interface ReviewProps {
@@ -31,6 +31,7 @@ interface ReviewProps {
     };
   reviewData: string[];
   uploadReviewResults: (character: string, object: UserCharacterInt) => void,
+  checkForAdvancement: () => void,
 }
 
 const Review: React.FC<ReviewProps> = (props): ReactElement => {
@@ -205,6 +206,10 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       }
       if (tries === 1) { // correct solution on first try, advance level
         userCharObject.level += 1;
+        // char is now guru, so check advancement
+        if (userCharObject.level === 5) {
+          props.checkForAdvancement();
+        }
         setCorrectNum(correctNum + 1);
         setCorrectList(correctList.concat(current));
       } else { // solution was correct but not at first try, fall back some levels
