@@ -8,7 +8,7 @@ interface TitleBoxProps {
 
 const MainMenu: React.FC<TitleBoxProps> = (props): ReactElement => {
   const adminList = [
-    'BjnlPmoMJAgRyJdkfjMGWROujbm1',
+    'AGBKwyOAwKhJyNenUVyE8GEIU8B2',
   ];
 
   const isAdmin = adminList.includes(props.userId);

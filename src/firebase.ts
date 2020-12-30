@@ -8,13 +8,13 @@ import history from './history';
 import handleError from './components/authentication/HandleAuthError';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBSdOBDev-GT-SSN_aa6H9IpdpEJBAngao',
-  authDomain: 'fir-sample-project-5efcf.firebaseapp.com',
-  databaseURL: 'https://fir-sample-project-5efcf.firebaseio.com',
-  projectId: 'fir-sample-project-5efcf',
-  storageBucket: 'fir-sample-project-5efcf.appspot.com',
-  messagingSenderId: '437929269435',
-  appId: '1:437929269435:web:a4490ab492a64323ecb19e',
+  apiKey: 'AIzaSyA3HHg0BjsZ3xck-zB1Sm02fLOerr0JeP4',
+  authDomain: 'hanzi-learner-466ac.firebaseapp.com',
+  databaseURL: 'https://hanzi-learner-466ac-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'hanzi-learner-466ac',
+  storageBucket: 'hanzi-learner-466ac.appspot.com',
+  messagingSenderId: '312627980272',
+  appId: '1:312627980272:web:08f4978778618992d7df35',
 };
 
 firebase.initializeApp(firebaseConfig);

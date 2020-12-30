@@ -57,6 +57,8 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   const [solutionSubmitted, setSolutionSubmitted] = useState(false);
   // solution submitted is correct
   const [solutionCorrect, setSolutionCorrect] = useState(false);
+  // Displays new level after solution submit
+  const [newLevel, setNewLevel] = useState(0);
   // user input
   const [meanInput, setMeaning] = useState('');
   const [readInput, setReading] = useState('');
@@ -223,6 +225,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
         setIncorrectNum(incorrectNum + 1);
         setIncorrectList(inCorrectList.concat(current));
       }
+      setNewLevel(userCharObject.level);
       // refresh database with results
       props.uploadReviewResults(current, userCharObject);
       // resets most things
@@ -307,31 +310,19 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
         <h2 id="chinese-simplified">{mainData[current].chineseSimp}</h2>
         <h1 id="chinese-traditional">{mainData[current].chineseTrad}</h1>
         <p id="correct">
-          Correct:
-          {' '}
-          {correctNum}
-          {' '}
-          -
-          {' '}
+          {`Correct: ${correctNum} - `}
           {correctNum + incorrectNum > 0
             ? Math.round((correctNum / (correctNum + incorrectNum)) * 100) : 0}
           %
         </p>
         <p id="incorrect">
-          Incorrect:
-          {' '}
-          {incorrectNum}
-          {' '}
-          -
-          {' '}
+          {`Incorrect: ${incorrectNum} - `}
           {correctNum + incorrectNum > 0
             ? Math.round((incorrectNum / (correctNum + incorrectNum)) * 100) : 0}
           %
         </p>
         <p id="remaining">
-          Remanining:
-          {' '}
-          {remaningNum}
+          {`Remanining: ${remaningNum}`}
         </p>
         <label
           id="meaning-label"
@@ -363,6 +354,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           value={readInput}
           onChange={(event) => setReading(event.target.value)}
         />
+        <p id="new-level">{solutionSubmitted ? newLevel : ''}</p>
         <form
           id="submit-button-form"
           autoComplete="off"
@@ -384,11 +376,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                 .join(', ')}
             </p>
             <p id="reading-solution">
-              {mainData[current].pinyin}
-              {' '}
-              (tone:
-              {mainData[current].tone}
-              )
+              {`${mainData[current].pinyin} (tone: ${mainData[current].tone})`}
             </p>
             <label
               id="meaning-memonic-label"

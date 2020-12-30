@@ -5,7 +5,7 @@ import {
 } from './interfaces';
 // I cannot give any other type than any here because neither instance types work :(
 const instance: any = axios.create({
-  baseURL: 'https://fir-sample-project-5efcf.firebaseio.com/',
+  baseURL: 'https://hanzi-learner-466ac-default-rtdb.europe-west1.firebasedatabase.app',
 });
 instance.CancelToken = axios.CancelToken;
 instance.isCancel = axios.isCancel;
