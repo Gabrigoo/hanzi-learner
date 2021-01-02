@@ -55,6 +55,10 @@
 #submit-button-form {
   width: 100%;
 }
+#new-level {
+  padding: 5px;
+  border-radius: 6px;
+}
 #meaning-label, #reading-label, #meaning-memonic-label, #reading-memonic-label {
   margin-top: 20px;
 }

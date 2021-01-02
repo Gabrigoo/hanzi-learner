@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../interfaces';
 import { similarity, editDistance } from '../assets/levenshtein_distance';
 import { toneChecker } from '../assets/tones';
+import LEVELS from '../assets/levels';
 import InfoTag from './info/InfoTag';
 import './Review.css';
 
@@ -94,7 +95,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     setNewMeaningMemonic(userData[current].memoMean);
     setNewReadingMemonic(userData[current].memoRead);
   };
-  // runs when asnwer is initially submitted
+  // runs when answer is initially submitted
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -147,10 +148,52 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           readCorrect += 1;
         }
       }
-
+      // creates a new object to upload new information
+      const userCharObject: UserCharacterInt = {
+        lastPract: new Date().getTime(),
+        level: userData[current].level,
+        memoMean: userData[current].memoMean,
+        memoRead: userData[current].memoRead,
+      };
+      if (newLevel !== 0) {
+        userCharObject.level = newLevel;
+      }
+      // We only check advancement on the first try
+      if (tries === 0) {
+        // user will always advance to level 1, regardless of performance
+        if (userCharObject.level === 0) {
+          userCharObject.level = 1;
+        }
+        if (meanCorrect > 0 && readCorrect > 0) {
+          userCharObject.level += 1;
+          // char is now guru, so check advancement
+          if (userCharObject.level === 5) {
+            props.checkForAdvancement();
+          }
+          setCorrectNum(correctNum + 1);
+          setCorrectList(correctList.concat(current));
+        } else {
+          // from Guru fall back to Apprentice
+          if (userCharObject.level === 5 || userCharObject.level === 6) {
+            userCharObject.level = 4;
+            // from Master and Enlightened, fall back to Guru
+          } else if (userCharObject.level === 7 || userCharObject.level === 8) {
+            userCharObject.level = 6;
+          }
+          setIncorrectNum(incorrectNum + 1);
+          setIncorrectList(inCorrectList.concat(current));
+        }
+      // second try or more
+      }
       if (meanCorrect > 0 && readCorrect > 0) {
         setSolutionCorrect(true);
       }
+      // Then set new level to display
+      setNewLevel(userCharObject.level);
+      // refresh database with results
+      props.uploadReviewResults(current, userCharObject);
+      // this is needed so we can advance to the next step
+      setSolutionSubmitted(true);
       // color input boxes depending on result
       switch (meanCorrect) {
         case 0:
@@ -174,8 +217,6 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           (document.getElementById('reading-input') as HTMLInputElement).style.backgroundColor = 'green';
           break;
       }
-      // this is needed so we can advance to the next step
-      setSolutionSubmitted(true);
       (document.getElementById('board-submit-button') as HTMLButtonElement).focus();
     }
   };
@@ -188,51 +229,27 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     (document.getElementById('meaning-input') as HTMLInputElement).disabled = false;
     (document.getElementById('reading-input') as HTMLInputElement).disabled = false;
 
-    // this is only activates when the user finally gets it right (regardless of number of tries)
-    if (solutionCorrect) {
+    // if memonic was modified, save it
+    if (changeMemonic) {
       // creates a new object to upload new information
       const userCharObject: UserCharacterInt = {
-        lastPract: new Date().getTime(),
+        lastPract: userData[current].lastPract,
         level: userData[current].level,
         memoMean: userData[current].memoMean,
         memoRead: userData[current].memoRead,
       };
-      // if memonic was modified, save it
-      if (changeMemonic) {
-        userCharObject.memoMean = newMeaningMemonic;
-        userCharObject.memoRead = newReadingMemonic;
+      if (newLevel !== 0) {
+        userCharObject.level = newLevel;
       }
-      // user will always advance to level 1, regardless of performance
-      if (userCharObject.level === 0) {
-        userCharObject.level = 1;
-      }
-      if (tries === 1) { // correct solution on first try, advance level
-        userCharObject.level += 1;
-        // char is now guru, so check advancement
-        if (userCharObject.level === 5) {
-          props.checkForAdvancement();
-        }
-        setCorrectNum(correctNum + 1);
-        setCorrectList(correctList.concat(current));
-      } else { // solution was correct but not at first try, fall back some levels
-        // from Guru fall back to Apprentice
-        if (userCharObject.level === 5 || userCharObject.level === 6) {
-          userCharObject.level = 4;
-          // from Master and Enlightened, fall back to Guru
-        } else if (userCharObject.level === 7 || userCharObject.level === 8) {
-          userCharObject.level = 6;
-        }
-        setIncorrectNum(incorrectNum + 1);
-        setIncorrectList(inCorrectList.concat(current));
-      }
-      setNewLevel(userCharObject.level);
-      // refresh database with results
+      userCharObject.memoMean = newMeaningMemonic;
+      userCharObject.memoRead = newReadingMemonic;
       props.uploadReviewResults(current, userCharObject);
-      // resets most things
-      setChangeMemonic(false);
-      setNewReadingMemonic('');
-      setNewMeaningMemonic('');
-      // advances to next character
+    }
+    // resets most things
+    setChangeMemonic(false);
+    setNewReadingMemonic('');
+    setNewMeaningMemonic('');
+    if (solutionCorrect) {
       const next = shuffledDeck[shuffledDeck.indexOf(current) + 1];
       if (Object.keys(props.mainData.characters).includes(next)) {
         setMainData(props.mainData.characters);
@@ -244,13 +261,13 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       setCurrent(next);
       setTries(0);
       setRemainingNum(remaningNum - 1);
+      setSolutionCorrect(false);
+      setNewLevel(0);
     }
-    setSolutionSubmitted(false);
-    setSolutionCorrect(false);
     setMeaning('');
     setReading('');
-
     (document.getElementById('meaning-input') as HTMLInputElement).focus();
+    setSolutionSubmitted(false);
   };
 
   // go into summary when no characters left to review
@@ -354,7 +371,16 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           value={readInput}
           onChange={(event) => setReading(event.target.value)}
         />
-        <p id="new-level">{solutionSubmitted ? newLevel : ''}</p>
+        {solutionSubmitted
+          ? (
+            <p
+              id="new-level"
+              style={solutionCorrect ? { backgroundColor: 'green' } : { backgroundColor: 'red' }}
+            >
+              {LEVELS[newLevel][1].slice(0, -2)}
+            </p>
+          )
+          : ''}
         <form
           id="submit-button-form"
           autoComplete="off"
