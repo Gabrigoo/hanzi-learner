@@ -18,6 +18,10 @@ export const ADD_MAIN_DATA = 'ADD_MAIN_DATA';
 export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
 export const UPDATE_USER_LEVEL = 'UPDATE_USER_LEVEL';
 
+export const SESSION_START = 'SESSION_START';
+export const ANSWER_CORRECT = 'ANSWER_CORRECT';
+export const ANSWER_INCORRECT = 'ANSWER_INCORRECT';
+
 interface SignInAction {
     type: typeof SIGN_IN
     payload: firebase.User
@@ -61,6 +65,24 @@ interface UpdateUserLevelAction {
 
 export type DataActionTypes = AddMainDataAction | UpdateUserDataAction | UpdateUserLevelAction
 | loadMainData | loadUserData;
+
+interface SessionStartAction {
+    type: typeof SESSION_START
+    payload: any
+}
+
+interface AnswerCorrectAction {
+    type: typeof ANSWER_CORRECT
+    payload: any
+}
+
+interface AnswerIncorrectAction {
+    type: typeof ANSWER_INCORRECT
+    payload: any
+}
+
+export type SessionActionTypes = SessionStartAction | AnswerCorrectAction | AnswerIncorrectAction
+ | loadUserData
 
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,

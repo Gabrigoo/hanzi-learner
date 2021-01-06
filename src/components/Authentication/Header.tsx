@@ -17,7 +17,7 @@ interface HeaderProps {
   isSignedIn: boolean,
   user: firebase.User,
   token: string,
-  loadMainData: (source: CancelTokenSource, token: string) => any,
+  loadMainData: (source: CancelTokenSource) => any,
   getToken: (userAuth: firebase.User) => any,
 }
 
@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
     const source = axios.CancelToken.source();
 
     if (props.user && props.token) {
-      props.loadMainData(source, props.token);
+      props.loadMainData(source);
     } else if (props.user) {
       props.getToken(props.user);
     }

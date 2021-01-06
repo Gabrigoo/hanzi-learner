@@ -43,7 +43,15 @@ interface UserInt {
   },
   profileData: {
     currentStage: number
-  }
+  },
+  sessionData: SessionInt;
+}
+
+interface SessionInt {
+  sessionStart: number | null,
+  remainingList: string[],
+  correctList: string[],
+  incorrectList: string[],
 }
 
 interface ReactFullState {
@@ -54,10 +62,11 @@ interface ReactFullState {
   }
   data: {
     mainData: MainInt,
-    userData: UserInt
+    userData: UserInt,
   }
+  session: SessionInt,
 }
 
 export type {
-  MainCharacterInt, MainWordInt, UserCharacterInt, MainInt, UserInt, ReactFullState,
+  MainCharacterInt, MainWordInt, UserCharacterInt, MainInt, UserInt, ReactFullState, SessionInt,
 };

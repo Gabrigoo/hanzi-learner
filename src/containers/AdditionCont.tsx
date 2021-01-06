@@ -16,7 +16,6 @@ interface ReactProps {
   addMainData: (
     word: string,
     object: MainCharacterInt | MainWordInt,
-    token: string
     ) => any,
 }
 
@@ -30,7 +29,7 @@ const AdditionCont: React.FC<ReactProps> = (props): ReactElement => {
 
   // Functions for data upload when next character is added to DB
   const uploadNewWord = (word: string, object: MainCharacterInt | MainWordInt) => {
-    props.addMainData(word, object, props.token);
+    props.addMainData(word, object);
   };
 
   let content;

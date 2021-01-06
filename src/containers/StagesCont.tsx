@@ -2,7 +2,6 @@ import React, {
   useEffect, ReactElement,
 } from 'react';
 import { connect } from 'react-redux';
-import firebase from 'firebase/app';
 import { CancelTokenSource } from 'axios';
 
 import { instance as axios } from '../axios-instance';
@@ -15,10 +14,9 @@ import Stage from '../components/info/Stage';
 
 interface ReactProps {
   token: string,
-  user: firebase.User,
   mainData: MainInt,
   userData: UserInt,
-  loadUserData: (source: CancelTokenSource, token: string, userId: string) => any,
+  loadUserData: (source: CancelTokenSource) => any,
 }
 
 const StagesCont: React.FC<ReactProps> = (props): ReactElement => {
@@ -26,7 +24,7 @@ const StagesCont: React.FC<ReactProps> = (props): ReactElement => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (!props.userData && props.token) {
-      props.loadUserData(source, props.token, props.user.uid);
+      props.loadUserData(source);
     }
     return () => {
       source.cancel('GET request cancelled');
@@ -90,7 +88,6 @@ const StagesCont: React.FC<ReactProps> = (props): ReactElement => {
 
 const mapStateToProps = (state: ReactFullState) => ({
   token: state.auth.token,
-  user: state.auth.user,
   mainData: state.data.mainData,
   userData: state.data.userData,
 });

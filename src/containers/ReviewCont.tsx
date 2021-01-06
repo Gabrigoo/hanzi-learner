@@ -1,40 +1,41 @@
 import React, {
-  useEffect, ReactElement,
+  useEffect, ReactElement, useState,
 } from 'react';
 import { connect } from 'react-redux';
-import firebase from 'firebase/app';
 import { CancelTokenSource } from 'axios';
 
 import { instance as axios } from '../axios-instance';
 import {
-  UserCharacterInt, MainInt, UserInt, ReactFullState,
+  UserCharacterInt, MainInt, UserInt, ReactFullState, SessionInt,
 } from '../interfaces';
-import { loadUserData, updateUserData, updateUserLevel } from '../redux/actions';
+import {
+  loadUserData, updateUserData, updateUserLevel, startSession, answerCorrect, answerIncorrect,
+} from '../redux/actions';
+import Summary from '../components/Summary';
 import Review from '../components/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';
 
 interface ReactProps {
   token: string,
-  user: firebase.User,
   mainData: MainInt,
   userData: UserInt,
-  loadUserData: (source: CancelTokenSource, token: string, userId: string) => any,
-  updateUserData: (
-    word: string,
-    object: UserCharacterInt,
-    token: string,
-    userId: string
-    ) => any,
-  updateUserLevel: (level: number, token: string, userId: string) => any,
+  sessionData: SessionInt,
+  loadUserData: (source: CancelTokenSource) => any,
+  updateUserData: (word: string, object: UserCharacterInt) => any,
+  updateUserLevel: (level: number) => any,
+  startSession: (remainingList: string[]) => any,
+  answerCorrect: (word: string) => any,
+  answerIncorrect: (word: string) => any,
 }
 
 const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
+  const [sessionOn, setSessionOn] = useState(false);
   // Loading user data
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (!props.userData && props.token) {
-      props.loadUserData(source, props.token, props.user.uid);
+      props.loadUserData(source);
     }
     return () => {
       source.cancel('GET request cancelled');
@@ -57,9 +58,10 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
 
     if (ratio > 90) {
       console.log(`User level increased to: ${userLevel + 1}`);
-      props.updateUserLevel(userLevel + 1, props.token, props.user.uid);
+      props.updateUserLevel(userLevel + 1);
     }
   };
+
   // takes in user data and return the list of characters that need reviewing
   const dataToReview = (data: UserInt): string[] => {
     const review: string[] = [];
@@ -93,24 +95,54 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
   };
   // As name suggests, uploads the results of the review
   const uploadReviewResults = (word: string, object: UserCharacterInt) => {
-    props.updateUserData(word, object, props.token, props.user.uid);
+    props.updateUserData(word, object);
+  };
+  // Upload answer into session db
+  const uploadAnswer = (word: string, correct: boolean) => {
+    if (correct) {
+      props.answerCorrect(word);
+    } else {
+      props.answerIncorrect(word);
+    }
+  };
+  // Starts or stops the current session
+  const switchSession = () => {
+    if (sessionOn) {
+      setSessionOn(false);
+    } else {
+      props.startSession(dataToReview(props.userData));
+      setSessionOn(true);
+    }
   };
 
   let content;
 
   if (props.mainData && props.userData) {
-    if (!props.userData.characters) {
-      content = <Strip message="You do not have any characters to review yet. Please visit Learn first." backTrack="/main" timeout={4000} />;
-    } else if (dataToReview(props.userData).length === 0) {
-      content = <Strip message="No characters to review right now" backTrack="/main" timeout={4000} />;
+    if (sessionOn) {
+      if (props.sessionData.sessionStart) {
+        content = (
+          <Review
+            mainData={props.mainData}
+            userData={props.userData}
+            reviewData={dataToReview(props.userData)}
+            sessionData={props.sessionData}
+            uploadReviewResults={uploadReviewResults}
+            checkForAdvancement={checkForAdvancement}
+            switchSession={switchSession}
+            uploadAnswer={uploadAnswer}
+          />
+        );
+      } else {
+        content = <Strip message="Loading..." />;
+      }
     } else {
       content = (
-        <Review
+        <Summary
           mainData={props.mainData}
           userData={props.userData}
           reviewData={dataToReview(props.userData)}
-          uploadReviewResults={uploadReviewResults}
-          checkForAdvancement={checkForAdvancement}
+          sessionData={props.sessionData}
+          switchSession={switchSession}
         />
       );
     }
@@ -129,12 +161,19 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
 
 const mapStateToProps = (state: ReactFullState) => ({
   token: state.auth.token,
-  user: state.auth.user,
   mainData: state.data.mainData,
   userData: state.data.userData,
+  sessionData: state.session,
 });
 
 export default connect(
   mapStateToProps,
-  { loadUserData, updateUserData, updateUserLevel },
+  {
+    loadUserData,
+    updateUserData,
+    updateUserLevel,
+    startSession,
+    answerCorrect,
+    answerIncorrect,
+  },
 )(ReviewCont);

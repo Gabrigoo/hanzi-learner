@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import AxiosErrorObj from 'axios-error';
 import {
-  MainInt, UserInt, MainCharacterInt, MainWordInt, UserCharacterInt,
+  MainInt, UserInt, MainCharacterInt, MainWordInt, UserCharacterInt, SessionInt,
 } from './interfaces';
 // I cannot give any other type than any here because neither instance types work :(
 const instance: any = axios.create({
@@ -42,13 +42,19 @@ const getUserData = async (
   userId: string,
 ): Promise<UserInt | AxiosErrorObj> => {
   try {
-    const response: AxiosResponse = await instance.get(`/${userId}.json?auth=${token}`, {
+    const response: AxiosResponse<UserInt> = await instance.get(`/${userId}.json?auth=${token}`, {
       cancelToken: source.token,
     });
     const fullData = {
       characters: {},
       profileData: { currentStage: 0 },
       words: {},
+      sessionData: {
+        sessionStart: null,
+        remainingList: [],
+        correctList: [],
+        incorrectList: [],
+      },
     };
     fullData.profileData = response.data.profileData;
     if ('characters' in response.data) {
@@ -56,6 +62,9 @@ const getUserData = async (
     }
     if ('words' in response.data) {
       fullData.words = response.data.words;
+    }
+    if ('sessionData' in response.data) {
+      fullData.sessionData = Object.assign(fullData.sessionData, response.data.sessionData);
     }
     console.log('GET: user data loaded');
     return fullData;
@@ -113,6 +122,21 @@ const setUserLevel = async (
   }
 };
 
+const addReviewData = async (
+  object: SessionInt,
+  token: string,
+  userId: string,
+): Promise<AxiosResponse<any> | AxiosErrorObj> => {
+  try {
+    const response: AxiosResponse = await instance.put(`/${userId}/sessionData.json?auth=${token}`, object);
+    console.log('PUT: new session data uploaded');
+    return response;
+  } catch (error) {
+    console.error(`Error uploading new user data: ${error}`);
+    return new AxiosErrorObj(error);
+  }
+};
+
 export {
-  instance, getMainData, getUserData, addNewWord, addUserData, setUserLevel,
+  instance, getMainData, getUserData, addNewWord, addUserData, setUserLevel, addReviewData,
 };

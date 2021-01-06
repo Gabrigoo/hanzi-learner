@@ -2,7 +2,6 @@ import React, {
   useEffect, ReactElement,
 } from 'react';
 import { useParams } from 'react-router-dom';
-import firebase from 'firebase/app';
 import { connect } from 'react-redux';
 import { CancelTokenSource } from 'axios';
 
@@ -16,15 +15,12 @@ import Strip from '../components/Strip';
 
 interface ReactProps {
   token: string,
-  user: firebase.User,
   mainData: MainInt,
   userData: UserInt,
-  loadUserData: (source: CancelTokenSource, token: string, userId: string) => any,
+  loadUserData: (source: CancelTokenSource) => any,
   updateUserData: (
     word: string,
     object: UserCharacterInt,
-    token: string,
-    userId: string
     ) => any,
 }
 
@@ -36,7 +32,7 @@ const InfoCont: React.FC<ReactProps> = (props): ReactElement => {
   useEffect(() => {
     const source: CancelTokenSource = axios.CancelToken.source();
     if (!props.userData && props.token) {
-      props.loadUserData(source, props.token, props.user.uid);
+      props.loadUserData(source);
     }
     return () => {
       source.cancel('GET request cancelled');
@@ -45,7 +41,7 @@ const InfoCont: React.FC<ReactProps> = (props): ReactElement => {
 
   // function for uploading memonic changes by the user
   const updateMemonic = (word: string, object: UserCharacterInt) => {
-    props.updateUserData(word, object, props.token, props.user.uid);
+    props.updateUserData(word, object);
   };
 
   let content;
@@ -74,7 +70,6 @@ const InfoCont: React.FC<ReactProps> = (props): ReactElement => {
 
 const mapStateToProps = (state: ReactFullState) => ({
   token: state.auth.token,
-  user: state.auth.user,
   mainData: state.data.mainData,
   userData: state.data.userData,
 });

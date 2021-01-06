@@ -12,6 +12,7 @@ const INITIAL_STATE: DataState = {
   mainData: null,
   userData: null,
 };
+
 // Have to ask someone smarter than me about this one 2
 export default (state = INITIAL_STATE, action: DataActionTypes): any => {
   switch (action.type) {
