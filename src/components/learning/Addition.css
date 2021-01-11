@@ -3,20 +3,9 @@
   min-height: 530px;
   height: auto;
   width: 400px;
-  padding: 10px 30px 15px 30px;
   place-items: unset;
   font-size: 17px;
-}
-#button-character {
-  border-color: rgb(45, 99, 14);
-  background:  rgb(30, 145, 58);
-}
-#button-word {
-  border-color: rgb(104, 36, 168);
-  background:  rgb(137, 47, 221);
-}
-#button-character, #button-word {
-  width: 100px;
+  gap: 0px;
 }
 .addition-label {
   display: flex;
@@ -24,6 +13,7 @@
   text-align: left;
   width: 100%;
   margin: 0px;
+  margin-left: 30px;
   margin-top: 5px;
 }
 .addition-input {
@@ -39,48 +29,7 @@
   min-width: 40px;
   width: 16%;
   margin: auto;
-}
-.add-h1 {
-  margin: auto;
-  margin-top: -5px;
-  margin-bottom: 0px;
-}
-.add-p {
-  margin-top: 5px;
-  margin-bottom: 1px;
-}
-.margin-bottom-3 {
-  margin-bottom: 3px;
-}
-.margin-bottom-2 {
-  margin-bottom: 2px;
-}
-#clear-button {
-  width: 3.5em;
-  margin: 0px 10px 0px 20px;
-  background:  rgb(173, 49, 45);
-}
-#submit-button {
-  width: 120px;
-}
-#two-buttons-div {
-  display: flex;
-  flex-direction: row;
-}
-#top-flex {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
-#bottom-flex {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 10px;
+  margin-left: 2px;
 }
 #add-message {
   height: 25px;
@@ -151,6 +100,15 @@ input:checked + .slider:before {
 @media (max-width: 500px) { 
   #addition-card {
       width: 80vw;
+  }
+  .addition-label {
+    margin-left: 10px;
+  }
+}
+
+@media (max-width: 300px) { 
+  .addition-label {
+    margin-left: 0px;
   }
 }
 

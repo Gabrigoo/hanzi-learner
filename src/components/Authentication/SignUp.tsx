@@ -3,6 +3,13 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 
+import {
+  Button,
+  Typography,
+  TextField,
+  Grid,
+} from '@material-ui/core';
+
 import { signInWithGoogle, signInWithFacebook, createUserWithEmailAndPasswordHandler } from '../../firebase';
 import './Authentication.css';
 
@@ -13,74 +20,73 @@ const SignUp = (): ReactElement => {
   const [error, setError] = useState('');
 
   return (
-    <div className="card auth-flex-card">
-      <h1 className="auth-h1">Sign up</h1>
-      <div id="auth-error">{error}</div>
-      <label htmlFor="displayName">Display Name:</label>
-      <input
+    <form
+      className="card auth-flex-card"
+      onSubmit={
+        (event) => {
+          createUserWithEmailAndPasswordHandler(event, email, password, displayName, setError);
+        }
+      }
+    >
+      <Typography variant="h4">Sign up</Typography>
+      <Typography variant="h6" color="error">{error}</Typography>
+      <TextField
         type="text"
-        name="displayName"
+        label="Username"
+        variant="outlined"
         value={displayName}
-        placeholder="E.g: Johnathan"
-        id="displayname"
-        className="auth-input"
+        required
         onChange={(event) => setDisplayName(event.target.value)}
       />
-      <label htmlFor="userEmail">Email:</label>
-      <input
+      <TextField
         type="email"
-        name="userEmail"
-        form="sign-up-button-form"
+        label="Email"
+        variant="outlined"
         value={email}
-        placeholder="E.g: ilearnchinese@gmail.com"
-        id="userEmail"
-        className="auth-input"
+        required
         onChange={(event) => setEmail(event.target.value)}
       />
-      <label htmlFor="userPassword">Password:</label>
-      <input
+      <TextField
         type="password"
-        name="userPassword"
-        form="sign-up-button-form"
+        label="Password"
+        variant="outlined"
         value={password}
-        placeholder="Your password"
-        id="userPassword"
-        className="auth-input"
+        required
         onChange={(event) => setPassword(event.target.value)}
       />
-      <form
-        id="sign-up-button-form"
-        onSubmit={
-          (event) => {
-            createUserWithEmailAndPasswordHandler(event, email, password, displayName, setError);
-          }
-        }
-      >
-        <button className="standard-button" type="submit">
-          Sign up
-        </button>
-      </form>
-      <p className="auth-p">or</p>
-      <div className="two-button-flex">
-        <button
-          onClick={(event) => signInWithGoogle(event, setError)}
-          className="standard-button large-button"
+      <Button variant="contained" color="primary" type="submit">
+        Sign up
+      </Button>
+      <Typography>or</Typography>
+      <Grid container direction="row" justify="center" spacing={2}>
+        <Grid item>
+          <Button
+            onClick={(event) => signInWithGoogle(event, setError)}
+            variant="contained"
+            color="primary"
+          >
+            Sign in with Google
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            onClick={signInWithFacebook}
+            variant="contained"
+            color="primary"
+          >
+            Sign in with Facebook
+          </Button>
+        </Grid>
+      </Grid>
+      <Typography>Already have an account?</Typography>
+      <Link className="no-underline" to="/sign-in">
+        <Button
+          color="primary"
         >
-          Sign in with Google
-        </button>
-        <button onClick={signInWithFacebook} className="standard-button large-button">
-          Sign in with Facebook
-        </button>
-      </div>
-      <p className="auth-p">Already have an account?</p>
-      <Link
-        to="/sign-in"
-        id="sing-up-in-redirect"
-        className="standard-button"
-      >
-        Sign in here
+          Sign in here
+        </Button>
       </Link>
-    </div>
+    </form>
   );
 };
 

@@ -1,6 +1,12 @@
 import React, { useState, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
+import {
+  Button,
+  Typography,
+  TextField,
+} from '@material-ui/core';
+
 import { sendResetEmail } from '../../firebase';
 import './Authentication.css';
 
@@ -10,30 +16,29 @@ const PasswordReset = (): ReactElement => {
   const [error, setError] = useState('');
 
   return (
-    <div className="card">
-      <h1 className="auth-h1">Reset your Password</h1>
-      {error
-        ? <div id="auth-error">{error}</div>
-        : <div id="auth-message">{message}</div>}
-      <label htmlFor="userEmail">Email:</label>
-      <input
+    <form
+      className="card auth-flex-card"
+      onSubmit={(event) => sendResetEmail(event, email, setEmail, setMessage, setError)}
+    >
+      <Typography variant="h4">Reset your Password</Typography>
+      <Typography variant="h6" color="error">
+        {error}
+      </Typography>
+      <Typography variant="h6" color="primary">
+        {message}
+      </Typography>
+      <TextField
         type="email"
-        name="userEmail"
-        form="password-reset-form"
-        id="userEmail"
-        className="auth-input"
+        label="Email"
+        variant="outlined"
         value={email}
-        placeholder="Input your email"
         onChange={(event) => setEmail(event.target.value)}
       />
-      <form
-        id="password-reset-form"
-        onSubmit={(event) => sendResetEmail(event, email, setEmail, setMessage, setError)}
-      >
-        <button className="standard-button large-button" type="submit">Send me a reset link</button>
-      </form>
-      <Link to="/sign-in" className="standard-button large-button">Back to sign in page</Link>
-    </div>
+      <Button variant="contained" color="primary" type="submit">Send me a reset link</Button>
+      <Link className="no-underline" to="/sign-in">
+        <Button variant="outlined" color="primary">Back to sign in page</Button>
+      </Link>
+    </form>
   );
 };
 

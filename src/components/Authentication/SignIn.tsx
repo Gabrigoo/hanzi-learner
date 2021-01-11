@@ -3,6 +3,13 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 
+import {
+  Button,
+  Typography,
+  TextField,
+  Grid,
+} from '@material-ui/core';
+
 import { signInWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler } from '../../firebase';
 import './Authentication.css';
 
@@ -12,67 +19,73 @@ const SignIn = (): ReactElement => {
   const [error, setError] = useState('');
 
   return (
-    <div className="card auth-flex-card">
-      <h1 className="auth-h1">Sign in</h1>
-      <div id="auth-error">{error}</div>
-      <label htmlFor="userEmail">Email:</label>
-      <input
+    <form
+      className="card auth-flex-card"
+      onSubmit={(event) => signInWithEmailAndPasswordHandler(event, email, password, setError)}
+    >
+      <Typography variant="h4">Sign in</Typography>
+      <Typography variant="h6" color="error">{error}</Typography>
+      <TextField
         type="email"
-        name="userEmail"
-        form="sign-in-button-form"
+        label="Email"
+        variant="outlined"
         value={email}
-        placeholder="E.g: ilearnchinese@gmail.com"
-        id="userEmail"
-        className="auth-input"
+        required
         onChange={(event) => setEmail(event.target.value)}
       />
-      <label htmlFor="userPassword">Password:</label>
-      <input
+      <TextField
         type="password"
-        name="userPassword"
-        form="sign-in-button-form"
+        label="Password"
+        variant="outlined"
         value={password}
-        placeholder="Your password"
-        id="userPassword"
-        className="auth-input"
+        required
         onChange={(event) => setPassword(event.target.value)}
       />
-      <form
-        id="sign-in-button-form"
-        onSubmit={(event) => signInWithEmailAndPasswordHandler(event, email, password, setError)}
+      <Button
+        variant="contained"
+        color="primary"
+        type="submit"
       >
-        <button className="standard-button" type="submit">
-          Sign in
-        </button>
-      </form>
-      <p className="auth-p">or</p>
-      <div className="two-button-flex">
-        <button
-          onClick={(event) => signInWithGoogle(event, setError)}
-          className="standard-button large-button"
+        Sign in
+      </Button>
+      <Typography>or</Typography>
+      <Grid container direction="row" justify="center" spacing={2}>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={(event) => signInWithGoogle(event, setError)}
+          >
+            Sign in with Google
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={signInWithFacebook}
+          >
+            Sign in with Facebook
+          </Button>
+        </Grid>
+      </Grid>
+      <Typography>Don&apos;t have an account?</Typography>
+      <Link className="no-underline" to="/sign-up">
+        <Button
+          color="primary"
         >
-          Sign in with Google
-        </button>
-        <button onClick={signInWithFacebook} className="standard-button large-button">
-          Sign in with Facebook
-        </button>
-      </div>
-      <p className="auth-p">Don&apos;t have an account?</p>
-      <Link
-        to="/sign-up"
-        id="sing-up-in-redirect"
-        className="standard-button"
-      >
-        Sign up here
+          Sign up here
+        </Button>
       </Link>
-      <Link
-        to="password-reset"
-        id="password-reset-button"
-        className="standard-button large-button"
-      >
-        Forgot Password?
+      <Link className="no-underline" to="/password-reset">
+        <Button
+          variant="outlined"
+          color="secondary"
+        >
+          Forgot Password?
+        </Button>
       </Link>
-    </div>
+    </form>
   );
 };
 

@@ -9,7 +9,7 @@ import {
   UserCharacterInt, MainInt, UserInt, ReactFullState,
 } from '../interfaces';
 import { loadUserData, updateUserData } from '../redux/actions';
-import Learn from '../components/Learn';
+import Learn from '../components/learning/Learn';
 import Strip from '../components/Strip';
 
 interface ReactProps {

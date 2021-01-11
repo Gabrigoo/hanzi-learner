@@ -1,10 +1,74 @@
+:root {
+    --orange: rgb(255, 216, 142);
+    --orange-header: rgb(235, 193, 115);
+    --blue: rgb(87, 121, 233);
+  }
+
 .content {
     position: absolute;
     height: 100vh;
     width: 100vw;
-    background-color: rgb(103, 111, 226);
+    background-color: var(--blue);
     background-position: top;
     background-repeat: no-repeat;
-    box-sizing: border-box;
     overflow-x: hidden;
+}
+
+body {
+    position: absolute;
+    top: 0px;
+    height: 100vh;
+    width: 100vw;
+    margin: 0px;
+    background-position: top;
+    background-size: 100vw 100vh;
+    background-repeat: no-repeat;
+}
+.card {
+    margin: auto;
+    margin-top: calc(70px + 12vh);
+    width: 620px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    padding-bottom: 30px;
+    background: var(--orange);
+    border-radius: 20px;
+}
+#header {
+    color: rgb(61, 49, 49);
+    height: 70px;
+    position: fixed;
+    z-index: 1;
+    width: 100vw;
+    background: var(--orange-header);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.grayscale {
+    filter: grayscale(100%);
+}
+.no-underline {
+    text-decoration: none;
+}
+@media (max-width: 680px) { 
+    .card {
+        width: 90vw;
+        margin-top: 70px;
+    }
+    .content {
+        background-color: var(--orange);
+    }
+}
+
+@media (max-height: 660px) {
+    .card {
+        margin-top: 70px;
+    }
+    .content {
+        background-color: var(--orange);
+    }
 }

@@ -3,6 +3,12 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 
+import {
+  Button,
+  TextField,
+  Grid,
+} from '@material-ui/core';
+
 import { MainCharacterInt, MainWordInt, MainInt } from '../../interfaces';
 import './Search.css';
 
@@ -60,29 +66,43 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
         autoComplete="off"
         onSubmit={(event) => props.handleSearch(event, query, mainData)}
       >
-        <label id="search-label">
-          <p id="search-p">Search:</p>
-          <input
-            id="search-input"
-            type="text"
-            name="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </label>
-        <input
-          id="search-button"
-          className="standard-button"
-          type="submit"
-          value="Search"
-        />
-        <button
-          id="clear-search-button"
-          className="standard-button"
-          onClick={clearInput}
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          spacing={1}
         >
-          Clear
-        </button>
+          <Grid item xs={12} md={6}>
+            <TextField
+              type="text"
+              label="Search"
+              variant="outlined"
+              value={query}
+              InputLabelProps={{ required: false }}
+              required
+              fullWidth
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </Grid>
+          <Grid item container justify="center" xs={6} md={3}>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+            >
+              Search
+            </Button>
+          </Grid>
+          <Grid item container justify="center" xs={6} md={3}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={clearInput}
+            >
+              Clear
+            </Button>
+          </Grid>
+        </Grid>
       </form>
       {resultList}
     </div>

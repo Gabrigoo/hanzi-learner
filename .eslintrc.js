@@ -60,5 +60,7 @@ module.exports = {
     "react/prop-types": "off",
     "react/jsx-filename-extension": "off",
     "import/extensions": [1, "never"],
+    "no-else-return": "off",
+    "quotes": [2, "single", { "allowTemplateLiterals": true }],
   },
 };

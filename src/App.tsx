@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import './App.css';
 import {
   Route, Router, Switch, Redirect,
 } from 'react-router-dom';

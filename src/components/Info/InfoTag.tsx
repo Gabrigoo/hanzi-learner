@@ -1,4 +1,9 @@
 import React, { useState, ReactElement } from 'react';
+
+import {
+  Typography,
+} from '@material-ui/core';
+
 import { Link } from 'react-router-dom';
 
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
@@ -82,35 +87,31 @@ const InfoTag: React.FC<InfoTagProps> = (props): ReactElement => {
 
   return (
     <div id="mapped-word-div" onMouseEnter={handleBoxEnter} onMouseLeave={handleBoxLeave}>
-      <Link to={`/info/${props.word}`} className={backColor} id="mapped-word">
+      <Link
+        id="mapped-word"
+        to={`/info/${props.word}`}
+        className={backColor}
+      >
         {props.word}
       </Link>
       {showBox
         ? (
           <div className={`popup-box ${leftDist()}`}>
             <div className="arrow-up" />
-            <p className="short-hint">
-              Mean:
-              {' '}
-              {mainData[props.word].english[0]}
-            </p>
-            <p className="short-hint">
+            <Typography>
+              {`Mean: ${mainData[props.word].english[0]}`}
+            </Typography>
+            <Typography className="short-hint">
               Read:
               {' '}
               {mainData[props.word].pinyin}
-            </p>
-            {userData[props.word]
-              ? (
-                <p className="short-hint">
-                  Level:
-                  {' '}
-                  {userData[props.word].level}
-                </p>
-              )
-              : ''}
+            </Typography>
+            <Typography>
+              {userData[props.word] ? `Level: ${userData[props.word].level}` : null}
+            </Typography>
           </div>
         )
-        : ''}
+        : null}
     </div>
   );
 };

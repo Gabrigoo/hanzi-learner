@@ -4,6 +4,8 @@ import React, {
 import { connect } from 'react-redux';
 import firebase from 'firebase/app';
 
+import { Button, Typography } from '@material-ui/core';
+
 import { linkWithGoogle, handleSignOut } from '../../firebase';
 import { ReactFullState } from '../../interfaces';
 import unknownUser from '../../assets/unknown-user.png';
@@ -37,23 +39,25 @@ const ProfilePage: React.FC<ProfilePageProps> = (props): ReactElement => {
             backgroundSize: 'cover',
           }}
         />
-        <h1 className="auth-h1">{props.user.displayName}</h1>
-        <h3 className="auth-h3">{props.user.email}</h3>
+        <Typography variant="h4">{props.user.displayName}</Typography>
+        <Typography variant="h5">{props.user.email}</Typography>
         {provider === 'password' ? (
-          <button
-            className="standard-button"
+          <Button
+            variant="contained"
+            color="primary"
             onClick={linkWithGoogle}
           >
             Link with Google
-          </button>
+          </Button>
         )
           : '' }
-        <button
-          className="standard-button"
+        <Button
+          variant="contained"
+          color="secondary"
           onClick={handleSignOut}
         >
           Sign out
-        </button>
+        </Button>
       </div>
     );
   }

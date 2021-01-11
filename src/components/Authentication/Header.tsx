@@ -6,12 +6,47 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { CancelTokenSource } from 'axios';
 
+import {
+  Button,
+  IconButton,
+  Typography,
+  makeStyles,
+  Box,
+  Avatar,
+} from '@material-ui/core';
+
+import HomeIcon from '@material-ui/icons/Home';
+
 import { loadMainData, getToken } from '../../redux/actions';
 import { instance as axios } from '../../axios-instance';
 import { ReactFullState } from '../../interfaces';
 import unknownUser from '../../assets/unknown-user.png';
-import mainMenu from '../../assets/main-menu.png';
-import './Header.css';
+
+const useStyles = makeStyles((theme) => ({
+  homeIcon: {
+    color: 'rgb(61, 49, 49)',
+    width: '45px',
+    height: '45px',
+  },
+  profilePic: {
+    width: '50px',
+    height: '50px',
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(4),
+  },
+  header: {
+    color: 'rgb(61, 49, 49)',
+    backgroundColor: 'rgb(241, 200, 124)',
+    boxSizing: 'border-box',
+  },
+  alignRight: {
+    marginRight: theme.spacing(3),
+    marginLeft: 'auto',
+  },
+  buttons: {
+    textAlign: 'center',
+  },
+}));
 
 interface HeaderProps {
   isSignedIn: boolean,
@@ -22,6 +57,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props): ReactElement => {
+  const classes = useStyles();
+
   useEffect(() => {
     const source = axios.CancelToken.source();
 
@@ -50,27 +87,56 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
 
     content = (
       <header id="header">
-        <Link to="/user" id="profile-link">
-          <img id="profile-img" src={photo} alt="profile" />
+        <Link to="/main-menu">
+          <IconButton aria-label="main-menu">
+            <HomeIcon className={classes.homeIcon} />
+          </IconButton>
         </Link>
-        {props.user.displayName ? <p id="header-user">{props.user.displayName}</p> : ''}
-        {props.user.email ? <p id="header-email">{props.user.email}</p> : ''}
-        <Link to="/main-menu" id="main-menu-link">
-          <img id="main-menu-icon" src={mainMenu} alt="mainmenu" />
+        <Typography className={classes.alignRight} variant="h5">
+          {props.user.displayName ? props.user.displayName : null}
+        </Typography>
+        <Typography variant="h5" id="header-email">
+          {props.user.email ? props.user.email : null}
+        </Typography>
+        <Link className="no-underline" to="/user">
+          <Avatar className={classes.profilePic} src={photo} alt="profile-picture" />
         </Link>
       </header>
     );
   } else {
     content = (
       <header id="header">
-        <Link to="/main-menu" id="main-menu-link">
-          <img id="main-menu-icon" src={mainMenu} alt="mainmenu" />
+        <Link to="/main-menu">
+          <IconButton aria-label="main-menu">
+            <HomeIcon className={classes.homeIcon} />
+          </IconButton>
         </Link>
-        <div id="profile-link" className="grayscale">
-          <img id="profile-img" src={unknownUser} alt="profile" />
-        </div>
-        <Link to="/sign-in" className="signing-button">Sign in</Link>
-        <Link to="/sign-up" className="signing-button">Sign up</Link>
+        <Link className={`${classes.alignRight} no-underline`} to="/sign-in">
+          <Button
+            className={classes.buttons}
+            variant="outlined"
+            size="large"
+          >
+            Sign in
+          </Button>
+        </Link>
+        <Link className="no-underline" to="/sign-up">
+          <Button
+            className={classes.buttons}
+            variant="outlined"
+            size="large"
+          >
+            Sign up
+          </Button>
+        </Link>
+        <Box className="grayscale">
+          <Avatar
+            id="header-profilepic"
+            className={classes.profilePic}
+            src={unknownUser}
+            alt="profile-unknown"
+          />
+        </Box>
       </header>
     );
   }

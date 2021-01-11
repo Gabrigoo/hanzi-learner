@@ -7,7 +7,7 @@ import { addMainData } from '../redux/actions';
 import {
   MainInt, MainCharacterInt, MainWordInt, ReactFullState,
 } from '../interfaces';
-import Addition from '../components/Addition';
+import Addition from '../components/learning/Addition';
 import Strip from '../components/Strip';
 
 interface ReactProps {

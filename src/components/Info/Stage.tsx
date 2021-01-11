@@ -31,8 +31,7 @@ interface StageProps {
 const Stage: React.FC<StageProps> = (props): ReactElement => (
   <div className="justify-left">
     <h1 className="levels-h1">
-      Stage
-      {props.level}
+      {`Stage ${props.level}`}
     </h1>
     <div className="stage-flex">
       {props.stageData.map((item, index) => (

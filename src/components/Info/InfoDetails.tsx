@@ -1,6 +1,13 @@
 import React, { useState, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
+import {
+  Button,
+  Grid,
+  Typography,
+  TextField,
+} from '@material-ui/core';
+
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 import InfoTag from './InfoTag';
 import LEVELS from '../../assets/levels';
@@ -82,145 +89,164 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
   let userContent = <p>This character is not yet learned.</p>;
   // From here it's rendering
   const renderMemonic = () => {
-    if (changeMemonic) {
-      return (
-        <>
-          <p>Meaning memonic:</p>
-          <textarea
-            id="meaning-memonic-input"
-            className="memo-info"
-            name="meaning-memo"
-            value={meaningMemonic}
-            onChange={(event) => setMeaningMemonic(event.target.value)}
-          />
-          <p>Reading memonic:</p>
-          <textarea
-            id="reading-memonic-input"
-            className="memo-info"
-            name="reading-memo"
-            value={readingMemonic}
-            onChange={(event) => setReadingMemonic(event.target.value)}
-          />
-          <button
-            id="change-memo-button"
-            className="standard-button"
-            onClick={sendMemonic}
-          >
-            Save memonics
-          </button>
-        </>
-      );
-    }
+    const renderMeanMemonic = () => {
+      if (meaningMemonic !== '') {
+        return meaningMemonic;
+      } else {
+        return userData[current].memoMean;
+      }
+    };
 
-    let meanMemRendered;
-    if (meaningMemonic !== '') {
-      meanMemRendered = meaningMemonic;
-    } else if (userData[current].memoMean === '') {
-      meanMemRendered = 'Currently no meaning memonic added';
-    } else {
-      meanMemRendered = userData[current].memoMean;
-    }
-
-    let readMemRendered;
-    if (readingMemonic !== '') {
-      readMemRendered = readingMemonic;
-    } else if (userData[current].memoRead === '') {
-      readMemRendered = 'Currently no reading memonic added';
-    } else {
-      readMemRendered = userData[current].memoRead;
-    }
+    const renderReadMemonic = () => {
+      if (readingMemonic !== '') {
+        return readingMemonic;
+      } else {
+        return userData[current].memoRead;
+      }
+    };
 
     return (
-      <>
-        <p>Meaning memonic:</p>
-        <div className="memo-info">
-          {meanMemRendered}
-        </div>
-        <p>Reading memonic:</p>
-        <div className="memo-info">
-          {readMemRendered}
-        </div>
-        <button
-          id="change-memo-button"
-          className="standard-button"
-          onClick={switchChangeMemonics}
-        >
-          Change memonics
-        </button>
-      </>
+      <Grid item container spacing={3} justify="space-evenly" alignItems="center">
+        <Grid item xs={12} sm={5}>
+          <TextField
+            type="text"
+            label="Meaning memonic"
+            variant="outlined"
+            multiline
+            fullWidth
+            disabled={!changeMemonic}
+            value={renderMeanMemonic()}
+            onChange={(event) => setMeaningMemonic(event.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={5}>
+          <TextField
+            type="text"
+            label="Reading memonic"
+            variant="outlined"
+            multiline
+            fullWidth
+            disabled={!changeMemonic}
+            value={renderReadMemonic()}
+            onChange={(event) => setReadingMemonic(event.target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={2} container justify="center">
+          {changeMemonic
+            ? (
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={sendMemonic}
+              >
+                Save
+              </Button>
+            )
+            : (
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={switchChangeMemonics}
+              >
+                Change
+              </Button>
+            )}
+        </Grid>
+      </Grid>
     );
   };
 
   const content = (
     <>
-      <div id="horiz-div-1" className="horiz-div">
-        <div id="horiz-div-2" className="horiz-div">
-          <h1 id="chinese-trad-info">{current}</h1>
-          <h2 id="chinese-simp-info">{mainData[current].chineseSimp}</h2>
-        </div>
-        <div>
-          <p id="stage-count">
-            Stage:
-            {' '}
-            {mainData[current].stage}
-          </p>
-          <Link
-            to="/stages"
-            className="standard-button"
-          >
-            Stages
+      <Grid item container direction="row" alignItems="flex-end" spacing={2}>
+        <Grid item xs={4} sm={2} md={2}>
+          <Typography variant="h2">{current}</Typography>
+        </Grid>
+        <Grid item xs={3} sm={2} md={1}>
+          <Typography variant="h5">{`(${mainData[current].chineseSimp})`}</Typography>
+        </Grid>
+        <Grid item xs={5} sm={3} md={5} />
+        <Grid item xs={6} sm={3} md={2}>
+          <Typography variant="h5">
+            {`Stage: ${mainData[current].stage}`}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sm={2} md={2}>
+          <Link className="no-underline" to="/stages">
+            <Button
+              variant="outlined"
+              color="primary"
+            >
+              Stages
+            </Button>
           </Link>
-        </div>
-      </div>
-      <div className="horiz-div">
-        <p className="margin-right-30">Meaning:</p>
-        {mainData[current].english.map((word, index) => <p className="mean-info" key={word + index}>{word}</p>)}
-      </div>
+        </Grid>
+      </Grid>
 
-      <div className="horiz-div">
-        <p className="margin-right-30">Reading:</p>
-        <p className="read-info">
+      <Grid item container direction="row" className="horiz-div" spacing={2}>
+        <Grid item>
+          <Typography>Meaning:</Typography>
+        </Grid>
+        {mainData[current].english.map((word, index) => (
+          <Grid item key={word + index}>
+            <Typography key={word + index}>{word}</Typography>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Grid item container direction="row" className="horiz-div" spacing={2}>
+        <Grid item>
+          <Typography>Reading: </Typography>
+        </Grid>
+        <Grid item>
           {type === 'character' ? mainData[current].pinyin : mainData[current].pinyin}
-        </p>
-        <p>{mainData[current].tone}</p>
-      </div>
+        </Grid>
+        <Grid item>{mainData[current].tone}</Grid>
+      </Grid>
+
       {type === 'word' ? (
-        <>
-          <div className="horiz-div">
-            <p className="margin-right-30">Components:</p>
-            {current.split('').map((item, index) => (
+        <Grid item container direction="row" alignItems="center" spacing={2}>
+          <Grid item>
+            <Typography>Components:</Typography>
+          </Grid>
+          {current.split('').map((item, index) => (
+            <Grid item>
               <InfoTag
                 mainData={props.mainData}
                 userData={props.userData}
                 word={item}
                 key={item + index}
               />
-            ))}
-          </div>
-        </>
+            </Grid>
+          ))}
+        </Grid>
       )
         : (
-          <>
-            <div className="horiz-div">
-              <p className="margin-right-30">Found in:</p>
-              {Object.keys(props.userData.words).filter((word) => {
-                let includes = false;
-                word.split('').forEach((comp) => {
-                  if (comp === current) {
-                    includes = true;
-                  }
-                });
-                return includes;
-              }).map((item, index) => (
+          <Grid item container direction="row" spacing={2}>
+            <Grid item>
+              <Typography>
+                {Object.keys(props.userData.words).length ? 'Found in' : null}
+              </Typography>
+            </Grid>
+            {Object.keys(props.userData.words).filter((word) => {
+              let includes = false;
+              word.split('').forEach((comp) => {
+                if (comp === current) {
+                  includes = true;
+                }
+              });
+              return includes;
+            }).map((item, index) => (
+              <Grid item>
                 <InfoTag
                   mainData={props.mainData}
                   userData={props.userData}
                   word={item}
                   key={item + index}
                 />
-              ))}
-            </div>
-          </>
+              </Grid>
+            ))}
+          </Grid>
         )}
     </>
   ); // from here is only displayed if user already has relevant learning data
@@ -228,35 +254,53 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
     userContent = (
       <>
         {renderMemonic()}
-        <div className="horiz-div">
-          <p className="margin-right-30">Last practiced:</p>
-          <p>{dateToString(userData[current].lastPract)}</p>
-        </div>
-        <div className="horiz-div">
-          <p className="margin-right-30">Next practice:</p>
-          <p>
-            {dateToString(userData[current].lastPract
-              + (LEVELS[userData[current].level][0] * (1000 * 60 * 60)))}
-          </p>
-        </div>
-        <div className="horiz-div">
-          <p className="margin-right-30">User level:</p>
-          {' '}
-          <p className="read-info">{userData[current].level}</p>
-          <p>
-            &quot;
-            {LEVELS[userData[current].level][1]}
-            &quot;
-          </p>
-        </div>
+        <Grid
+          item
+          container
+          direction="row"
+          justify="flex-start"
+          spacing={2}
+        >
+          <Grid item container direction="column" alignItems="flex-start" spacing={1} xs={5} sm={4} md={3}>
+            <Grid item>
+              <Typography>Last practiced:</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>Next practice:</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>User level:</Typography>
+            </Grid>
+          </Grid>
+
+          <Grid item container direction="column" alignItems="flex-start" spacing={1} xs={7} sm={5} md={4}>
+            <Grid item>
+              <Typography>{dateToString(userData[current].lastPract)}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>
+                {dateToString(userData[current].lastPract
+                  + (LEVELS[userData[current].level][0] * (1000 * 60 * 60)))}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography>
+                {`${userData[current].level} "${LEVELS[userData[current].level][1]}"`}
+              </Typography>
+            </Grid>
+          </Grid>
+
+        </Grid>
       </>
     );
   }
 
   return (
     <div className="card" id="info-card">
-      {content}
-      {userContent}
+      <Grid container spacing={3}>
+        {content}
+        {userContent}
+      </Grid>
     </div>
   );
 };

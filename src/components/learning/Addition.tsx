@@ -2,8 +2,16 @@ import React, {
   useState, useEffect, ChangeEvent, FormEvent, ReactElement, MouseEvent,
 } from 'react';
 
-import { MainCharacterInt, MainWordInt } from '../interfaces';
-import { TONES } from '../assets/tones';
+import {
+  Button,
+  Grid,
+  Typography,
+  InputLabel,
+  Input,
+} from '@material-ui/core';
+
+import { MainCharacterInt, MainWordInt } from '../../interfaces';
+import { TONES } from '../../assets/tones';
 import './Addition.css';
 
 interface AdditionProps {
@@ -214,168 +222,181 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
   return (
     <div>
       <form id="addition-card" className="card" autoComplete="off" onSubmit={handleSubmit}>
-        <div id="top-flex">
-          <h1 className="add-h1">Add new entry:</h1>
-          {inputType === 'Character'
-            ? (
-              <button id="button-character" className="standard-button" onClick={changeInputType}>
-                Character
-              </button>
-            )
-            : (
-              <button id="button-word" className="standard-button" onClick={changeInputType}>
-                Word
-              </button>
-            )}
-        </div>
-        <div id="add-message">
-          {message}
-        </div>
-        <label className="addition-label">
-          <p className="add-p">Traditional chinese:</p>
-          {inputType === 'Character' ? (
-            <input
-              className="addition-input"
-              type="text"
-              name="chineseTrad-1"
-              value={chineseTrad[0]}
-              onChange={handleChange}
-            />
-          )
-            : (
-              <div className="horizontal-flex-div">
-                {Array(5).fill('').map((x, index: number) => (
-                  <input
-                    className="addition-input-short"
-                    type="text"
-                    name={`chineseTrad-${index + 1}`}
-                    value={chineseTrad[index]}
-                    onChange={handleChange}
-                    key={x + index}
-                  />
-                ))}
-              </div>
-            )}
-        </label>
-        <label className="addition-label">
-          <p className="add-p">Simplified chinese:</p>
-          {inputType === 'Character' ? (
-            <input
-              className="addition-input"
-              type="text"
-              name="chineseSimp-1"
-              value={chineseSimp[0]}
-              onChange={handleChange}
-            />
-          )
-            : (
-              <div className="horizontal-flex-div">
-                {Array(5).fill('').map((x, index: number) => (
-                  <input
-                    className="addition-input-short"
-                    type="text"
-                    name={`chineseSimp-${index + 1}`}
-                    value={chineseSimp[index]}
-                    onChange={handleChange}
-                    key={x + index}
-                  />
-                ))}
-              </div>
-            )}
-        </label>
-        <label className="addition-label">
-          <p className="add-p">Pinyin:</p>
-          {inputType === 'Character' ? (
-            <input
-              className="addition-input"
-              type="text"
-              name="pinyin-1"
-              value={pinyin[0]}
-              onChange={handleChange}
-            />
-          )
-            : (
-              <div className="horizontal-flex-div">
-                {Array(5).fill('').map((x, index: number) => (
-                  <input
-                    className="addition-input-short"
-                    type="text"
-                    name={`pinyin-${index + 1}`}
-                    value={pinyin[index]}
-                    onChange={handleChange}
-                    key={x + index}
-                  />
-                ))}
-              </div>
-            )}
-        </label>
-        <label className="addition-label">
-          <p className="add-p">Tone:</p>
-          {inputType === 'Character' ? (
-            <input
-              className="addition-input"
-              type="text"
-              name="tone-1"
-              value={tone[0]}
-              onChange={handleChange}
-            />
-          )
-            : (
-              <div className="horizontal-flex-div">
-                {Array(5).fill('').map((x, index: number) => (
-                  <input
-                    className="addition-input-short"
-                    type="text"
-                    name={`tone-${index + 1}`}
-                    value={tone[index]}
-                    onChange={handleChange}
-                    key={x + index}
-                  />
-                ))}
-              </div>
-            )}
-        </label>
-        <label className="addition-label">
-          <p className="add-p">Meaning:</p>
-          {Array(3).fill('').map((x, index: number) => (
-            <input
-              className="addition-input margin-bottom-2"
-              type="text"
-              name={`english-${index + 1}`}
-              value={english[index]}
-              onChange={handleChange}
-              key={x + index}
-            />
-          ))}
-        </label>
-        <label className="addition-label">
-          <p className="add-p">Stage:</p>
-          <input
-            className="addition-input"
-            type="text"
-            name="stage"
-            value={stage}
-            onChange={handleChange}
-          />
-        </label>
-        <div id="bottom-flex">
-          <p>Overwrite:</p>
-          <label className="switch">
-            <input onChange={switchOverwrite} type="checkbox" />
-            <span className="slider round" />
-          </label>
-          <div id="two-button-div">
-            <input
-              id="submit-button"
-              className="standard-button"
-              type="submit"
-              value="Submit"
-            />
-            <button type="reset" id="clear-button" className="standard-button" onClick={clearInput}>
-              Clear
-            </button>
-          </div>
-        </div>
+        <Grid container direction="column" spacing={2}>
+          <Grid item container direction="row" justify="space-between" alignItems="center">
+            <Grid item xs={12} sm={7} container justify="center">
+              <Typography variant="h4">Add new entry:</Typography>
+            </Grid>
+            <Grid item xs={9} sm={5} container justify="flex-end">
+              <Button variant="contained" color="primary" onClick={changeInputType}>
+                {inputType}
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Typography color="error">
+              {message}
+            </Typography>
+          </Grid>
+
+          <Grid item>
+            <InputLabel className="addition-label">
+              <p>Traditional chinese:</p>
+              {inputType === 'Character' ? (
+                <Input
+                  className="addition-input"
+                  type="text"
+                  name="chineseTrad-1"
+                  value={chineseTrad[0]}
+                  onChange={handleChange}
+                />
+              )
+                : (
+                  <div className="horizontal-flex-div">
+                    {Array(5).fill('').map((x, index: number) => (
+                      <Input
+                        className="addition-input-short"
+                        type="text"
+                        name={`chineseTrad-${index + 1}`}
+                        value={chineseTrad[index]}
+                        onChange={handleChange}
+                        key={x + index}
+                      />
+                    ))}
+                  </div>
+                )}
+            </InputLabel>
+            <InputLabel className="addition-label">
+              <p>Simplified chinese:</p>
+              {inputType === 'Character' ? (
+                <Input
+                  className="addition-input"
+                  type="text"
+                  name="chineseSimp-1"
+                  value={chineseSimp[0]}
+                  onChange={handleChange}
+                />
+              )
+                : (
+                  <div className="horizontal-flex-div">
+                    {Array(5).fill('').map((x, index: number) => (
+                      <Input
+                        className="addition-input-short"
+                        type="text"
+                        name={`chineseSimp-${index + 1}`}
+                        value={chineseSimp[index]}
+                        onChange={handleChange}
+                        key={x + index}
+                      />
+                    ))}
+                  </div>
+                )}
+            </InputLabel>
+            <InputLabel className="addition-label">
+              <p>Pinyin:</p>
+              {inputType === 'Character' ? (
+                <Input
+                  className="addition-input"
+                  type="text"
+                  name="pinyin-1"
+                  value={pinyin[0]}
+                  onChange={handleChange}
+                />
+              )
+                : (
+                  <div className="horizontal-flex-div">
+                    {Array(5).fill('').map((x, index: number) => (
+                      <Input
+                        className="addition-input-short"
+                        type="text"
+                        name={`pinyin-${index + 1}`}
+                        value={pinyin[index]}
+                        onChange={handleChange}
+                        key={x + index}
+                      />
+                    ))}
+                  </div>
+                )}
+            </InputLabel>
+            <InputLabel className="addition-label">
+              <p>Tone:</p>
+              {inputType === 'Character' ? (
+                <Input
+                  className="addition-input"
+                  type="text"
+                  name="tone-1"
+                  value={tone[0]}
+                  onChange={handleChange}
+                />
+              )
+                : (
+                  <div className="horizontal-flex-div">
+                    {Array(5).fill('').map((x, index: number) => (
+                      <Input
+                        className="addition-input-short"
+                        type="text"
+                        name={`tone-${index + 1}`}
+                        value={tone[index]}
+                        onChange={handleChange}
+                        key={x + index}
+                      />
+                    ))}
+                  </div>
+                )}
+            </InputLabel>
+            <InputLabel className="addition-label">
+              <p>Meaning:</p>
+              {Array(3).fill('').map((x, index: number) => (
+                <Input
+                  className="addition-input margin-bottom-2"
+                  type="text"
+                  name={`english-${index + 1}`}
+                  value={english[index]}
+                  onChange={handleChange}
+                  key={x + index}
+                />
+              ))}
+            </InputLabel>
+            <InputLabel className="addition-label">
+              <p>Stage:</p>
+              <Input
+                className="addition-input"
+                type="text"
+                name="stage"
+                value={stage}
+                onChange={handleChange}
+              />
+            </InputLabel>
+          </Grid>
+
+          <Grid item container direction="row" justify="space-evenly" alignItems="center">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button type="reset" variant="contained" color="secondary" onClick={clearInput}>
+                Clear
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid item container direction="row" justify="center" alignItems="center" spacing={2}>
+            <Grid item>
+              <Typography>Overwrite:</Typography>
+            </Grid>
+            <Grid item>
+              <label className="switch">
+                <input onChange={switchOverwrite} type="checkbox" />
+                <span className="slider round" />
+              </label>
+            </Grid>
+          </Grid>
+        </Grid>
       </form>
     </div>
   );

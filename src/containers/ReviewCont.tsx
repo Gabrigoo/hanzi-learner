@@ -9,10 +9,15 @@ import {
   UserCharacterInt, MainInt, UserInt, ReactFullState, SessionInt,
 } from '../interfaces';
 import {
-  loadUserData, updateUserData, updateUserLevel, startSession, answerCorrect, answerIncorrect,
+  loadUserData,
+  updateUserData,
+  updateUserLevel,
+  startSession,
+  answerCorrect,
+  answerIncorrect,
 } from '../redux/actions';
-import Summary from '../components/Summary';
-import Review from '../components/Review';
+import Summary from '../components/learning/Summary';
+import Review from '../components/learning/Review';
 import Strip from '../components/Strip';
 import levels from '../assets/levels';
 
@@ -60,6 +65,10 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
       console.log(`User level increased to: ${userLevel + 1}`);
       props.updateUserLevel(userLevel + 1);
     }
+  };
+
+  const updateMemonic = (word: string, object: UserCharacterInt) => {
+    props.updateUserData(word, object);
   };
 
   // takes in user data and return the list of characters that need reviewing
@@ -130,6 +139,7 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
             checkForAdvancement={checkForAdvancement}
             switchSession={switchSession}
             uploadAnswer={uploadAnswer}
+            updateMemonic={updateMemonic}
           />
         );
       } else {
