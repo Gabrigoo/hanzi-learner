@@ -52,6 +52,8 @@ module.exports = {
     "react/no-array-index-key": "off",
     "no-use-before-define": "off",
     "no-alert": "off",
+    "arrow-body-style": "warn",
+    "no-unused-vars": "warn",
     "react/state-in-constructor": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-noninteractive-element-interactions": "off",

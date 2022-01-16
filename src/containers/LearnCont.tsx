@@ -34,18 +34,21 @@ const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
 
   // determines which items are to be learned by user level
   const filterNewItems = (main: MainInt, user: UserInt) => {
-  // which level our user is on
+    // which level our user is on
     const userStage = user.profileData.currentStage;
+
     // characters that are right for the user's level
     const dataCharKeys = Object.keys(main.characters)
       .filter((char) => main.characters[char].stage <= userStage);
+
     // words that are right for the user's level
     const dataWordKeys = Object.keys(main.words)
       .filter((word) => main.words[word].stage <= userStage);
+
     // checks if all elements of the word are at least GURU level
     const dataWordKeysGuru = dataWordKeys.filter((item) => {
       let applicable = true;
-      main.words[item].chineseTrad.forEach((comp) => {
+      item.split('').forEach((comp) => {
         if (!Object.keys(user.characters).includes(comp)) {
           applicable = false;
         } else if (user.characters[comp].level < 5) {

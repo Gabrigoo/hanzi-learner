@@ -48,28 +48,21 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
     ? props.userData.characters : props.userData.words;
   // memonics in case they are changed
   const [changeMemonic, setChangeMemonic] = useState(false);
-  const [meaningMemonic, setMeaningMemonic] = useState('');
-  const [readingMemonic, setReadingMemonic] = useState('');
+  const [meaningMemonic, setMeaningMemonic] = useState(userData[current]?.memoMean || '');
+  const [readingMemonic, setReadingMemonic] = useState(userData[current]?.memoRead || '');
 
   const switchChangeMemonics = () => {
-    setChangeMemonic(true);
-    if (meaningMemonic === '') {
-      setMeaningMemonic(userData[current].memoMean);
+    if (changeMemonic) {
+      // updates memonic in the database
+      const object = {
+        lastPract: userData[current].lastPract,
+        level: userData[current].level,
+        memoMean: meaningMemonic,
+        memoRead: readingMemonic,
+      };
+      props.updateMemonic(current, object);
     }
-    if (readingMemonic === '') {
-      setReadingMemonic(userData[current].memoRead);
-    }
-  };
-  // updates memonic in the database
-  const sendMemonic = () => {
-    const object = {
-      lastPract: userData[current].lastPract,
-      level: userData[current].level,
-      memoMean: meaningMemonic,
-      memoRead: readingMemonic,
-    };
-    props.updateMemonic(current, object);
-    setChangeMemonic(false);
+    setChangeMemonic(!changeMemonic);
   };
 
   // convert numeric date into the displayed date
@@ -86,25 +79,23 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
     return `${year}/${currentMonth}/${currentDay} ${hours}:${minutes}`;
   };
 
+  const isPresentInWords = (character: string): string[] => {
+    const words = Object.keys(props.mainData.words).filter((word) => {
+      let includes = false;
+      word.split('').forEach((comp) => {
+        if (comp === character) {
+          includes = true;
+        }
+      });
+      return includes;
+    });
+    return words;
+  };
+
   let userContent = <p>This character is not yet learned.</p>;
+
   // From here it's rendering
   const renderMemonic = () => {
-    const renderMeanMemonic = () => {
-      if (meaningMemonic !== '') {
-        return meaningMemonic;
-      } else {
-        return userData[current].memoMean;
-      }
-    };
-
-    const renderReadMemonic = () => {
-      if (readingMemonic !== '') {
-        return readingMemonic;
-      } else {
-        return userData[current].memoRead;
-      }
-    };
-
     return (
       <Grid item container spacing={3} justify="space-evenly" alignItems="center">
         <Grid item xs={12} sm={5}>
@@ -115,7 +106,7 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
             multiline
             fullWidth
             disabled={!changeMemonic}
-            value={renderMeanMemonic()}
+            value={meaningMemonic}
             onChange={(event) => setMeaningMemonic(event.target.value)}
           />
         </Grid>
@@ -127,30 +118,18 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
             multiline
             fullWidth
             disabled={!changeMemonic}
-            value={renderReadMemonic()}
+            value={readingMemonic}
             onChange={(event) => setReadingMemonic(event.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={2} container justify="center">
-          {changeMemonic
-            ? (
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={sendMemonic}
-              >
-                Save
-              </Button>
-            )
-            : (
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={switchChangeMemonics}
-              >
-                Change
-              </Button>
-            )}
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={switchChangeMemonics}
+          >
+            {changeMemonic ? 'Save' : 'Change'}
+          </Button>
         </Grid>
       </Grid>
     );
@@ -163,7 +142,7 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
           <Typography variant="h2">{current}</Typography>
         </Grid>
         <Grid item xs={3} sm={2} md={1}>
-          <Typography variant="h5">{`(${mainData[current].chineseSimp})`}</Typography>
+          <Typography variant="h5">{mainData[current].chineseSimp}</Typography>
         </Grid>
         <Grid item xs={5} sm={3} md={5} />
         <Grid item xs={6} sm={3} md={2}>
@@ -225,18 +204,10 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
           <Grid item container direction="row" spacing={2}>
             <Grid item>
               <Typography>
-                {Object.keys(props.userData.words).length ? 'Found in' : null}
+                {isPresentInWords(current).length ? 'Found in' : null}
               </Typography>
             </Grid>
-            {Object.keys(props.userData.words).filter((word) => {
-              let includes = false;
-              word.split('').forEach((comp) => {
-                if (comp === current) {
-                  includes = true;
-                }
-              });
-              return includes;
-            }).map((item, index) => (
+            {isPresentInWords(current).map((item, index) => (
               <Grid item>
                 <InfoTag
                   mainData={props.mainData}

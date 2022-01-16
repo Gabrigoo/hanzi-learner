@@ -72,8 +72,8 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
 
   // memonic data that is changeable by the user
   const [changeMemonic, setChangeMemonic] = useState(false);
-  const [newMeaningMemonic, setNewMeaningMemonic] = useState('');
-  const [newReadingMemonic, setNewReadingMemonic] = useState('');
+  const [meaningMemonic, setMeaningMemonic] = useState(userData[current].memoMean);
+  const [readingMemonic, setReadingMemonic] = useState(userData[current].memoRead);
 
   // shuffles deck in the beginning
   function shuffleDeck(sourceArray: string[]): string[] {
@@ -86,22 +86,21 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     }
     return newArray;
   }
+
   const switchChangeMemonics = (): void => {
-    setChangeMemonic(true);
-    setNewMeaningMemonic(userData[current].memoMean);
-    setNewReadingMemonic(userData[current].memoRead);
+    if (changeMemonic) {
+      // updates memonic in the database
+      const object = {
+        lastPract: userData[current].lastPract,
+        level: userData[current].level,
+        memoMean: meaningMemonic,
+        memoRead: readingMemonic,
+      };
+      props.updateMemonic(current, object);
+    }
+    setChangeMemonic(!changeMemonic);
   };
-  // updates memonic in the database
-  const sendMemonic = () => {
-    const object = {
-      lastPract: userData[current].lastPract,
-      level: userData[current].level,
-      memoMean: newMeaningMemonic,
-      memoRead: newReadingMemonic,
-    };
-    props.updateMemonic(current, object);
-    setChangeMemonic(false);
-  };
+
   // runs when answer is initially submitted
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -250,22 +249,23 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       props.uploadReviewResults(current, userCharObject);
     }
     // resets most things
-    setChangeMemonic(false);
-    setNewReadingMemonic('');
-    setNewMeaningMemonic('');
     if (solutionCorrect) {
       const next = shuffledDeck[shuffledDeck.indexOf(current) + 1];
-      if (Object.keys(props.mainData.characters).includes(next)) {
+      if (next === undefined) {
+        props.switchSession();
+      } else if (Object.keys(props.mainData.characters).includes(next)) {
         setMainData(props.mainData.characters);
         setUserData(props.userData.characters);
+        setMeaningMemonic(props.userData.characters[next].memoMean);
+        setReadingMemonic(props.userData.characters[next].memoRead);
       } else {
         setMainData(props.mainData.words);
         setUserData(props.userData.words);
-      }
-      if (next === undefined) {
-        props.switchSession();
+        setMeaningMemonic(props.userData.words[next].memoMean);
+        setReadingMemonic(props.userData.words[next].memoRead);
       }
       setCurrent(next);
+      setChangeMemonic(false);
       setTries(0);
       setSolutionCorrect(false);
       setNewLevel(0);
@@ -274,22 +274,6 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     setReading('');
     (document.getElementById('meaning-input') as HTMLInputElement).focus();
     setSolutionSubmitted(false);
-  };
-
-  const renderMeanMemonic = () => {
-    if (newMeaningMemonic !== '') {
-      return newMeaningMemonic;
-    } else {
-      return userData[current].memoMean;
-    }
-  };
-
-  const renderReadMemonic = () => {
-    if (newReadingMemonic !== '') {
-      return newReadingMemonic;
-    } else {
-      return userData[current].memoRead;
-    }
   };
 
   return (
@@ -415,7 +399,11 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                 {solutionSubmitted
                   ? (
                     <Typography id="reading-solution">
-                      {`${mainData[current].pinyin} (tone: ${mainData[current].tone})`}
+                      {mainData[current].pinyin}
+                      &nbsp;
+                      (tone:
+                      {mainData[current].tone}
+                      )
                     </Typography>
                   )
                   : null}
@@ -463,8 +451,8 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                   multiline
                   fullWidth
                   disabled={!changeMemonic}
-                  value={renderMeanMemonic()}
-                  onChange={(event) => setNewMeaningMemonic(event.target.value)}
+                  value={meaningMemonic}
+                  onChange={(event) => setMeaningMemonic(event.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -475,30 +463,18 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                   multiline
                   fullWidth
                   disabled={!changeMemonic}
-                  value={renderReadMemonic()}
-                  onChange={(event) => setNewReadingMemonic(event.target.value)}
+                  value={readingMemonic}
+                  onChange={(event) => setReadingMemonic(event.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={2} container justify="center">
-                {changeMemonic
-                  ? (
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={sendMemonic}
-                    >
-                      Save
-                    </Button>
-                  )
-                  : (
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={switchChangeMemonics}
-                    >
-                      Change
-                    </Button>
-                  )}
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={switchChangeMemonics}
+                >
+                  {changeMemonic ? 'Save' : 'Change'}
+                </Button>
               </Grid>
             </Grid>
           )}
