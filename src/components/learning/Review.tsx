@@ -62,6 +62,8 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   const [meanInput, setMeaning] = useState('');
   const [readInput, setReading] = useState('');
 
+  const [lastPract, setLastPract] = useState(userData[current].lastPract);
+
   const meanInputRef = useRef<HTMLInputElement>(null);
   const readInputRef = useRef<HTMLInputElement>(null);
 
@@ -91,8 +93,8 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     if (changeMemonic) {
       // updates memonic in the database
       const object = {
-        lastPract: userData[current].lastPract,
-        level: userData[current].level,
+        lastPract,
+        level: newLevel,
         memoMean: meaningMemonic,
         memoRead: readingMemonic,
       };
@@ -153,8 +155,11 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       }
     }
     // creates a new object to upload new information
+    const lastPracticed = new Date().getTime();
+    setLastPract(lastPracticed);
+
     const userCharObject: UserCharacterInt = {
-      lastPract: new Date().getTime(),
+      lastPract: lastPracticed,
       level: userData[current].level,
       memoMean: userData[current].memoMean,
       memoRead: userData[current].memoRead,
@@ -199,28 +204,9 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     setSolutionSubmitted(true);
     // color input boxes depending on result
     if (meanInputRef.current && readInputRef.current) {
-      switch (meanCorrect) {
-        case 0:
-          meanInputRef.current.style.color = 'red';
-          break;
-        case 1:
-          meanInputRef.current.style.color = 'orange';
-          break;
-        default:
-          meanInputRef.current.style.color = 'green';
-          break;
-      }
-      switch (readCorrect) {
-        case 0:
-          readInputRef.current.style.color = 'red';
-          break;
-        case 1:
-          readInputRef.current.style.color = 'orange';
-          break;
-        default:
-          readInputRef.current.style.color = 'green';
-          break;
-      }
+      const statusColors = ['red', 'orange', 'green'];
+      meanInputRef.current.style.color = statusColors[meanCorrect];
+      readInputRef.current.style.color = statusColors[readCorrect];
     }
     (document.getElementById('board-submit-button') as HTMLInputElement).focus();
   };
@@ -334,7 +320,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                     variant="h6"
                     style={solutionCorrect && tries === 1 ? { color: 'green' } : { color: 'red' }}
                   >
-                    {LEVELS[newLevel][1].slice(0, -2)}
+                    {LEVELS[newLevel][2]}
                     {solutionCorrect && tries === 1
                       ? <KeyboardArrowUpIcon />
                       : <KeyboardArrowDownIcon />}

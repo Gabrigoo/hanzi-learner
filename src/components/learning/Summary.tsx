@@ -1,15 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
-
-import {
-  Button,
-  Grid,
-  Typography,
-} from '@material-ui/core';
-
-import {
-  MainInt, SessionInt, UserInt,
-} from '../../interfaces';
+import { Button, Grid, Typography } from '@material-ui/core';
+import { MainInt, SessionInt, UserInt } from '../../interfaces';
 import InfoTag from '../info/InfoTag';
 
 interface SummaryProps {

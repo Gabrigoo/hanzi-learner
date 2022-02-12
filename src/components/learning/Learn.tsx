@@ -122,7 +122,12 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
               </Grid>
               <Grid item>
                 <Typography id="reading-show">
-                  {`${mainData[current].pinyin} (tone: ${mainData[current].tone})`}
+                  {mainData[current].pinyin}
+                  &nbsp;
+                  (tone:
+                  &nbsp;
+                  {mainData[current].tone}
+                  )
                 </Typography>
               </Grid>
             </Grid>

@@ -30,9 +30,15 @@ interface StageProps {
 // all the elements for the current stage mapped
 const Stage: React.FC<StageProps> = (props): ReactElement => (
   <div className="justify-left">
-    <h1 className="levels-h1">
-      {`Stage ${props.level}`}
-    </h1>
+    <div>
+      <h2>
+        {props.level === '1' ? `User level: ${props.userData.profileData.currentStage}` : null}
+      </h2>
+      <h1 className="levels-h1">
+        {`Stage ${props.level}`}
+      </h1>
+    </div>
+
     <div className="stage-flex">
       {props.stageData.map((item, index) => (
         <InfoTag

@@ -104,13 +104,10 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
   // Handles state change
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value }: { name: string, value: string } = event.currentTarget;
-    switch (name) {
-      case 'chineseTrad-1':
-      case 'chineseTrad-2':
-      case 'chineseTrad-3':
-      case 'chineseTrad-4':
-      case 'chineseTrad-5': {
-        const arrIndex = parseInt(name.slice(-1), 10) - 1;
+    let arrIndex: number;
+    switch (name.slice(0, -2)) {
+      case 'chineseTrad':
+        arrIndex = parseInt(name.slice(-1), 10) - 1;
         setChineseTrad(Object.assign([], chineseTrad, { [arrIndex]: value }));
         setChineseSimp(Object.assign([], chineseSimp,
           { [arrIndex]: autoFillField(value, 'chineseSimp') }));
@@ -119,43 +116,24 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
         setTone(Object.assign([], tone,
           { [arrIndex]: autoFillField(value, 'tone') }));
         break;
-      }
-      case 'chineseSimp-1':
-      case 'chineseSimp-2':
-      case 'chineseSimp-3':
-      case 'chineseSimp-4':
-      case 'chineseSimp-5': {
-        const arrIndex = parseInt(name.slice(-1), 10) - 1;
+      case 'chineseSimp':
+        arrIndex = parseInt(name.slice(-1), 10) - 1;
         setChineseSimp(Object.assign([], chineseSimp, { [arrIndex]: value }));
         break;
-      }
-      case 'pinyin-1':
-      case 'pinyin-2':
-      case 'pinyin-3':
-      case 'pinyin-4':
-      case 'pinyin-5': {
-        const arrIndex = parseInt(name.slice(-1), 10) - 1;
+      case 'pinyin':
+        arrIndex = parseInt(name.slice(-1), 10) - 1;
         setPinyin(Object.assign([], pinyin, { [arrIndex]: value }));
         setTone(Object.assign([], tone, { [arrIndex]: toneCheck(value) }));
         break;
-      }
-      case 'tone-1':
-      case 'tone-2':
-      case 'tone-3':
-      case 'tone-4':
-      case 'tone-5': {
-        const arrIndex = parseInt(name.slice(-1), 10) - 1;
+      case 'tone':
+        arrIndex = parseInt(name.slice(-1), 10) - 1;
         setTone(Object.assign([], tone, { [arrIndex]: value }));
         break;
-      }
-      case 'english-1':
-      case 'english-2':
-      case 'english-3': {
-        const arrIndex = parseInt(name.slice(-1), 10) - 1;
+      case 'english':
+        arrIndex = parseInt(name.slice(-1), 10) - 1;
         setEnglish(Object.assign([], english, { [arrIndex]: value }));
         break;
-      }
-      case 'stage':
+      case 'sta':
         setStage(value);
         break;
       default:

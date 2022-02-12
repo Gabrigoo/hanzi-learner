@@ -49,6 +49,7 @@ module.exports = {
     "react/destructuring-assignment": "off",
     "linebreak-style": [2, "windows"],
     "prefer-destructuring": "off",
+    "prefer-template": "off",
     "react/no-array-index-key": "off",
     "no-use-before-define": "off",
     "no-alert": "off",

@@ -36,6 +36,8 @@ interface ReactProps {
 
 const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
   const [sessionOn, setSessionOn] = useState(false);
+  let content;
+
   // Loading user data
   useEffect(() => {
     const source = axios.CancelToken.source();
@@ -102,10 +104,12 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
     });
     return review;
   };
+
   // As name suggests, uploads the results of the review
   const uploadReviewResults = (word: string, object: UserCharacterInt) => {
     props.updateUserData(word, object);
   };
+
   // Upload answer into session db
   const uploadAnswer = (word: string, correct: boolean) => {
     if (correct) {
@@ -114,6 +118,7 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
       props.answerIncorrect(word);
     }
   };
+
   // Starts or stops the current session
   const switchSession = () => {
     if (sessionOn) {
@@ -123,8 +128,6 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
       setSessionOn(true);
     }
   };
-
-  let content;
 
   if (props.mainData && props.userData) {
     if (sessionOn) {
