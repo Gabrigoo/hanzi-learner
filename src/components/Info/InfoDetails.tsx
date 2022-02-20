@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from 'react';
+import React, { useState, useEffect, ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -48,8 +48,14 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
     ? props.userData.characters : props.userData.words;
   // memonics in case they are changed
   const [changeMemonic, setChangeMemonic] = useState(false);
-  const [meaningMemonic, setMeaningMemonic] = useState(userData[current]?.memoMean || '');
-  const [readingMemonic, setReadingMemonic] = useState(userData[current]?.memoRead || '');
+  const [meaningMemonic, setMeaningMemonic] = useState('');
+  const [readingMemonic, setReadingMemonic] = useState('');
+
+  useEffect(() => {
+    setMeaningMemonic(userData[current]?.memoMean);
+    setReadingMemonic(userData[current]?.memoRead);
+    setChangeMemonic(false);
+  }, [current]);
 
   const switchChangeMemonics = () => {
     if (changeMemonic) {
@@ -189,12 +195,11 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
             <Typography>Components:</Typography>
           </Grid>
           {current.split('').map((item, index) => (
-            <Grid item>
+            <Grid item key={item + index}>
               <InfoTag
                 mainData={props.mainData}
                 userData={props.userData}
                 word={item}
-                key={item + index}
               />
             </Grid>
           ))}
@@ -208,12 +213,11 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
               </Typography>
             </Grid>
             {isPresentInWords(current).map((item, index) => (
-              <Grid item>
+              <Grid item key={item + index}>
                 <InfoTag
                   mainData={props.mainData}
                   userData={props.userData}
                   word={item}
-                  key={item + index}
                 />
               </Grid>
             ))}
