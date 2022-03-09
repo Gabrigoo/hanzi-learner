@@ -116,7 +116,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     let meanCorrect = 0; // 0: incorrect, 1: partially correct, 2: completely correct
     let readCorrect = 0;
     // remove accidental spaces
-    const formattedMeanInput = meanInput.trim();
+    const formattedMeanInput = meanInput.trim().split(' ').filter((e) => e !== 'to').join();
     const formattedReadInput = readInput.trim();
 
     // check if meaning is correct first
