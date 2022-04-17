@@ -30,6 +30,8 @@ interface SearchProps {
 }
 
 const Search: React.FC<SearchProps> = (props): ReactElement => {
+  const searchResults = props.searchResults || [];
+
   const mainData = props.mainData;
   // query is the currently searched string by the user
   const [query, setQuery] = useState('');
@@ -40,7 +42,7 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
   };
 
   // all search results mapped
-  const resultList = props.searchResults.map((item, index) => {
+  const resultList = searchResults.map((item, index) => {
     const data = Object.keys(mainData.characters).includes(item)
       ? mainData.characters : mainData.words;
     return (
@@ -107,10 +109,6 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
       {resultList}
     </div>
   );
-};
-
-Search.defaultProps = {
-  searchResults: [],
 };
 
 export default Search;

@@ -30,7 +30,7 @@ const getMainData = async (
     }
     console.log('GET: main data loaded');
     return fullData;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error loading main data: ${error}`);
     return new AxiosErrorObj(error);
   }
@@ -68,7 +68,7 @@ const getUserData = async (
     }
     console.log('GET: user data loaded');
     return fullData;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error loading user data: ${error}`);
     return new AxiosErrorObj(error);
   }
@@ -84,7 +84,7 @@ const addNewWord = async (
     const response: AxiosResponse = await instance.put(`/main-data/${type}/${word}.json?auth=${token}`, object);
     console.log('PUT: New word upload complete');
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error adding new entry: ${error}`);
     return new AxiosErrorObj(error);
   }
@@ -101,7 +101,7 @@ const addUserData = async (
     const response: AxiosResponse = await instance.put(`/${userId}/${type}/${word}.json?auth=${token}`, object);
     console.log('PUT: new user data uploaded');
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error uploading new user data: ${error}`);
     return new AxiosErrorObj(error);
   }
@@ -116,7 +116,7 @@ const setUserLevel = async (
     const response: AxiosResponse = await axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, newLevel);
     console.log('PUT database overwritten');
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error uploading new user data: ${error}`);
     return new AxiosErrorObj(error);
   }
@@ -131,7 +131,7 @@ const addReviewData = async (
     const response: AxiosResponse = await instance.put(`/${userId}/sessionData.json?auth=${token}`, object);
     console.log('PUT: new session data uploaded');
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error uploading new user data: ${error}`);
     return new AxiosErrorObj(error);
   }

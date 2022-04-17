@@ -3,3 +3,4 @@
 /src/assets/*
 /src/App.test.js
 /src/components/authentication/provider/
+/eslintrc.js

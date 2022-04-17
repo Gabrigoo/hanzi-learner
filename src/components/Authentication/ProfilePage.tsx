@@ -12,7 +12,6 @@ import unknownUser from '../../assets/unknown-user.png';
 import './Authentication.css';
 
 interface ProfilePageProps {
-  isSignedIn: boolean,
   user: firebase.User,
 }
 
@@ -65,7 +64,6 @@ const ProfilePage: React.FC<ProfilePageProps> = (props): ReactElement => {
 };
 
 const mapStateToProps = (state: ReactFullState) => ({
-  isSignedIn: state.auth.isSignedIn,
   user: state.auth.user,
 });
 

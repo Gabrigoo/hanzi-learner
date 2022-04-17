@@ -6,10 +6,14 @@ import './Strip.css';
 interface StripProps {
   message?: string,
   backTrack?: string,
-  timeout?: number | null,
+  timeout?: number,
 }
 
-const Strip: React.FC<StripProps> = ({ message = '', backTrack = '/main', timeout = null }): ReactElement => {
+const Strip: React.FC<StripProps> = (props): ReactElement => {
+  const message = props.message || '';
+  const backTrack = props.backTrack || '/main';
+  const timeout = props.timeout || null;
+
   // on the jump to whatever url saven in backtrack
   const clickHandler = (event: SyntheticEvent<HTMLDivElement>) => {
     event.preventDefault();

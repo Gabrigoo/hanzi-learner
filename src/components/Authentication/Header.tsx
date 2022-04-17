@@ -11,7 +11,6 @@ import {
   IconButton,
   Typography,
   makeStyles,
-  Box,
   Avatar,
 } from '@material-ui/core';
 
@@ -49,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface HeaderProps {
-  isSignedIn: boolean,
   user: firebase.User,
   token: string,
   loadMainData: (source: CancelTokenSource) => any,
@@ -129,14 +127,14 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
             Sign up
           </Button>
         </Link>
-        <Box className="grayscale">
+        <div className="grayscale">
           <Avatar
             id="header-profilepic"
             className={classes.profilePic}
             src={unknownUser}
             alt="profile-unknown"
           />
-        </Box>
+        </div>
       </header>
     );
   }
@@ -149,7 +147,6 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
 };
 
 const mapStateToProps = (state: ReactFullState) => ({
-  isSignedIn: state.auth.isSignedIn,
   user: state.auth.user,
   token: state.auth.token,
 });

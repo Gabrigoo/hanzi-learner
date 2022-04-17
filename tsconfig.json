@@ -18,9 +18,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
   "include": [
-    "src", "setupTest.js", "setupTest.js", "jest.config.js"
+    "src",
+    "setupTest.js",
+    "setupTest.js",
+    "jest.config.js"
   ]
 }
