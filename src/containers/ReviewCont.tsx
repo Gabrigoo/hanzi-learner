@@ -4,6 +4,7 @@ import React, {
 import { connect } from 'react-redux';
 import { CancelTokenSource } from 'axios';
 
+import AxiosErrorObj from 'axios-error';
 import { instance as axios } from '../axios-instance';
 import {
   UserCharacterInt, MainInt, UserInt, ReactFullState, SessionInt,
@@ -69,9 +70,10 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
     }
   };
 
-  const updateMemonic = (word: string, object: UserCharacterInt) => {
-    props.updateUserData(word, object);
-  };
+  const updateMemonic = (
+    word: string,
+    object: UserCharacterInt,
+  ): AxiosErrorObj => props.updateUserData(word, object);
 
   // takes in user data and return the list of characters that need reviewing
   const dataToReview = (data: UserInt): string[] => {
@@ -106,9 +108,10 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
   };
 
   // As name suggests, uploads the results of the review
-  const uploadReviewResults = (word: string, object: UserCharacterInt) => {
-    props.updateUserData(word, object);
-  };
+  const uploadReviewResults = (
+    word: string,
+    object: UserCharacterInt,
+  ): AxiosErrorObj => props.updateUserData(word, object);
 
   // Upload answer into session db
   const uploadAnswer = (word: string, correct: boolean) => {

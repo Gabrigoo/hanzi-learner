@@ -2,6 +2,8 @@ import React, {
   useState, FormEvent, ReactElement, useRef,
 } from 'react';
 
+import AxiosErrorObj from 'axios-error';
+
 import {
   Button,
   Typography,
@@ -26,8 +28,8 @@ interface ReviewProps {
   userData: UserInt,
   reviewData: string[],
   sessionData: SessionInt,
-  uploadReviewResults: (character: string, object: UserCharacterInt) => void,
-  updateMemonic: (character: string, object: UserCharacterInt) => void,
+  uploadReviewResults: (character: string, object: UserCharacterInt) => AxiosErrorObj,
+  updateMemonic: (character: string, object: UserCharacterInt) => AxiosErrorObj,
   checkForLevelAdvancement: () => void,
   switchSession: () => void,
   uploadAnswer: (word: string, correct: boolean) => any,
@@ -63,6 +65,8 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       : props.userData.words,
   );
 
+  const [error, setError] = useState('');
+
   // how many time an answer was given to this particular character so far
   const [savedTries, setSavedTries] = useState(0);
   // solution is currently submitted for judgement
@@ -90,7 +94,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   const [meaningMemonic, setMeaningMemonic] = useState(userData[current].memoMean);
   const [readingMemonic, setReadingMemonic] = useState(userData[current].memoRead);
 
-  const switchChangeMemonics = (): void => {
+  const switchChangeMemonics = async () => {
     if (changeMemonic) {
       // updates memonic in the database
       const object = {
@@ -99,9 +103,18 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
         memoMean: meaningMemonic,
         memoRead: readingMemonic,
       };
-      props.updateMemonic(current, object);
+
+      const resultError = await props.updateMemonic(current, object);
+
+      if (resultError) {
+        setError(resultError.message);
+      } else {
+        setError('');
+        setChangeMemonic(!changeMemonic);
+      }
+    } else {
+      setChangeMemonic(!changeMemonic);
     }
-    setChangeMemonic(!changeMemonic);
   };
 
   const resetOnSolutionAccepted = () => {
@@ -190,27 +203,24 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     // If solution correct
     if (meaningCorrect > 0 && readingCorrect > 0) {
       charObject.level += 1;
-      props.uploadAnswer(current, true);
+
       // Char is now guru, so check advancement
       if (userCharObject.level === 5) {
         props.checkForLevelAdvancement();
       }
-    } else { // If incorrect
-      if (userCharObject.level in [5, 6]) {
-        // From Guru fall back to Apprentice
-        charObject.level = 4;
-      } else if (userCharObject.level in [7, 8]) {
-        // From Master and Enlightened, fall back to Guru
-        charObject.level = 6;
-      }
-      props.uploadAnswer(current, false);
+    } else if (userCharObject.level in [5, 6]) {
+      // From Guru fall back to Apprentice
+      charObject.level = 4;
+    } else if (userCharObject.level in [7, 8]) {
+      // From Master and Enlightened, fall back to Guru
+      charObject.level = 6;
     }
 
     return charObject;
   };
 
   // runs when answer is initially submitted
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const meaningCorrect = isMeaningCorrect();
@@ -235,34 +245,42 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       userCharObject = checkForCharacterAdvancement(userCharObject, meaningCorrect, readingCorrect);
     }
 
-    if (meaningCorrect > 0 && readingCorrect > 0) {
-      setSolutionCorrect(true);
-      // Then set new level to display
-      setNewLevel(userCharObject.level);
-    }
-
     // refresh database with results
-    props.uploadReviewResults(current, userCharObject);
+    const resultError = await props.uploadReviewResults(current, userCharObject);
 
-    // this is needed so we can advance to the next step
-    setSolutionSubmitted(true);
+    if (resultError) {
+      setError(resultError.message);
+    } else {
+      setError('');
+      if (meaningCorrect > 0 && readingCorrect > 0) {
+        props.uploadAnswer(current, true);
+        setSolutionCorrect(true);
+        // Then set new level to display
+        setNewLevel(userCharObject.level);
+      } else {
+        props.uploadAnswer(current, false);
+      }
 
-    // color input boxes depending on result
-    if (meanInputRef.current && readInputRef.current) {
-      const statusColors = ['red', 'orange', 'green'];
-      meanInputRef.current.disabled = true;
-      readInputRef.current.disabled = true;
-      meanInputRef.current.style.color = statusColors[meaningCorrect];
-      readInputRef.current.style.color = statusColors[readingCorrect];
+      // this is needed so we can advance to the next step
+      setSolutionSubmitted(true);
+
+      // color input boxes depending on result
+      if (meanInputRef.current && readInputRef.current) {
+        const statusColors = ['red', 'orange', 'green'];
+        meanInputRef.current.disabled = true;
+        readInputRef.current.disabled = true;
+        meanInputRef.current.style.color = statusColors[meaningCorrect];
+        readInputRef.current.style.color = statusColors[readingCorrect];
+      }
+
+      setSavedTries(savedTries + 1);
+      setLastPract(currentTime);
+      (document.getElementById('board-submit-button') as HTMLInputElement).focus();
     }
-
-    setSavedTries(savedTries + 1);
-    setLastPract(currentTime);
-    (document.getElementById('board-submit-button') as HTMLInputElement).focus();
   };
 
   // this runs when user was given the results and wants to continue
-  const handleContinue = (event: FormEvent<HTMLFormElement>): void => {
+  const handleContinue = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (meanInputRef.current && readInputRef.current) {
@@ -271,25 +289,10 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       meanInputRef.current.disabled = false;
       readInputRef.current.disabled = false;
     }
-    // if memonic was modified, save it
-    if (changeMemonic) {
-      // creates a new object to upload new information
-      const userCharObject: UserCharacterInt = {
-        lastPract: userData[current].lastPract,
-        level: userData[current].level,
-        memoMean: userData[current].memoMean,
-        memoRead: userData[current].memoRead,
-      };
-      if (newLevel !== 0) {
-        userCharObject.level = newLevel;
-      }
-      props.uploadReviewResults(current, userCharObject);
-    }
 
     if (solutionCorrect) {
       resetOnSolutionAccepted();
     }
-    // Always reset these
     setMeaning('');
     setReading('');
     (document.getElementById('meaning-input') as HTMLInputElement).focus();
@@ -432,6 +435,15 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           </Grid>
 
           <Grid
+            container
+            direction="row"
+            justify="space-evenly"
+            alignItems="center"
+          >
+            <Typography variant="h6" color="error">{error}</Typography>
+          </Grid>
+
+          <Grid
             className="margin-top-15"
             container
             direction="row"
@@ -445,7 +457,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                 size="large"
                 type="submit"
                 id="board-submit-button"
-                disabled={meanInput === '' || readInput === ''}
+                disabled={meanInput === '' || readInput === '' || changeMemonic}
               >
                 {!solutionSubmitted ? 'Submit' : solutionCorrect ? 'Continue' : 'Again'}
               </Button>

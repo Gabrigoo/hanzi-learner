@@ -78,11 +78,14 @@ export const updateUserData = (
   if (token && user) {
     const response = await addUserData(word, object, token, user.uid);
 
-    if (response instanceof AxiosErrorObj === false) {
+    if (response instanceof AxiosErrorObj) {
+      return response;
+    } else {
       const type = word.length > 1 ? 'words' : 'characters';
       dispatch({ type: UPDATE_USER_DATA, payload: [word, object, type] });
     }
   }
+  return null;
 };
 
 export const updateUserLevel = (
