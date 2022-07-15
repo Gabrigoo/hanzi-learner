@@ -28,16 +28,28 @@ interface ReviewProps {
   sessionData: SessionInt,
   uploadReviewResults: (character: string, object: UserCharacterInt) => void,
   updateMemonic: (character: string, object: UserCharacterInt) => void,
-  checkForAdvancement: () => void,
+  checkForLevelAdvancement: () => void,
   switchSession: () => void,
   uploadAnswer: (word: string, correct: boolean) => any,
 }
 
 const Review: React.FC<ReviewProps> = (props): ReactElement => {
   // randomizes the sequence
-  const [shuffledDeck] = useState(shuffleDeck(props.reviewData));
+  const shuffleArray = (sourceArray: string[]): string[] => {
+    const newArray = [...sourceArray];
+    if (newArray.length > 1) {
+      for (let i = newArray.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+    }
+    return newArray;
+  };
+  const [shuffledDeck] = useState(shuffleArray(props.reviewData));
+
   // current character being tested
   const [current, setCurrent] = useState(shuffledDeck[0]);
+
   const [mainData, setMainData] = useState<
   {[key: string]: MainCharacterInt} | {[key: string]: MainWordInt}
   >(
@@ -50,8 +62,9 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       ? props.userData.characters
       : props.userData.words,
   );
+
   // how many time an answer was given to this particular character so far
-  const [tries, setTries] = useState(0);
+  const [savedTries, setSavedTries] = useState(0);
   // solution is currently submitted for judgement
   const [solutionSubmitted, setSolutionSubmitted] = useState(false);
   // solution submitted is correct
@@ -77,18 +90,6 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   const [meaningMemonic, setMeaningMemonic] = useState(userData[current].memoMean);
   const [readingMemonic, setReadingMemonic] = useState(userData[current].memoRead);
 
-  // shuffles deck in the beginning
-  function shuffleDeck(sourceArray: string[]): string[] {
-    const newArray = [...sourceArray];
-    if (newArray.length > 1) {
-      for (let i = newArray.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-      }
-    }
-    return newArray;
-  }
-
   const switchChangeMemonics = (): void => {
     if (changeMemonic) {
       // updates memonic in the database
@@ -103,37 +104,54 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     setChangeMemonic(!changeMemonic);
   };
 
-  // runs when answer is initially submitted
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (meanInputRef.current && readInputRef.current) {
-      meanInputRef.current.disabled = true;
-      readInputRef.current.disabled = true;
+  const resetOnSolutionAccepted = () => {
+    const next = shuffledDeck[shuffledDeck.indexOf(current) + 1];
+    if (next === undefined) {
+      props.switchSession();
+    } else if (Object.keys(props.mainData.characters).includes(next)) {
+      setMainData(props.mainData.characters);
+      setUserData(props.userData.characters);
+      setMeaningMemonic(props.userData.characters[next].memoMean);
+      setReadingMemonic(props.userData.characters[next].memoRead);
+    } else {
+      setMainData(props.mainData.words);
+      setUserData(props.userData.words);
+      setMeaningMemonic(props.userData.words[next].memoMean);
+      setReadingMemonic(props.userData.words[next].memoRead);
     }
-    setTries(tries + 1);
+    setCurrent(next);
+    setChangeMemonic(false);
+    setSavedTries(0);
+    setSolutionCorrect(false);
+    setNewLevel(0);
+  };
 
-    let meanCorrect = 0; // 0: incorrect, 1: partially correct, 2: completely correct
-    let readCorrect = 0;
-    // remove accidental spaces
+  const isMeaningCorrect = (): number => {
+    let correct = 0; // 0: incorrect, 1: partially correct, 2: completely correct
+
     const formattedMeanInput = meanInput.trim().split(' ').filter((e) => e !== 'to').join(' ');
-    const formattedReadInput = readInput.trim();
 
-    // check if meaning is correct first
     for (let i = 0; i < 3; i += 1) { // loop through possible correct solutions from DB
       // use levensthein method to check
       const editDist = editDistance(mainData[current].english[i], formattedMeanInput);
       const similar = similarity(mainData[current].english[i], formattedMeanInput);
       // check if input and data difference are inside tolerance
       if ((formattedMeanInput.length > 1 && (editDist < 2 || similar > 0.75))
-        || mainData[current].english[i] === formattedMeanInput) {
-        meanCorrect += 1;
+    || mainData[current].english[i] === formattedMeanInput) {
+        correct += 1;
         if (mainData[current].english[i] === formattedMeanInput) {
-          meanCorrect += 1;
+          correct += 1;
         }
       }
     }
-    // then check reading
+    return correct;
+  };
+
+  const isReadingCorrect = (): number => {
+    let correct = 0; // 0: incorrect, 1: partially correct, 2: completely correct
+
+    const formattedReadInput = readInput.trim();
+
     // remove tone from input in order to compare
     const readingInputFlat = toneChecker(formattedReadInput)[0];
     const toneInput = toneChecker(formattedReadInput)[1];
@@ -144,73 +162,106 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     const readDataFlat = toneChecker(mainData[current].pinyin)[0];
     // check if reading is correct without tone
     if (readDataFlat === readingInputFlat) {
-      readCorrect += 1;
+      correct += 1;
       // check if tone is also correct
       if (mainData[current].tone instanceof Array) {
         if (JSON.stringify(mainData[current].tone) === JSON.stringify(toneInputArray)) {
-          readCorrect += 1;
+          correct += 1;
         }
       } else if (mainData[current].tone === toneInput) {
-        readCorrect += 1;
+        correct += 1;
       }
     }
-    // creates a new object to upload new information
-    const lastPracticed = new Date().getTime();
-    setLastPract(lastPracticed);
+    return correct;
+  };
 
-    const userCharObject: UserCharacterInt = {
-      lastPract: lastPracticed,
+  const checkForCharacterAdvancement = (
+    userCharObject: UserCharacterInt,
+    meaningCorrect: number,
+    readingCorrect: number,
+  ) => {
+    const charObject = userCharObject;
+
+    // user will always advance to level 1, regardless of performance
+    if (userCharObject.level === 0) {
+      charObject.level = 1;
+    }
+
+    // If solution correct
+    if (meaningCorrect > 0 && readingCorrect > 0) {
+      charObject.level += 1;
+      props.uploadAnswer(current, true);
+      // Char is now guru, so check advancement
+      if (userCharObject.level === 5) {
+        props.checkForLevelAdvancement();
+      }
+    } else { // If incorrect
+      if (userCharObject.level in [5, 6]) {
+        // From Guru fall back to Apprentice
+        charObject.level = 4;
+      } else if (userCharObject.level in [7, 8]) {
+        // From Master and Enlightened, fall back to Guru
+        charObject.level = 6;
+      }
+      props.uploadAnswer(current, false);
+    }
+
+    return charObject;
+  };
+
+  // runs when answer is initially submitted
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const meaningCorrect = isMeaningCorrect();
+    const readingCorrect = isReadingCorrect();
+
+    const currentTime = new Date().getTime();
+
+    // creates a new object to upload new information
+    let userCharObject: UserCharacterInt = {
+      lastPract: currentTime,
       level: userData[current].level,
       memoMean: userData[current].memoMean,
       memoRead: userData[current].memoRead,
     };
+
     if (newLevel !== 0) {
       userCharObject.level = newLevel;
     }
+
     // We only check advancement on the first try
-    if (tries === 0) {
-      // user will always advance to level 1, regardless of performance
-      if (userCharObject.level === 0) {
-        userCharObject.level = 1;
-      }
-      // If user gets it right
-      if (meanCorrect > 0 && readCorrect > 0) {
-        userCharObject.level += 1;
-        props.uploadAnswer(current, true);
-        // Char is now guru, so check advancement
-        if (userCharObject.level === 5) {
-          props.checkForAdvancement();
-        }
-        // If user gets it wrong
-      } else {
-        if (userCharObject.level === 5 || userCharObject.level === 6) {
-          // From Guru fall back to Apprentice
-          userCharObject.level = 4;
-        } else if (userCharObject.level === 7 || userCharObject.level === 8) {
-          // From Master and Enlightened, fall back to Guru
-          userCharObject.level = 6;
-        }
-        props.uploadAnswer(current, false);
-      }
+    if (savedTries === 0) {
+      userCharObject = checkForCharacterAdvancement(userCharObject, meaningCorrect, readingCorrect);
     }
-    if (meanCorrect > 0 && readCorrect > 0) {
+
+    if (meaningCorrect > 0 && readingCorrect > 0) {
       setSolutionCorrect(true);
       // Then set new level to display
       setNewLevel(userCharObject.level);
     }
+
     // refresh database with results
     props.uploadReviewResults(current, userCharObject);
+
     // this is needed so we can advance to the next step
     setSolutionSubmitted(true);
+
     // color input boxes depending on result
     if (meanInputRef.current && readInputRef.current) {
       const statusColors = ['red', 'orange', 'green'];
-      meanInputRef.current.style.color = statusColors[meanCorrect];
-      readInputRef.current.style.color = statusColors[readCorrect];
+      meanInputRef.current.disabled = true;
+      readInputRef.current.disabled = true;
+      meanInputRef.current.style.color = statusColors[meaningCorrect];
+      readInputRef.current.style.color = statusColors[readingCorrect];
     }
+
+    setSavedTries(savedTries + 1);
+    setLastPract(currentTime);
     (document.getElementById('board-submit-button') as HTMLInputElement).focus();
   };
-    // this runs when user was given the results and wants to continue
+
+  // this runs when user was given the results and wants to continue
   const handleContinue = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
@@ -234,28 +285,11 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
       }
       props.uploadReviewResults(current, userCharObject);
     }
-    // resets most things
+
     if (solutionCorrect) {
-      const next = shuffledDeck[shuffledDeck.indexOf(current) + 1];
-      if (next === undefined) {
-        props.switchSession();
-      } else if (Object.keys(props.mainData.characters).includes(next)) {
-        setMainData(props.mainData.characters);
-        setUserData(props.userData.characters);
-        setMeaningMemonic(props.userData.characters[next].memoMean);
-        setReadingMemonic(props.userData.characters[next].memoRead);
-      } else {
-        setMainData(props.mainData.words);
-        setUserData(props.userData.words);
-        setMeaningMemonic(props.userData.words[next].memoMean);
-        setReadingMemonic(props.userData.words[next].memoRead);
-      }
-      setCurrent(next);
-      setChangeMemonic(false);
-      setTries(0);
-      setSolutionCorrect(false);
-      setNewLevel(0);
+      resetOnSolutionAccepted();
     }
+    // Always reset these
     setMeaning('');
     setReading('');
     (document.getElementById('meaning-input') as HTMLInputElement).focus();
@@ -318,10 +352,10 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                 <Grid item>
                   <Typography
                     variant="h6"
-                    style={solutionCorrect && tries === 1 ? { color: 'green' } : { color: 'red' }}
+                    style={solutionCorrect && savedTries === 1 ? { color: 'green' } : { color: 'red' }}
                   >
                     {LEVELS[newLevel][2]}
-                    {solutionCorrect && tries === 1
+                    {solutionCorrect && savedTries === 1
                       ? <KeyboardArrowUpIcon />
                       : <KeyboardArrowDownIcon />}
                   </Typography>

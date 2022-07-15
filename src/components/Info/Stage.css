@@ -1,18 +1,24 @@
 .levels-h1 {
-    color: rgb(45, 57, 221);
     margin-top: 15px;
     margin-bottom: 5px;
     margin-left: 8px;
 }
+
+.active {
+    color: rgb(45, 57, 221);
+}
+
 .stage-flex {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 2px;
 }
+
 .justify-left {
     text-align: left;
 }
+
 #stage-flex-card {
     height: auto;
     display: flex;

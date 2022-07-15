@@ -25,16 +25,13 @@ interface StageProps {
       currentStage: number
     }
   };
-  level: string,
+  level: number,
 }
 // all the elements for the current stage mapped
 const Stage: React.FC<StageProps> = (props): ReactElement => (
   <div className="justify-left">
     <div>
-      <h2>
-        {props.level === '1' ? `User level: ${props.userData.profileData.currentStage}` : null}
-      </h2>
-      <h1 className="levels-h1">
+      <h1 className={`levels-h1 ${props.userData.profileData.currentStage >= props.level ? 'active' : ''}`}>
         {`Stage ${props.level}`}
       </h1>
     </div>

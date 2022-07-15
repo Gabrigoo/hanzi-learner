@@ -63,7 +63,7 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
     const ratio = (knownLength / fullLength) * 100;
     console.log(`All characters: ${fullLength}, known:${knownLength}, (${Math.floor(ratio)}%)`);
 
-    if (ratio > 90) {
+    if (ratio > 85) {
       console.log(`User level increased to: ${userLevel + 1}`);
       props.updateUserLevel(userLevel + 1);
     }
@@ -139,7 +139,7 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
             reviewData={dataToReview(props.userData)}
             sessionData={props.sessionData}
             uploadReviewResults={uploadReviewResults}
-            checkForAdvancement={checkForAdvancement}
+            checkForLevelAdvancement={checkForAdvancement}
             switchSession={switchSession}
             uploadAnswer={uploadAnswer}
             updateMemonic={updateMemonic}

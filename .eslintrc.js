@@ -56,7 +56,7 @@ module.exports = {
     'no-alert': 'off',
     'arrow-body-style': 'warn',
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-unused-vars': 'warn',
     'react/state-in-constructor': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-noninteractive-element-interactions': 'off',

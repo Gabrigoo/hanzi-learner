@@ -60,7 +60,7 @@ const StagesCont: React.FC<ReactProps> = (props): ReactElement => {
   const mapAllStages = (highestStage: number, main: MainInt, user: UserInt) => {
     const items = [];
     for (let i = 1; i <= highestStage; i += 1) {
-      items.push(<Stage level={i.toString()} stageData={sortDataToStage(main, i)} mainData={main} userData={user} key={`stage${i}`} />);
+      items.push(<Stage level={i} stageData={sortDataToStage(main, i)} mainData={main} userData={user} key={`stage${i}`} />);
     }
     return items;
   };

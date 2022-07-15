@@ -113,7 +113,7 @@ const setUserLevel = async (
   userId: string,
 ): Promise<AxiosResponse<any> | AxiosErrorObj> => {
   try {
-    const response: AxiosResponse = await axios.put(`/${userId}/profileData/currentStage.json?auth=${token}`, newLevel);
+    const response: AxiosResponse = await instance.put(`/${userId}/profileData/currentStage.json?auth=${token}`, newLevel);
     console.log('PUT database overwritten');
     return response;
   } catch (error: any) {

@@ -89,6 +89,8 @@ export const updateUserLevel = (
   newLevel: number,
 ): AppThunk | void => async (dispatch, getState) => {
   const { token, user } = { ...getState().auth };
+  console.log('updating user level');
+  console.log(user);
   if (token && user) {
     const response = await setUserLevel(newLevel, token, user.uid);
 
