@@ -1,6 +1,7 @@
 import React, {
   useState, FormEvent, ReactElement,
 } from 'react';
+import AxiosErrorObj from 'axios-error';
 
 import {
   Button,
@@ -11,9 +12,9 @@ import {
 
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 import Strip from '../Strip';
-import './Learn.css';
+import './Learning.css';
 
-interface LearnProps {
+interface LearningProps {
   mainData: {
     characters: {
       [key: string]: MainCharacterInt,
@@ -23,10 +24,10 @@ interface LearnProps {
     },
   },
   newItemKeys: string[],
-  learnNewWord: (word: string, object: UserCharacterInt) => void,
+  learnNewWord: (word: string, object: UserCharacterInt) => AxiosErrorObj,
 }
 
-const Learn: React.FC<LearnProps> = (props): ReactElement => {
+const Learning: React.FC<LearningProps> = (props): ReactElement => {
   // starts with first element of to-learn list
   const [current, setCurrent] = useState(props.newItemKeys[0]);
   const [mainData, setMainData] = useState<
@@ -37,12 +38,15 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
       : props.mainData.words,
   );
 
+  const [error, setError] = useState('');
+
   // memonics in case they are changed
   const [meaningMemonic, setMeaningMemonic] = useState('');
   const [readingMemonic, setReadingMemonic] = useState('');
   const [remaningNum, setRemainingNum] = useState(props.newItemKeys.length);
+
   // on continue uploads new character to use DB and continue to next one
-  const handleContinue = (event: FormEvent<HTMLFormElement>) => {
+  const handleContinue = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const newObj = {
@@ -51,17 +55,24 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
       memoMean: meaningMemonic,
       memoRead: readingMemonic,
     };
-    props.learnNewWord(current, newObj);
-    const next = props.newItemKeys[props.newItemKeys.indexOf(current) + 1];
-    setCurrent(next);
-    if (Object.keys(props.mainData.characters).includes(next)) {
-      setMainData(props.mainData.characters);
+
+    const resultError = await props.learnNewWord(current, newObj);
+    if (resultError) {
+      setError(resultError.message);
     } else {
-      setMainData(props.mainData.words);
+      const next = props.newItemKeys[props.newItemKeys.indexOf(current) + 1];
+      setCurrent(next);
+
+      if (Object.keys(props.mainData.characters).includes(next)) {
+        setMainData(props.mainData.characters);
+      } else {
+        setMainData(props.mainData.words);
+      }
+
+      setMeaningMemonic('');
+      setReadingMemonic('');
+      setRemainingNum(remaningNum - 1);
     }
-    setMeaningMemonic('');
-    setReadingMemonic('');
-    setRemainingNum(remaningNum - 1);
   };
 
   if (remaningNum === 0) {
@@ -134,6 +145,15 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
           </Grid>
 
           <Grid
+            container
+            direction="row"
+            justify="space-evenly"
+            alignItems="center"
+          >
+            <Typography variant="h6" color="error">{error}</Typography>
+          </Grid>
+
+          <Grid
             className="margin-top-15"
             item
             container
@@ -182,4 +202,4 @@ const Learn: React.FC<LearnProps> = (props): ReactElement => {
   );
 };
 
-export default Learn;
+export default Learning;

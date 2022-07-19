@@ -4,12 +4,13 @@ import React, {
 import { connect } from 'react-redux';
 import { CancelTokenSource } from 'axios';
 
+import AxiosErrorObj from 'axios-error';
 import { instance as axios } from '../axios-instance';
 import {
   UserCharacterInt, MainInt, UserInt, ReactFullState,
 } from '../interfaces';
 import { loadUserData, updateUserData } from '../redux/actions';
-import Learn from '../components/learning/Learn';
+import Learning from '../components/learning/Learning';
 import Strip from '../components/Strip';
 
 interface ReactProps {
@@ -65,9 +66,10 @@ const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
   };
 
   // adds learned character from main DB to user DB
-  const learnNewWord = (word: string, object: UserCharacterInt) => {
-    props.updateUserData(word, object);
-  };
+  const learnNewWord = (
+    word: string,
+    object: UserCharacterInt,
+  ): AxiosErrorObj => props.updateUserData(word, object);
 
   let content;
 
@@ -76,7 +78,7 @@ const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
       content = <Strip message="No new characters to learn right now" backTrack="/main" timeout={4000} />;
     } else {
       content = (
-        <Learn
+        <Learning
           mainData={props.mainData}
           learnNewWord={learnNewWord}
           newItemKeys={filterNewItems(props.mainData, props.userData)}
