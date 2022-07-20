@@ -2,7 +2,8 @@ import React, {
   useState, useEffect, ReactElement,
 } from 'react';
 import { connect } from 'react-redux';
-import firebase from 'firebase/app';
+import { User } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 import { Button, Typography } from '@material-ui/core';
 
@@ -12,11 +13,13 @@ import unknownUser from '../../assets/unknown-user.png';
 import './Authentication.css';
 
 interface ProfilePageProps {
-  user: firebase.User,
+  user: User,
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = (props): ReactElement => {
   const [provider, setProvider] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (props.user) {
@@ -25,6 +28,12 @@ const ProfilePage: React.FC<ProfilePageProps> = (props): ReactElement => {
       }
     }
   }, [props.user]);
+
+  const signOutClicked = () => {
+    handleSignOut().then(() => {
+      navigate('/main');
+    });
+  };
 
   if (props.user) {
     const photo = props.user.photoURL ? props.user.photoURL : unknownUser;
@@ -53,7 +62,7 @@ const ProfilePage: React.FC<ProfilePageProps> = (props): ReactElement => {
         <Button
           variant="contained"
           color="secondary"
-          onClick={handleSignOut}
+          onClick={signOutClicked}
         >
           Sign out
         </Button>

@@ -1,7 +1,7 @@
 import React, {
   useEffect, ReactElement,
 } from 'react';
-import firebase from 'firebase/app';
+import { User } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { CancelTokenSource } from 'axios';
@@ -48,10 +48,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface HeaderProps {
-  user: firebase.User,
+  user: User,
   token: string,
   loadMainData: (source: CancelTokenSource) => any,
-  getToken: (userAuth: firebase.User) => any,
+  getToken: (userAuth: User) => any,
 }
 
 const Header: React.FC<HeaderProps> = (props): ReactElement => {

@@ -109,12 +109,21 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
       case 'chineseTrad':
         arrIndex = parseInt(name.slice(-1), 10) - 1;
         setChineseTrad(Object.assign([], chineseTrad, { [arrIndex]: value }));
-        setChineseSimp(Object.assign([], chineseSimp,
-          { [arrIndex]: autoFillField(value, 'chineseSimp') }));
-        setPinyin(Object.assign([], pinyin,
-          { [arrIndex]: autoFillField(value, 'pinyin') }));
-        setTone(Object.assign([], tone,
-          { [arrIndex]: autoFillField(value, 'tone') }));
+        setChineseSimp(Object.assign(
+          [],
+          chineseSimp,
+          { [arrIndex]: autoFillField(value, 'chineseSimp') },
+        ));
+        setPinyin(Object.assign(
+          [],
+          pinyin,
+          { [arrIndex]: autoFillField(value, 'pinyin') },
+        ));
+        setTone(Object.assign(
+          [],
+          tone,
+          { [arrIndex]: autoFillField(value, 'tone') },
+        ));
         break;
       case 'chineseSimp':
         arrIndex = parseInt(name.slice(-1), 10) - 1;

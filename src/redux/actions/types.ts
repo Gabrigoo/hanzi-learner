@@ -1,6 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
-import firebase from 'firebase/app';
+import { User } from 'firebase/auth';
 
 import { RootState } from '../reducers';
 import {
@@ -24,7 +24,7 @@ export const ANSWER_INCORRECT = 'ANSWER_INCORRECT';
 
 interface SignInAction {
     type: typeof SIGN_IN
-    payload: firebase.User
+    payload: User
 }
 
 interface SignOutAction {

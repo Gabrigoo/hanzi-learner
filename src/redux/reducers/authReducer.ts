@@ -1,4 +1,4 @@
-import firebase from 'firebase/app';
+import { User } from 'firebase/auth';
 
 import {
   SIGN_IN, SIGN_OUT, GET_TOKEN, AuthActionTypes,
@@ -6,7 +6,7 @@ import {
 
 interface AuthState {
   isSignedIn: boolean | null,
-  user: firebase.User | null,
+  user: User | null,
   token: string | null,
 }
 

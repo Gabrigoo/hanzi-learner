@@ -22,7 +22,7 @@ class UserProvider extends Component {
 
   render() {
     return (
-      <UserContext.Provider>
+      <UserContext.Provider value={UserContext}>
         {this.props.children}
       </UserContext.Provider>
     );

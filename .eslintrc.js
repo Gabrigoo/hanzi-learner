@@ -65,6 +65,8 @@ module.exports = {
     'react/prop-types': 'off',
     'import/extensions': [1, 'never'],
     'no-else-return': 'off',
+    'react/function-component-definition': 'off',
+    'default-param-last': 'off',
     quotes: [2, 'single', { allowTemplateLiterals: true }],
   },
 };

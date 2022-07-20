@@ -1,8 +1,7 @@
 import React, { ReactElement } from 'react';
 import {
-  Route, Router, Switch, Redirect,
+  Route, Routes, BrowserRouter,
 } from 'react-router-dom';
-import history from './history';
 import MainCont from './containers/MainCont';
 import ReviewCont from './containers/ReviewCont';
 import AdditionCont from './containers/AdditionCont';
@@ -16,29 +15,29 @@ import InfoCont from './containers/InfoCont';
 import SearchCont from './containers/SearchCont';
 import Layout from './hoc/Layout/Layout';
 
-const App = (): ReactElement => {
+function App(): ReactElement {
   const routing = (
-    <Router history={history}>
+    <BrowserRouter>
       <Layout>
-        <Switch>
-          <Route path="/main" component={MainCont} />
-          <Route path="/review" component={ReviewCont} />
-          <Route path="/add" component={AdditionCont} />
-          <Route path="/learn" component={LearnCont} />
-          <Route path="/sign-up" component={SignUp} />
-          <Route path="/sign-in" component={SignIn} />
-          <Route path="/password-reset" component={PasswordReset} />
-          <Route path="/user" component={ProfilePage} />
-          <Route path="/search" component={SearchCont} />
-          <Route path="/stages" component={StagesCont} />
-          <Route path="/info/:id" component={InfoCont} />
-          <Redirect to="/main" />
-        </Switch>
+        <Routes>
+          <Route path="/main" element={<MainCont />} />
+          <Route path="/review" element={<ReviewCont />} />
+          <Route path="/add" element={<AdditionCont />} />
+          <Route path="/learn" element={<LearnCont />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/password-reset" element={<PasswordReset />} />
+          <Route path="/user" element={<ProfilePage />} />
+          <Route path="/search" element={<SearchCont />} />
+          <Route path="/stages" element={<StagesCont />} />
+          <Route path="/info/:id" element={<InfoCont />} />
+          <Route path="*" element={<MainCont />} />
+        </Routes>
       </Layout>
-    </Router>
+    </BrowserRouter>
   );
 
   return routing;
-};
+}
 
 export default App;

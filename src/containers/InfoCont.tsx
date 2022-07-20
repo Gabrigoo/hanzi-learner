@@ -26,7 +26,7 @@ interface ReactProps {
 
 const InfoCont: React.FC<ReactProps> = (props): ReactElement => {
   // Getting character the panel is supposed to display
-  const { id }: { id: string } = useParams();
+  const { id }: any = useParams();
 
   // Loading user data
   useEffect(() => {

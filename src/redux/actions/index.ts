@@ -1,6 +1,6 @@
 import { CancelTokenSource } from 'axios';
 import AxiosErrorObj from 'axios-error';
-import firebase from 'firebase/app';
+import { User } from 'firebase/auth';
 
 import {
   SIGN_IN, SIGN_OUT, LOAD_MAIN_DATA, LOAD_USER_DATA, GET_TOKEN,
@@ -13,7 +13,7 @@ import {
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 
 // Authentication actions:
-export const signIn = (user: firebase.User): AuthActionTypes => ({
+export const signIn = (user: User): AuthActionTypes => ({
   type: SIGN_IN,
   payload: user,
 });
@@ -22,7 +22,7 @@ export const signOut = (): AuthActionTypes => ({
   type: SIGN_OUT,
 });
 
-export const getToken = (userAuth: firebase.User): AppThunk => async (dispatch) => {
+export const getToken = (userAuth: User): AppThunk => async (dispatch) => {
   const idToken: string = await userAuth.getIdToken();
 
   localStorage.setItem('token', idToken);

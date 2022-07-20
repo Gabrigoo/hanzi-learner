@@ -1,7 +1,7 @@
 import React, {
   ReactElement,
 } from 'react';
-import firebase from 'firebase/app';
+import { User } from 'firebase/auth';
 import { connect } from 'react-redux';
 
 import {
@@ -12,7 +12,7 @@ import MainMenu from '../components/MainMenu';
 
 interface ReactProps {
   isSignedIn: boolean,
-  user: firebase.User,
+  user: User,
 }
 
 const MainCont: React.FC<ReactProps> = (props): ReactElement => {

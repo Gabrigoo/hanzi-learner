@@ -1,6 +1,6 @@
 import React, { useEffect, SyntheticEvent, ReactElement } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import history from '../history';
 import './Strip.css';
 
 interface StripProps {
@@ -13,19 +13,21 @@ const Strip: React.FC<StripProps> = (props): ReactElement => {
   const message = props.message || '';
   const backTrack = props.backTrack || '/main';
   const timeout = props.timeout || null;
+  const navigate = useNavigate();
 
   // on the jump to whatever url saven in backtrack
   const clickHandler = (event: SyntheticEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (timeout) {
-      history.push(backTrack);
+      navigate(backTrack);
     }
   };
+
   // set up and clear a timeout for jumping to backtract automatically
   useEffect(() => {
     let myTimeout: ReturnType<typeof setTimeout>;
     if (timeout) {
-      myTimeout = setTimeout(() => { history.push(backTrack); }, timeout);
+      myTimeout = setTimeout(() => { navigate(backTrack); }, timeout);
     }
     return () => {
       clearTimeout(myTimeout);
@@ -33,7 +35,7 @@ const Strip: React.FC<StripProps> = (props): ReactElement => {
   });
 
   const handleKey = () => {
-    history.push(backTrack);
+    navigate(backTrack);
   };
 
   useEffect(() => {

@@ -4,3 +4,4 @@
 /src/App.test.js
 /src/components/authentication/provider/
 /eslintrc.js
+/config-overrides.js
