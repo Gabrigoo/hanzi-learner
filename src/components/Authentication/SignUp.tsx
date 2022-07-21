@@ -82,7 +82,7 @@ const SignUp = (): ReactElement => {
         Sign up
       </Button>
       <Typography>or</Typography>
-      <Grid container direction="row" justify="center" spacing={2}>
+      <Grid container direction="row" justifyContent="center" spacing={2}>
         <Grid item>
           <Button
             onClick={(event) => signInWithGoogleClicked(event)}

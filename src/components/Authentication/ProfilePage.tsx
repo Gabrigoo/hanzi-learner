@@ -50,7 +50,7 @@ const ProfilePage: React.FC<ProfilePageProps> = (props): ReactElement => {
         <Typography variant="h4">{props.user.displayName}</Typography>
         <Typography variant="h5">{props.user.email}</Typography>
         {provider === 'password' ? (
-          <Grid container direction="row" justify="center" spacing={2}>
+          <Grid container direction="row" justifyContent="center" spacing={2}>
             <Grid item>
               <Button
                 variant="contained"

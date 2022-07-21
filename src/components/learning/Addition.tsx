@@ -210,11 +210,11 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
     <div>
       <form id="addition-card" className="card" autoComplete="off" onSubmit={handleSubmit}>
         <Grid container direction="column" spacing={2}>
-          <Grid item container direction="row" justify="space-between" alignItems="center">
-            <Grid item xs={12} sm={7} container justify="center">
+          <Grid item container direction="row" justifyContent="space-between" alignItems="center">
+            <Grid item xs={12} sm={7} container justifyContent="center">
               <Typography variant="h4">Add new entry:</Typography>
             </Grid>
-            <Grid item xs={9} sm={5} container justify="flex-end">
+            <Grid item xs={9} sm={5} container justifyContent="flex-end">
               <Button variant="contained" color="primary" onClick={changeInputType}>
                 {inputType}
               </Button>
@@ -356,7 +356,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
             </InputLabel>
           </Grid>
 
-          <Grid item container direction="row" justify="space-evenly" alignItems="center">
+          <Grid item container direction="row" justifyContent="space-evenly" alignItems="center">
             <Grid item>
               <Button
                 variant="contained"
@@ -372,7 +372,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item container direction="row" justify="center" alignItems="center" spacing={2}>
+          <Grid item container direction="row" justifyContent="center" alignItems="center" spacing={2}>
             <Grid item>
               <Typography>Overwrite:</Typography>
             </Grid>

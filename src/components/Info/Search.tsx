@@ -86,7 +86,7 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
               onChange={(event) => setQuery(event.target.value)}
             />
           </Grid>
-          <Grid item container justify="center" xs={6} md={3}>
+          <Grid item container justifyContent="center" xs={6} md={3}>
             <Button
               variant="contained"
               color="primary"
@@ -95,7 +95,7 @@ const Search: React.FC<SearchProps> = (props): ReactElement => {
               Search
             </Button>
           </Grid>
-          <Grid item container justify="center" xs={6} md={3}>
+          <Grid item container justifyContent="center" xs={6} md={3}>
             <Button
               variant="contained"
               color="secondary"

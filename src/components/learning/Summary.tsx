@@ -48,7 +48,7 @@ const Summary: React.FC<SummaryProps> = (props): ReactElement => {
               />
             ))}
         </Grid>
-        <Grid item container direction="row" spacing={2} justify="space-evenly">
+        <Grid item container direction="row" spacing={2} justifyContent="space-evenly">
           <Grid item>
             <Button
               variant="contained"

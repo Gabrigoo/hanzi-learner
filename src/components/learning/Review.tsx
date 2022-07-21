@@ -307,7 +307,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
         onSubmit={solutionSubmitted ? handleContinue : handleSubmit}
       >
         <Grid container direction="column" spacing={3}>
-          <Grid item container direction="row" justify="space-around" spacing={1}>
+          <Grid item container direction="row" justifyContent="space-around" spacing={1}>
             <Grid item xs={12} sm={4}>
               <Typography>
                 {`Remanining: ${remaningNum}`}
@@ -349,7 +349,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
             </Grid>
           </Grid>
 
-          <Grid id="new-level" item container justify="center">
+          <Grid id="new-level" item container justifyContent="center">
             {newLevel
               ? (
                 <Grid item>
@@ -437,7 +437,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           <Grid
             container
             direction="row"
-            justify="space-evenly"
+            justifyContent="space-evenly"
             alignItems="center"
           >
             <Typography variant="h6" color="error">{error}</Typography>
@@ -447,7 +447,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
             className="margin-top-15"
             container
             direction="row"
-            justify="space-evenly"
+            justifyContent="space-evenly"
             alignItems="center"
           >
             <Grid item>
@@ -474,7 +474,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
           </Grid>
 
           {!solutionSubmitted ? null : (
-            <Grid id="memonics" item container spacing={3} justify="space-evenly" alignItems="center">
+            <Grid id="memonics" item container spacing={3} justifyContent="space-evenly" alignItems="center">
               <Grid item xs={12} sm={5}>
                 <TextField
                   type="text"
@@ -499,7 +499,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
                   onChange={(event) => setReadingMemonic(event.target.value)}
                 />
               </Grid>
-              <Grid item xs={12} sm={2} container justify="center">
+              <Grid item xs={12} sm={2} container justifyContent="center">
                 <Button
                   variant="outlined"
                   color="primary"

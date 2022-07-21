@@ -101,45 +101,43 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
   let userContent = <p>This character is not yet learned.</p>;
 
   // From here it's rendering
-  const renderMemonic = () => {
-    return (
-      <Grid item container spacing={3} justify="space-evenly" alignItems="center">
-        <Grid item xs={12} sm={5}>
-          <TextField
-            type="text"
-            label="Meaning memonic"
-            variant="outlined"
-            multiline
-            fullWidth
-            disabled={!changeMemonic}
-            value={meaningMemonic}
-            onChange={(event) => setMeaningMemonic(event.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={5}>
-          <TextField
-            type="text"
-            label="Reading memonic"
-            variant="outlined"
-            multiline
-            fullWidth
-            disabled={!changeMemonic}
-            value={readingMemonic}
-            onChange={(event) => setReadingMemonic(event.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={2} container justify="center">
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={switchChangeMemonics}
-          >
-            {changeMemonic ? 'Save' : 'Change'}
-          </Button>
-        </Grid>
+  const renderMemonic = () => (
+    <Grid item container spacing={3} justifyContent="space-evenly" alignItems="center">
+      <Grid item xs={12} sm={5}>
+        <TextField
+          type="text"
+          label="Meaning memonic"
+          variant="outlined"
+          multiline
+          fullWidth
+          disabled={!changeMemonic}
+          value={meaningMemonic}
+          onChange={(event) => setMeaningMemonic(event.target.value)}
+        />
       </Grid>
-    );
-  };
+      <Grid item xs={12} sm={5}>
+        <TextField
+          type="text"
+          label="Reading memonic"
+          variant="outlined"
+          multiline
+          fullWidth
+          disabled={!changeMemonic}
+          value={readingMemonic}
+          onChange={(event) => setReadingMemonic(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={12} sm={2} container justifyContent="center">
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={switchChangeMemonics}
+        >
+          {changeMemonic ? 'Save' : 'Change'}
+        </Button>
+      </Grid>
+    </Grid>
+  );
 
   const content = (
     <>
@@ -233,7 +231,7 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
           item
           container
           direction="row"
-          justify="flex-start"
+          justifyContent="flex-start"
           spacing={2}
         >
           <Grid item container direction="column" alignItems="flex-start" spacing={1} xs={5} sm={4} md={3}>

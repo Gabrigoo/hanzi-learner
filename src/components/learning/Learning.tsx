@@ -147,7 +147,7 @@ const Learning: React.FC<LearningProps> = (props): ReactElement => {
           <Grid
             container
             direction="row"
-            justify="space-evenly"
+            justifyContent="space-evenly"
             alignItems="center"
           >
             <Typography variant="h6" color="error">{error}</Typography>
@@ -157,7 +157,7 @@ const Learning: React.FC<LearningProps> = (props): ReactElement => {
             className="margin-top-15"
             item
             container
-            justify="center"
+            justifyContent="center"
             alignItems="center"
           >
             <Button
@@ -171,7 +171,7 @@ const Learning: React.FC<LearningProps> = (props): ReactElement => {
             </Button>
           </Grid>
 
-          <Grid item container spacing={3} justify="space-evenly" alignItems="center">
+          <Grid item container spacing={3} justifyContent="space-evenly" alignItems="center">
             <Grid item xs={12} sm={6}>
               <TextField
                 type="text"
