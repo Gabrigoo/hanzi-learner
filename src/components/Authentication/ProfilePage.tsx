@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { User } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography, Grid } from '@material-ui/core';
 
-import { linkWithGoogle, handleSignOut } from '../../firebase';
+import { linkWithGoogle, linkWithFacebook, handleSignOut } from '../../firebase';
 import { ReactFullState } from '../../interfaces';
 import unknownUser from '../../assets/unknown-user.png';
 import './Authentication.css';
@@ -50,13 +50,26 @@ const ProfilePage: React.FC<ProfilePageProps> = (props): ReactElement => {
         <Typography variant="h4">{props.user.displayName}</Typography>
         <Typography variant="h5">{props.user.email}</Typography>
         {provider === 'password' ? (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={linkWithGoogle}
-          >
-            Link with Google
-          </Button>
+          <Grid container direction="row" justify="center" spacing={2}>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={linkWithGoogle}
+              >
+                Link with Google
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={linkWithFacebook}
+              >
+                Link with Facebook
+              </Button>
+            </Grid>
+          </Grid>
         )
           : '' }
         <Button

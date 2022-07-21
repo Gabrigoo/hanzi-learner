@@ -147,7 +147,7 @@ const signInWithFacebook = async (
         });
     }
   } catch (error) {
-    console.error('Error signing up with google: ', error);
+    console.error('Error signing up with facebook: ', error);
     handleError(error, setError);
   }
 };
@@ -169,6 +169,15 @@ const linkWithGoogle = (): void => {
   }
   linkWithPopup(auth.currentUser, googleProvider).catch((error: AxiosError) => {
     console.log(`Error linking with google: ${error}`);
+  });
+};
+
+const linkWithFacebook = (): void => {
+  if (!auth.currentUser) {
+    throw new Error('No user currently logged in!');
+  }
+  linkWithPopup(auth.currentUser, facebookProvider).catch((error: AxiosError) => {
+    console.log(`Error linking with facebook: ${error}`);
   });
 };
 
@@ -202,6 +211,6 @@ const handleSignOut = async (): Promise<void> => {
 
 export {
   auth, firestore, createUserWithEmailAndPasswordHandler, signInWithGoogle,
-  linkWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler, sendResetEmail,
-  handleSignOut,
+  linkWithGoogle, linkWithFacebook, signInWithFacebook, signInWithEmailAndPasswordHandler,
+  sendResetEmail, handleSignOut,
 };

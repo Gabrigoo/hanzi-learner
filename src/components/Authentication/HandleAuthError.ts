@@ -23,6 +23,9 @@ const handleError = (error: any, setError: React.Dispatch<React.SetStateAction<s
     case 'auth/popup-closed-by-user':
       setError('Google sign-in not finished');
       break;
+    case 'auth/account-exists-with-different-credential':
+      setError('Account already exists with a different credential. You can still link your accounts.');
+      break;
     default:
       alert(`Unhandled error:${error.code}`);
       setError('Unhandled error');
