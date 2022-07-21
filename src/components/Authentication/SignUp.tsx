@@ -22,8 +22,8 @@ const SignUp = (): ReactElement => {
   const navigate = useNavigate();
 
   const signUpClicked = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     createUserWithEmailAndPasswordHandler(
-      event,
       email,
       password,
       displayName,
@@ -34,21 +34,23 @@ const SignUp = (): ReactElement => {
   };
 
   const signInWithGoogleClicked = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    signInWithGoogle(event, setError).then(() => {
+    event.preventDefault();
+    signInWithGoogle(setError).then(() => {
       navigate('/main');
     });
   };
 
-  const signInWithFacebookClicked = () => {
-    // signInWithFacebook();
+  const signInWithFacebookClicked = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    signInWithFacebook(setError).then(() => {
+      navigate('/main');
+    });
   };
 
   return (
     <form
       className="card auth-flex-card"
-      onSubmit={
-        (event) => { signUpClicked(event); }
-      }
+      onSubmit={(event) => { signUpClicked(event); }}
     >
       <Typography variant="h4">Sign up</Typography>
       <Typography variant="h6" color="error">{error}</Typography>
@@ -92,7 +94,7 @@ const SignUp = (): ReactElement => {
         </Grid>
         <Grid item>
           <Button
-            onClick={signInWithFacebookClicked}
+            onClick={(event) => signInWithFacebookClicked(event)}
             variant="contained"
             color="primary"
           >

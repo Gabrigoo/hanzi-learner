@@ -21,19 +21,24 @@ const SignIn = (): ReactElement => {
   const navigate = useNavigate();
 
   const signInClicked = async (event: React.FormEvent<HTMLFormElement>) => {
-    signInWithEmailAndPasswordHandler(event, email, password, setError).then(() => {
+    event.preventDefault();
+    signInWithEmailAndPasswordHandler(email, password, setError).then(() => {
       navigate('/main');
     });
   };
 
   const signInWithGoogleClicked = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    signInWithGoogle(event, setError).then(() => {
+    event.preventDefault();
+    signInWithGoogle(setError).then(() => {
       navigate('/main');
     });
   };
 
-  const signInWithFacebookClicked = () => {
-    // signInWithFacebook();
+  const signInWithFacebookClicked = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    signInWithFacebook(setError).then(() => {
+      navigate('/main');
+    });
   };
 
   return (
@@ -81,7 +86,7 @@ const SignIn = (): ReactElement => {
           <Button
             variant="contained"
             color="primary"
-            onClick={signInWithFacebookClicked}
+            onClick={(event) => signInWithFacebookClicked(event)}
           >
             Sign in with Facebook
           </Button>

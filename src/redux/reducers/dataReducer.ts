@@ -2,7 +2,7 @@ import {
   LOAD_MAIN_DATA, LOAD_USER_DATA, UPDATE_USER_DATA, ADD_MAIN_DATA, UPDATE_USER_LEVEL,
   DataActionTypes,
 } from '../actions/types';
-// Have to ask someone smarter than me about this one
+
 interface DataState {
   mainData: any,
   userData: any,

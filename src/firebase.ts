@@ -1,4 +1,4 @@
-import React, { FormEvent, MouseEvent } from 'react';
+import React, { FormEvent } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore/lite';
 import {
@@ -36,14 +36,11 @@ const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
 const createUserWithEmailAndPasswordHandler = async (
-  event: FormEvent<HTMLFormElement>,
   email: string,
   password: string,
   displayName: string,
   setError: React.Dispatch<React.SetStateAction<string>>,
 ): Promise<void> => {
-  event.preventDefault();
-
   try {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     if (!auth.currentUser || !user) {
@@ -75,10 +72,8 @@ const createUserWithEmailAndPasswordHandler = async (
 };
 
 const signInWithGoogle = async (
-  event: MouseEvent<HTMLButtonElement>,
   setError: React.Dispatch<React.SetStateAction<string>>,
 ): Promise<void> => {
-  event.preventDefault();
   try {
     let userID;
     let isNew = false;
@@ -116,14 +111,52 @@ const signInWithGoogle = async (
   }
 };
 
+const signInWithFacebook = async (
+  setError: React.Dispatch<React.SetStateAction<string>>,
+): Promise<void> => {
+  try {
+    let userID;
+    let isNew = false;
+    await signInWithPopup(auth, facebookProvider).then(async (result) => {
+      console.log('user result:' + result);
+      if (!result.user) {
+        throw new Error('No user currently logged in!');
+      }
+      userID = result.user.uid;
+      isNew = await getAdditionalUserInfo(result)?.isNewUser || false;
+    });
+
+    if (!auth.currentUser) {
+      throw new Error('No user currently logged in!');
+    }
+
+    const token = await auth.currentUser.getIdToken();
+
+    if (isNew) {
+      const newObject = {
+        profileData: {
+          currentStage: 1,
+        },
+      };
+
+      axios.put(`/${userID}.json?auth=${token}`, newObject)
+        .then(() => { console.log('PUT: new user data created!'); })
+        .catch((error: AxiosError) => {
+          console.error(`Error creating new user data: ${error}`);
+          throw error;
+        });
+    }
+  } catch (error) {
+    console.error('Error signing up with google: ', error);
+    handleError(error, setError);
+  }
+};
+
 const signInWithEmailAndPasswordHandler = async (
-  event: FormEvent<HTMLFormElement>,
   email: string,
   password: string,
   setError: React.Dispatch<React.SetStateAction<string>>,
 ): Promise<void> => {
-  event.preventDefault();
-
   signInWithEmailAndPassword(auth, email, password).catch((error: AxiosError) => {
     console.error('Error signing in with email and password: ', error);
     handleError(error, setError);
@@ -136,14 +169,6 @@ const linkWithGoogle = (): void => {
   }
   linkWithPopup(auth.currentUser, googleProvider).catch((error: AxiosError) => {
     console.log(`Error linking with google: ${error}`);
-  });
-};
-
-const signInWithFacebook = (): void => {
-  signInWithPopup(auth, facebookProvider).then(() => {
-    // not implemented yet
-  }).catch((error: AxiosError) => {
-    console.log(error.message);
   });
 };
 
