@@ -8,7 +8,7 @@ import {
   Typography,
   InputLabel,
   Input,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { MainCharacterInt, MainWordInt } from '../../interfaces';
 import { TONES } from '../../assets/tones';

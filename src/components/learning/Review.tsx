@@ -11,9 +11,9 @@ import {
   Input,
   InputLabel,
   TextField,
-} from '@material-ui/core';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+} from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import {
   MainInt, UserInt, MainCharacterInt, MainWordInt, UserCharacterInt, SessionInt,

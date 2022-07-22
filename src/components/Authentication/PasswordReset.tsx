@@ -5,7 +5,7 @@ import {
   Button,
   Typography,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { sendResetEmail } from '../../firebase';
 import './Authentication.css';

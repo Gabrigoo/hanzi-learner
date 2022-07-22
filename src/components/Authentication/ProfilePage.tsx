@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { User } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Typography, Grid } from '@material-ui/core';
+import { Button, Typography, Grid } from '@mui/material';
 
 import { linkWithGoogle, linkWithFacebook, handleSignOut } from '../../firebase';
 import { ReactFullState } from '../../interfaces';

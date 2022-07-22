@@ -6,7 +6,7 @@ import {
   Grid,
   Typography,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 import InfoTag from './InfoTag';

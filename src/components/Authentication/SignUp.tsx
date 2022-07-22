@@ -8,7 +8,7 @@ import {
   Typography,
   TextField,
   Grid,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { signInWithGoogle, signInWithFacebook, createUserWithEmailAndPasswordHandler } from '../../firebase';
 import './Authentication.css';

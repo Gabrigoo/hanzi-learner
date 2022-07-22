@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Header from '../../components/authentication/Header';
 import './Layout.css';
 
@@ -7,12 +7,7 @@ interface LayoutProps {
     children: React.ReactNode
 }
 
-const theme = createMuiTheme();
-
-// const useStyles = makeStyles((theme) => {
-//   root: {
-//   }
-// });
+const theme = createTheme();
 
 function Layout({ children }: LayoutProps): ReactElement {
   return (

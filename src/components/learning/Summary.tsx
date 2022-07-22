@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Grid, Typography } from '@material-ui/core';
+import { Button, Grid, Typography } from '@mui/material';
 import { MainInt, SessionInt, UserInt } from '../../interfaces';
 import InfoTag from '../info/InfoTag';
 

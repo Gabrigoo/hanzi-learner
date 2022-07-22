@@ -8,7 +8,7 @@ import {
   Typography,
   Grid,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 import Strip from '../Strip';

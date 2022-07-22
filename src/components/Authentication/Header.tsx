@@ -10,42 +10,15 @@ import {
   Button,
   IconButton,
   Typography,
-  makeStyles,
   Avatar,
-} from '@material-ui/core';
-
-import HomeIcon from '@material-ui/icons/Home';
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import HomeIcon from '@mui/icons-material/Home';
 
 import { loadMainData, getToken } from '../../redux/actions';
 import { instance as axios } from '../../axios-instance';
 import { ReactFullState } from '../../interfaces';
 import unknownUser from '../../assets/unknown-user.png';
-
-const useStyles = makeStyles((theme) => ({
-  homeIcon: {
-    color: 'rgb(61, 49, 49)',
-    width: '45px',
-    height: '45px',
-  },
-  profilePic: {
-    width: '50px',
-    height: '50px',
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(4),
-  },
-  header: {
-    color: 'rgb(61, 49, 49)',
-    backgroundColor: 'rgb(241, 200, 124)',
-    boxSizing: 'border-box',
-  },
-  alignRight: {
-    marginRight: theme.spacing(3),
-    marginLeft: 'auto',
-  },
-  buttons: {
-    textAlign: 'center',
-  },
-}));
 
 interface HeaderProps {
   user: User,
@@ -55,7 +28,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props): ReactElement => {
-  const classes = useStyles();
+  const theme = useTheme();
 
   useEffect(() => {
     const source = axios.CancelToken.source();
@@ -87,17 +60,23 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
       <header id="header">
         <Link to="/main-menu">
           <IconButton aria-label="main-menu">
-            <HomeIcon className={classes.homeIcon} />
+            <HomeIcon sx={{ color: 'rgb(61, 49, 49)', width: '45px', height: '45px' }} />
           </IconButton>
         </Link>
-        <Typography className={classes.alignRight} variant="h5">
+        <Typography sx={{ marginRight: theme.spacing(3), marginLeft: 'auto' }} variant="h5">
           {props.user.displayName ? props.user.displayName : null}
         </Typography>
         <Typography variant="h5" id="header-email">
           {props.user.email ? props.user.email : null}
         </Typography>
         <Link className="no-underline" to="/user">
-          <Avatar className={classes.profilePic} src={photo} alt="profile-picture" />
+          <Avatar
+            sx={{
+              width: '50px', height: '50px', marginLeft: theme.spacing(3), marginRight: theme.spacing(4),
+            }}
+            src={photo}
+            alt="profile-picture"
+          />
         </Link>
       </header>
     );
@@ -106,12 +85,12 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
       <header id="header">
         <Link to="/main-menu">
           <IconButton aria-label="main-menu">
-            <HomeIcon className={classes.homeIcon} />
+            <HomeIcon sx={{ color: 'rgb(61, 49, 49)', width: '45px', height: '45px' }} />
           </IconButton>
         </Link>
-        <Link className={`${classes.alignRight} no-underline`} to="/sign-in">
+        <Link className="no-underline" to="/sign-in">
           <Button
-            className={classes.buttons}
+            sx={{ textAlign: 'center', marginRight: theme.spacing(3), marginLeft: 'auto' }}
             variant="outlined"
             size="large"
           >
@@ -120,7 +99,7 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
         </Link>
         <Link className="no-underline" to="/sign-up">
           <Button
-            className={classes.buttons}
+            sx={{ textAlign: 'center' }}
             variant="outlined"
             size="large"
           >
@@ -130,7 +109,9 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
         <div className="grayscale">
           <Avatar
             id="header-profilepic"
-            className={classes.profilePic}
+            sx={{
+              width: '50px', height: '50px', marginLeft: theme.spacing(3), marginRight: theme.spacing(4),
+            }}
             src={unknownUser}
             alt="profile-unknown"
           />

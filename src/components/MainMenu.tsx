@@ -1,22 +1,13 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Typography, Button, makeStyles } from '@material-ui/core';
-
-const useStyles = makeStyles(() => ({
-  menuButton: {
-    width: '120px',
-    marginTop: '2vh',
-  },
-}));
+import { Typography, Button } from '@mui/material';
 
 interface TitleBoxProps {
   userId: string;
 }
 
 const MainMenu: React.FC<TitleBoxProps> = (props): ReactElement => {
-  const classes = useStyles();
-
   const adminList = [
     'AGBKwyOAwKhJyNenUVyE8GEIU8B2',
   ];
@@ -28,7 +19,7 @@ const MainMenu: React.FC<TitleBoxProps> = (props): ReactElement => {
       <Typography variant="h3" component="h1" color="primary">Hanzi SRS</Typography>
       <Link className="no-underline" to="/learn">
         <Button
-          className={classes.menuButton}
+          sx={{ width: '120px', marginTop: '2vh' }}
           variant="contained"
           color="primary"
           size="large"
@@ -38,7 +29,7 @@ const MainMenu: React.FC<TitleBoxProps> = (props): ReactElement => {
       </Link>
       <Link className="no-underline" to="/review">
         <Button
-          className={classes.menuButton}
+          sx={{ width: '120px', marginTop: '2vh' }}
           variant="contained"
           color="primary"
           size="large"
@@ -48,7 +39,7 @@ const MainMenu: React.FC<TitleBoxProps> = (props): ReactElement => {
       </Link>
       <Link className="no-underline" to="/stages">
         <Button
-          className={classes.menuButton}
+          sx={{ width: '120px', marginTop: '2vh' }}
           variant="contained"
           color="primary"
           size="large"
@@ -58,7 +49,7 @@ const MainMenu: React.FC<TitleBoxProps> = (props): ReactElement => {
       </Link>
       <Link className="no-underline" to="/search">
         <Button
-          className={classes.menuButton}
+          sx={{ width: '120px', marginTop: '2vh' }}
           variant="contained"
           color="primary"
           size="large"
@@ -70,7 +61,7 @@ const MainMenu: React.FC<TitleBoxProps> = (props): ReactElement => {
         ? (
           <Link className="no-underline" to="/add">
             <Button
-              className={classes.menuButton}
+              sx={{ width: '120px', marginTop: '2vh' }}
               variant="contained"
               color="primary"
               size="large"

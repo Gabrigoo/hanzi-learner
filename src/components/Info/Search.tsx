@@ -7,7 +7,7 @@ import {
   Button,
   TextField,
   Grid,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { MainCharacterInt, MainWordInt, MainInt } from '../../interfaces';
 import './Search.css';
