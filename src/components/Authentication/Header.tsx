@@ -96,12 +96,6 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
         <Container maxWidth={false}>
           <Toolbar disableGutters>
 
-            <Link to="/main-menu">
-              <IconButton aria-label="main-menu" size="large" edge="start" sx={{ mr: 2 }}>
-                <HomeIcon sx={{ fontSize: 40 }} />
-              </IconButton>
-            </Link>
-
             <Box sx={{ flexGrow: 1 }} />
 
             <NavButton title="Sign in" to="/sign-in" />

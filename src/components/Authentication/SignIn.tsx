@@ -1,16 +1,20 @@
 import React, {
   useState, ReactElement,
 } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
+  ButtonGroup,
   Typography,
   TextField,
-  Grid,
+  Box,
+  Stack,
+  Container,
 } from '@mui/material';
 
 import { signInWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler } from '../../firebase';
+import NavButton from '../partials/NavButton';
 import './Authentication.css';
 
 const SignIn = (): ReactElement => {
@@ -42,73 +46,63 @@ const SignIn = (): ReactElement => {
   };
 
   return (
-    <form
-      className="card auth-flex-card"
-      onSubmit={(event) => signInClicked(event)}
-    >
-      <Typography variant="h4">Sign in</Typography>
-      <Typography variant="h6" color="error">{error}</Typography>
-      <TextField
-        type="email"
-        label="Email"
-        variant="outlined"
-        value={email}
-        required
-        onChange={(event) => setEmail(event.target.value)}
-      />
-      <TextField
-        type="password"
-        label="Password"
-        variant="outlined"
-        value={password}
-        required
-        onChange={(event) => setPassword(event.target.value)}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-      >
-        Sign in
-      </Button>
-      <Typography>or</Typography>
-      <Grid container direction="row" justifyContent="center" spacing={2}>
-        <Grid item>
+    <Container maxWidth="xs" sx={{ mt: 10 }}>
+      <form onSubmit={(event) => signInClicked(event)}>
+        <Stack spacing={2}>
+
+          <Typography variant="h4" align="center">Sign in</Typography>
+
+          <Typography variant="h6" align="center" color="error">{error}</Typography>
+
+          <TextField
+            type="email"
+            label="Email"
+            variant="filled"
+            value={email}
+            required
+            onChange={(event) => setEmail(event.target.value)}
+          />
+
+          <TextField
+            type="password"
+            label="Password"
+            variant="filled"
+            value={password}
+            required
+            onChange={(event) => setPassword(event.target.value)}
+          />
+
           <Button
             variant="contained"
-            color="primary"
-            onClick={(event) => signInWithGoogleClicked(event)}
+            type="submit"
           >
-            Sign in with Google
+            Sign in
           </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={(event) => signInWithFacebookClicked(event)}
-          >
-            Sign in with Facebook
-          </Button>
-        </Grid>
-      </Grid>
-      <Typography>Don&apos;t have an account?</Typography>
-      <Link className="no-underline" to="/sign-up">
-        <Button
-          color="primary"
-        >
-          Sign up here
-        </Button>
-      </Link>
-      <Link className="no-underline" to="/password-reset">
-        <Button
-          variant="outlined"
-          color="secondary"
-        >
-          Forgot Password?
-        </Button>
-      </Link>
-    </form>
+
+          <Typography align="center">or sign in with</Typography>
+
+          <ButtonGroup variant="contained" aria-label="outlined primary button group" fullWidth>
+            <Button color="secondary" onClick={(event) => signInWithGoogleClicked(event)}>
+              Google
+            </Button>
+            <Button color="secondary" onClick={(event) => signInWithFacebookClicked(event)}>
+              Facebook
+            </Button>
+          </ButtonGroup>
+
+          <Typography align="center">Don&apos;t have an account?</Typography>
+
+          <Box display="flex" justifyContent="center">
+            <NavButton title="Sign up here" to="/sign-up" variant="outlined" />
+          </Box>
+
+          <Box display="flex" justifyContent="center">
+            <NavButton title="Forgot Password?" to="/password-reset" variant="outlined" color="secondary" />
+          </Box>
+
+        </Stack>
+      </form>
+    </Container>
   );
 };
 
