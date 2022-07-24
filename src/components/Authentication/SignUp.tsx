@@ -13,7 +13,9 @@ import {
   Container,
 } from '@mui/material';
 
-import { signInWithGoogle, signInWithFacebook, createUserWithEmailAndPasswordHandler } from '../../firebase';
+import { AxiosError } from 'axios';
+import { signInWithGoogleOrFacebook, createUserWithEmailAndPasswordHandler } from '../../firebase';
+import getErrorMessage from './HandleErrorMessage';
 import NavButton from '../partials/NavButton';
 import './Authentication.css';
 
@@ -27,33 +29,28 @@ const SignUp = (): ReactElement => {
 
   const signUpClicked = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    createUserWithEmailAndPasswordHandler(
-      email,
-      password,
-      displayName,
-      setError,
-    ).then(() => {
+
+    createUserWithEmailAndPasswordHandler(email, password, displayName).then((res) => {
+      console.log(res);
       navigate('/main');
+    }).catch((e: AxiosError) => {
+      setError(getErrorMessage(e.code));
     });
   };
 
-  const signInWithGoogleClicked = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const signInWithProviderClicked = (event: React.MouseEvent<HTMLButtonElement>, provider: 'google' | 'facebook') => {
     event.preventDefault();
-    signInWithGoogle(setError).then(() => {
-      navigate('/main');
-    });
-  };
 
-  const signInWithFacebookClicked = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    signInWithFacebook(setError).then(() => {
+    signInWithGoogleOrFacebook(provider).then(() => {
       navigate('/main');
+    }).catch((e: AxiosError) => {
+      setError(getErrorMessage(e.code));
     });
   };
 
   return (
     <Container maxWidth="xs" sx={{ mt: 10 }}>
-      <form onSubmit={(event) => { signUpClicked(event); }}>
+      <form onSubmit={signUpClicked}>
         <Stack spacing={2}>
 
           <Typography variant="h4" align="center">Sign up</Typography>
@@ -96,11 +93,11 @@ const SignUp = (): ReactElement => {
 
           <Typography align="center">or sign in with</Typography>
 
-          <ButtonGroup variant="contained" aria-label="outlined primary button group" fullWidth>
-            <Button color="secondary" onClick={(event) => signInWithGoogleClicked(event)}>
+          <ButtonGroup variant="contained" color="secondary" aria-label="outlined primary button group" fullWidth>
+            <Button onClick={(event) => signInWithProviderClicked(event, 'google')}>
               Google
             </Button>
-            <Button color="secondary" onClick={(event) => signInWithFacebookClicked(event)}>
+            <Button onClick={(event) => signInWithProviderClicked(event, 'facebook')}>
               Facebook
             </Button>
           </ButtonGroup>

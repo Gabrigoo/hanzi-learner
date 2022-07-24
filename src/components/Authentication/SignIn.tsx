@@ -13,7 +13,9 @@ import {
   Container,
 } from '@mui/material';
 
-import { signInWithGoogle, signInWithFacebook, signInWithEmailAndPasswordHandler } from '../../firebase';
+import { AxiosError } from 'axios';
+import { signInWithGoogleOrFacebook, signInWithEmailAndPasswordHandler } from '../../firebase';
+import getErrorMessage from './HandleErrorMessage';
 import NavButton from '../partials/NavButton';
 import './Authentication.css';
 
@@ -24,30 +26,29 @@ const SignIn = (): ReactElement => {
 
   const navigate = useNavigate();
 
-  const signInClicked = async (event: React.FormEvent<HTMLFormElement>) => {
+  const signInClicked = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signInWithEmailAndPasswordHandler(email, password, setError).then(() => {
+
+    signInWithEmailAndPasswordHandler(email, password).then(() => {
       navigate('/main');
+    }).catch((e: AxiosError) => {
+      setError(getErrorMessage(e.code));
     });
   };
 
-  const signInWithGoogleClicked = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const signInWithProviderClicked = (event: React.MouseEvent<HTMLButtonElement>, provider: 'google' | 'facebook') => {
     event.preventDefault();
-    signInWithGoogle(setError).then(() => {
-      navigate('/main');
-    });
-  };
 
-  const signInWithFacebookClicked = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    signInWithFacebook(setError).then(() => {
+    signInWithGoogleOrFacebook(provider).then(() => {
       navigate('/main');
+    }).catch((e: AxiosError) => {
+      setError(getErrorMessage(e.code));
     });
   };
 
   return (
     <Container maxWidth="xs" sx={{ mt: 10 }}>
-      <form onSubmit={(event) => signInClicked(event)}>
+      <form onSubmit={signInClicked}>
         <Stack spacing={2}>
 
           <Typography variant="h4" align="center">Sign in</Typography>
@@ -81,11 +82,11 @@ const SignIn = (): ReactElement => {
 
           <Typography align="center">or sign in with</Typography>
 
-          <ButtonGroup variant="contained" aria-label="outlined primary button group" fullWidth>
-            <Button color="secondary" onClick={(event) => signInWithGoogleClicked(event)}>
+          <ButtonGroup variant="contained" color="secondary" aria-label="outlined primary button group" fullWidth>
+            <Button onClick={(event) => signInWithProviderClicked(event, 'google')}>
               Google
             </Button>
-            <Button color="secondary" onClick={(event) => signInWithFacebookClicked(event)}>
+            <Button onClick={(event) => signInWithProviderClicked(event, 'facebook')}>
               Facebook
             </Button>
           </ButtonGroup>
@@ -97,7 +98,7 @@ const SignIn = (): ReactElement => {
           </Box>
 
           <Box display="flex" justifyContent="center">
-            <NavButton title="Forgot Password?" to="/password-reset" variant="outlined" color="secondary" />
+            <NavButton title="Forgot Password?" to="/password-reset" variant="outlined" color="warning" />
           </Box>
 
         </Stack>

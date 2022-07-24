@@ -1,14 +1,24 @@
 import React, {
-  useState, useEffect, ReactElement,
+  useState, ReactElement,
 } from 'react';
 import { connect } from 'react-redux';
 import { User } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Typography, Grid } from '@mui/material';
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  Box,
+  Stack,
+  Avatar,
+  Typography,
+} from '@mui/material';
 
-import { linkWithGoogle, linkWithFacebook, handleSignOut } from '../../firebase';
+import { AxiosError } from 'axios';
+import { linkWithSpecialProvider, handleSignOut } from '../../firebase';
 import { ReactFullState } from '../../interfaces';
+import getErrorMessage from './HandleErrorMessage';
 import unknownUser from '../../assets/unknown-user.png';
 import './Authentication.css';
 
@@ -17,72 +27,70 @@ interface ProfilePageProps {
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = (props): ReactElement => {
-  const [provider, setProvider] = useState('');
+  const photo = props.user?.photoURL || unknownUser;
+
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (props.user) {
-      if (props.user.providerData[0]?.providerId) {
-        setProvider(props.user.providerData[0].providerId);
-      }
-    }
-  }, [props.user]);
+  const signOutClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
 
-  const signOutClicked = () => {
     handleSignOut().then(() => {
-      navigate('/main');
+      navigate('/sign-in');
+    }).catch((e: AxiosError) => {
+      setError(getErrorMessage(e.code));
     });
   };
 
-  if (props.user) {
-    const photo = props.user.photoURL ? props.user.photoURL : unknownUser;
+  const linkWithProviderClicked = (event: React.MouseEvent<HTMLButtonElement>, provider: 'google' | 'facebook') => {
+    event.preventDefault();
 
-    return (
-      <div className="card auth-flex-card">
-        <div
-          id="profile-image-big"
-          style={{
-            background: `url(${photo})  no-repeat center center`,
-            backgroundSize: 'cover',
-          }}
+    linkWithSpecialProvider(provider).catch((e: AxiosError) => {
+      setError(getErrorMessage(e.code));
+    });
+  };
+
+  return (
+    <Container maxWidth="xs" sx={{ mt: 12 }}>
+      <Stack spacing={3}>
+
+        <Avatar
+          variant="rounded"
+          sx={{ height: '200px', width: '200px', mx: 'auto' }}
+          src={photo}
+          alt="profile-picture"
         />
-        <Typography variant="h4">{props.user.displayName}</Typography>
-        <Typography variant="h5">{props.user.email}</Typography>
-        {provider === 'password' ? (
-          <Grid container direction="row" justifyContent="center" spacing={2}>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={linkWithGoogle}
-              >
-                Link with Google
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={linkWithFacebook}
-              >
-                Link with Facebook
-              </Button>
-            </Grid>
-          </Grid>
-        )
-          : '' }
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={signOutClicked}
-        >
-          Sign out
-        </Button>
-      </div>
-    );
-  }
-  return <div />;
+
+        <Typography variant="h4" align="center">{props.user?.displayName}</Typography>
+
+        <Typography variant="h5" align="center">{props.user?.email}</Typography>
+
+        <ButtonGroup variant="contained" color="secondary" aria-label="outlined primary button group" fullWidth>
+          <Button onClick={(event) => linkWithProviderClicked(event, 'google')}>
+            Link with Google
+          </Button>
+          <Button onClick={(event) => linkWithProviderClicked(event, 'facebook')}>
+            Link with Facebook
+          </Button>
+        </ButtonGroup>
+
+        <Typography variant="h6" align="center" color="error">{error}</Typography>
+
+        <Box textAlign="center">
+          <Button
+            size="large"
+            variant="contained"
+            color="warning"
+            onClick={signOutClicked}
+          >
+            Sign out
+          </Button>
+        </Box>
+
+      </Stack>
+    </Container>
+  );
 };
 
 const mapStateToProps = (state: ReactFullState) => ({
