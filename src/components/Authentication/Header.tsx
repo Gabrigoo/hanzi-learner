@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
     }
 
     content = (
-      <AppBar color="secondary" position="static">
+      <AppBar color="secondary" position="fixed">
         <Container maxWidth={false}>
           <Toolbar disableGutters>
 
@@ -92,7 +92,7 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
     );
   } else {
     content = (
-      <AppBar color="secondary" position="static">
+      <AppBar color="secondary" position="fixed">
         <Container maxWidth={false}>
           <Toolbar disableGutters>
 

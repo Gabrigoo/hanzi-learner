@@ -12,10 +12,8 @@ class UserProvider extends Component {
     auth.onAuthStateChanged((userAuth) => {
       if (userAuth) {
         this.props.signIn(userAuth);
-        console.log('user is logged in');
       } else {
         this.props.signOut();
-        console.log('user is logged out');
       }
     });
   };

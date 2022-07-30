@@ -27,12 +27,12 @@ interface ReactProps {
   mainData: MainInt,
   userData: UserInt,
   sessionData: SessionInt,
-  loadUserData: (source: CancelTokenSource) => any,
+  loadUserData: (source: CancelTokenSource) => void,
   updateUserData: (word: string, object: UserCharacterInt) => any,
-  updateUserLevel: (level: number) => any,
-  startSession: (remainingList: string[]) => any,
-  answerCorrect: (word: string) => any,
-  answerIncorrect: (word: string) => any,
+  updateUserLevel: (level: number) => void,
+  startSession: (remainingList: string[]) => void,
+  answerCorrect: (word: string) => void,
+  answerIncorrect: (word: string) => void,
 }
 
 const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {

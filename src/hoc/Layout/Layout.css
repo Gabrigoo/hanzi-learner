@@ -6,8 +6,9 @@
 
 .content {
     position: absolute;
-    height: 100vh;
+    height: calc(100vh - 64px);
     width: 100vw;
+    margin-top: 64px;
     background-color: whitesmoke;
     background-position: top;
     background-repeat: no-repeat;
