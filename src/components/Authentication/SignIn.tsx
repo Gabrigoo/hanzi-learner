@@ -17,7 +17,6 @@ import { AxiosError } from 'axios';
 import { signInWithGoogleOrFacebook, signInWithEmailAndPasswordHandler } from '../../firebase';
 import getErrorMessage from './HandleErrorMessage';
 import NavButton from '../partials/NavButton';
-import './Authentication.css';
 
 const SignIn = (): ReactElement => {
   const [email, setEmail] = useState('');

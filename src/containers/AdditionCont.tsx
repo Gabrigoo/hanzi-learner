@@ -16,7 +16,7 @@ interface ReactProps {
   addMainData: (
     word: string,
     object: MainCharacterInt | MainWordInt,
-    ) => any,
+    ) => void,
 }
 
 const AdditionCont: React.FC<ReactProps> = (props): ReactElement => {

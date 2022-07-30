@@ -32,7 +32,6 @@ import {
 import { linkWithSpecialProvider, handleSignOut } from '../../firebase';
 import getErrorMessage from './HandleErrorMessage';
 import unknownUser from '../../assets/unknown-user.png';
-import './Authentication.css';
 
 interface ReactProps {
   user: User,
