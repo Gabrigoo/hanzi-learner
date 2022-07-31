@@ -1,14 +1,20 @@
 import React, {
-  useState, useEffect, ChangeEvent, FormEvent, ReactElement, MouseEvent,
+  useState, useEffect, ChangeEvent, FormEvent, ReactElement,
 } from 'react';
 
 import {
   Button,
-  Grid,
+  Box,
+  FormControlLabel,
   Typography,
   InputLabel,
+  Switch,
   Input,
+  IconButton,
+  Container,
+  Stack,
 } from '@mui/material';
+import LoopIcon from '@mui/icons-material/Loop';
 
 import { MainCharacterInt, MainWordInt } from '../../interfaces';
 import { TONES } from '../../assets/tones';
@@ -36,28 +42,23 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
   const [stage, setStage] = useState('');
 
   // import data in order to check if entry exists
-  const [dataKeys, setDataKeys] = useState(
-    Object.keys(props.mainData.characters).concat(Object.keys(props.mainData.words)),
-  );
+  const [dataKeys, setDataKeys] = useState(['']);
+
   useEffect(() => {
     setDataKeys(Object.keys(props.mainData.characters).concat(Object.keys(props.mainData.words)));
   }, [props.mainData.characters, props.mainData.words]);
 
   // set if already existing entry should be overwritten or not
   const [overwrite, setOverwrite] = useState(false);
-  // a message warning the user if character is already in db
-  const [message, setMessage] = useState('');
-  // a variable to follow which input system to use
-  const [inputType, setInputType] = useState('Character');
 
-  const changeInputType = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    if (inputType === 'Character') {
-      setInputType('Word');
-    } else {
-      setInputType('Character');
-    }
-  };
+  // a message warning to the user if character is already in db
+  const [message, setMessage] = useState('');
+
+  // a variable to follow which input system to use
+  const [multiChar, setMultiChar] = useState(false);
+
+  const toogleInputType = () => setMultiChar(!multiChar);
+
   // Checks if current input is already in database
   useEffect(() => {
     const currentString = chineseTrad.join('');
@@ -82,29 +83,20 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
     }
     return '5';
   };
-  const autoFillField = (origin: string, desired: string): string => {
-    let output = '';
+
+  const autoFillField = (origin: string, desired: 'chineseSimp' | 'pinyin' | 'tone'): string => {
     if (Object.keys(props.mainData.characters).includes(origin)) {
-      switch (desired) {
-        case 'chineseSimp':
-          output = props.mainData.characters[origin].chineseSimp;
-          break;
-        case 'pinyin':
-          output = props.mainData.characters[origin].pinyin;
-          break;
-        case 'tone':
-          output = props.mainData.characters[origin].tone;
-          break;
-        default:
-          break;
-      }
+      return props.mainData.characters[origin][desired];
     }
-    return output;
+    return '';
   };
+
   // Handles state change
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value }: { name: string, value: string } = event.currentTarget;
+
     let arrIndex: number;
+
     switch (name.slice(0, -2)) {
       case 'chineseTrad':
         arrIndex = parseInt(name.slice(-1), 10) - 1;
@@ -149,6 +141,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
         break;
     }
   };
+
   // determines whether user is allowed to overwrite existing character entry
   const switchOverwrite = () => {
     if (overwrite) {
@@ -158,6 +151,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
       alert('Please use caution when overwriting data entries.');
     }
   };
+
   // resets all input fields to empty string
   const clearInput = () => {
     setChineseTrad(Array(5).fill(''));
@@ -167,6 +161,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
     setTone(Array(5).fill(''));
     setStage('');
   };
+
   // handles uploading of character
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -179,7 +174,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
       alert('Please fill all fields');
     } else if (dataKeys.includes(chineseTrad.join('')) && overwrite === false) {
       alert('Entry already exists');
-    } else if (inputType === 'Character') {
+    } else if (!multiChar) {
       const newObj = {
         chineseTrad: chineseTrad[0].trim(),
         chineseSimp: chineseSimp[0].trim(),
@@ -188,6 +183,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
         stage: parseInt(stage, 10),
         tone: tone[0].trim(),
       };
+
       // This is important, this is where the upload happens!
       props.uploadNewWord(chineseTrad[0], newObj);
       clearInput();
@@ -200,6 +196,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
         stage: parseInt(stage, 10),
         tone: tone.map((item) => item.trim()),
       };
+
       // This is important, this is where the upload happens!
       props.uploadNewWord(chineseTrad.join(''), newObj);
       clearInput();
@@ -207,185 +204,171 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
   };
 
   return (
-    <div>
-      <form id="addition-card" className="card" autoComplete="off" onSubmit={handleSubmit}>
-        <Grid container direction="column" spacing={2}>
-          <Grid item container direction="row" justifyContent="space-between" alignItems="center">
-            <Grid item xs={12} sm={7} container justifyContent="center">
-              <Typography variant="h4">Add new entry:</Typography>
-            </Grid>
-            <Grid item xs={9} sm={5} container justifyContent="flex-end">
-              <Button variant="contained" color="primary" onClick={changeInputType}>
-                {inputType}
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Typography color="error">
-              {message}
-            </Typography>
-          </Grid>
+    <Container maxWidth="xs" sx={{ mt: 4 }}>
+      <form autoComplete="off" onSubmit={handleSubmit}>
+        <Stack spacing={2}>
 
-          <Grid item>
-            <InputLabel className="addition-label">
-              <p>Traditional chinese:</p>
-              {inputType === 'Character' ? (
-                <Input
-                  className="addition-input"
-                  type="text"
-                  name="chineseTrad-1"
-                  value={chineseTrad[0]}
-                  onChange={handleChange}
-                />
-              )
-                : (
-                  <div className="horizontal-flex-div">
-                    {Array(5).fill('').map((x, index: number) => (
-                      <Input
-                        className="addition-input-short"
-                        type="text"
-                        name={`chineseTrad-${index + 1}`}
-                        value={chineseTrad[index]}
-                        onChange={handleChange}
-                        key={x + index}
-                      />
-                    ))}
-                  </div>
-                )}
-            </InputLabel>
-            <InputLabel className="addition-label">
-              <p>Simplified chinese:</p>
-              {inputType === 'Character' ? (
-                <Input
-                  className="addition-input"
-                  type="text"
-                  name="chineseSimp-1"
-                  value={chineseSimp[0]}
-                  onChange={handleChange}
-                />
-              )
-                : (
-                  <div className="horizontal-flex-div">
-                    {Array(5).fill('').map((x, index: number) => (
-                      <Input
-                        className="addition-input-short"
-                        type="text"
-                        name={`chineseSimp-${index + 1}`}
-                        value={chineseSimp[index]}
-                        onChange={handleChange}
-                        key={x + index}
-                      />
-                    ))}
-                  </div>
-                )}
-            </InputLabel>
-            <InputLabel className="addition-label">
-              <p>Pinyin:</p>
-              {inputType === 'Character' ? (
-                <Input
-                  className="addition-input"
-                  type="text"
-                  name="pinyin-1"
-                  value={pinyin[0]}
-                  onChange={handleChange}
-                />
-              )
-                : (
-                  <div className="horizontal-flex-div">
-                    {Array(5).fill('').map((x, index: number) => (
-                      <Input
-                        className="addition-input-short"
-                        type="text"
-                        name={`pinyin-${index + 1}`}
-                        value={pinyin[index]}
-                        onChange={handleChange}
-                        key={x + index}
-                      />
-                    ))}
-                  </div>
-                )}
-            </InputLabel>
-            <InputLabel className="addition-label">
-              <p>Tone:</p>
-              {inputType === 'Character' ? (
-                <Input
-                  className="addition-input"
-                  type="text"
-                  name="tone-1"
-                  value={tone[0]}
-                  onChange={handleChange}
-                />
-              )
-                : (
-                  <div className="horizontal-flex-div">
-                    {Array(5).fill('').map((x, index: number) => (
-                      <Input
-                        className="addition-input-short"
-                        type="text"
-                        name={`tone-${index + 1}`}
-                        value={tone[index]}
-                        onChange={handleChange}
-                        key={x + index}
-                      />
-                    ))}
-                  </div>
-                )}
-            </InputLabel>
-            <InputLabel className="addition-label">
-              <p>Meaning:</p>
-              {Array(3).fill('').map((x, index: number) => (
-                <Input
-                  className="addition-input margin-bottom-2"
-                  type="text"
-                  name={`english-${index + 1}`}
-                  value={english[index]}
-                  onChange={handleChange}
-                  key={x + index}
-                />
-              ))}
-            </InputLabel>
-            <InputLabel className="addition-label">
-              <p>Stage:</p>
-              <Input
-                className="addition-input"
-                type="text"
-                name="stage"
-                value={stage}
-                onChange={handleChange}
-              />
-            </InputLabel>
-          </Grid>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h4">New entry:</Typography>
 
-          <Grid item container direction="row" justifyContent="space-evenly" alignItems="center">
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Submit
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button type="reset" variant="contained" color="secondary" onClick={clearInput}>
-                Clear
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid item container direction="row" justifyContent="center" alignItems="center" spacing={2}>
-            <Grid item>
-              <Typography>Overwrite:</Typography>
-            </Grid>
-            <Grid item>
-              <label className="switch">
-                <input onChange={switchOverwrite} type="checkbox" />
-                <span className="slider round" />
-              </label>
-            </Grid>
-          </Grid>
-        </Grid>
+            <Button
+              variant="contained"
+              color={multiChar ? 'secondary' : 'primary'}
+              sx={{ minWidth: '120px' }}
+              onClick={toogleInputType}
+            >
+              {multiChar ? 'Word' : 'Character'}
+            </Button>
+
+            <IconButton aria-label="switch" size="large" sx={{ ml: '-50px' }} onClick={toogleInputType}>
+              <LoopIcon />
+            </IconButton>
+          </Box>
+
+          {message ? <Typography color="error">{message}</Typography> : null}
+
+          <InputLabel>Traditional chinese:</InputLabel>
+          {!multiChar ? (
+            <Input
+              className="addition-input"
+              type="text"
+              name="chineseTrad-1"
+              value={chineseTrad[0]}
+              onChange={handleChange}
+            />
+          )
+            : (
+              <Box display="flex" gap="3px">
+                {Array(5).fill('').map((x, index: number) => (
+                  <Input
+                    className="addition-input-short"
+                    type="text"
+                    name={`chineseTrad-${index + 1}`}
+                    value={chineseTrad[index]}
+                    onChange={handleChange}
+                    key={x + index}
+                  />
+                ))}
+              </Box>
+            )}
+
+          <InputLabel>Simplified chinese:</InputLabel>
+          {!multiChar ? (
+            <Input
+              className="addition-input"
+              type="text"
+              name="chineseSimp-1"
+              value={chineseSimp[0]}
+              onChange={handleChange}
+            />
+          )
+            : (
+              <Box display="flex" gap="3px">
+                {Array(5).fill('').map((x, index: number) => (
+                  <Input
+                    className="addition-input-short"
+                    type="text"
+                    name={`chineseSimp-${index + 1}`}
+                    value={chineseSimp[index]}
+                    onChange={handleChange}
+                    key={x + index}
+                  />
+                ))}
+              </Box>
+            )}
+
+          <InputLabel>Pinyin:</InputLabel>
+          {!multiChar ? (
+            <Input
+              className="addition-input"
+              type="text"
+              name="pinyin-1"
+              value={pinyin[0]}
+              onChange={handleChange}
+            />
+          )
+            : (
+              <Box display="flex" gap="3px">
+                {Array(5).fill('').map((x, index: number) => (
+                  <Input
+                    className="addition-input-short"
+                    type="text"
+                    name={`pinyin-${index + 1}`}
+                    value={pinyin[index]}
+                    onChange={handleChange}
+                    key={x + index}
+                  />
+                ))}
+              </Box>
+            )}
+
+          <InputLabel>Tone:</InputLabel>
+          {!multiChar ? (
+            <Input
+              className="addition-input"
+              type="text"
+              name="tone-1"
+              value={tone[0]}
+              onChange={handleChange}
+            />
+          )
+            : (
+              <Box display="flex" gap="3px">
+                {Array(5).fill('').map((x, index: number) => (
+                  <Input
+                    className="addition-input-short"
+                    type="text"
+                    name={`tone-${index + 1}`}
+                    value={tone[index]}
+                    onChange={handleChange}
+                    key={x + index}
+                  />
+                ))}
+              </Box>
+            )}
+
+          <InputLabel>Meaning:</InputLabel>
+          {Array(3).fill('').map((x, index: number) => (
+            <Input
+              className="addition-input margin-bottom-2"
+              type="text"
+              name={`english-${index + 1}`}
+              value={english[index]}
+              onChange={handleChange}
+              key={x + index}
+            />
+          ))}
+
+          <InputLabel>Stage:</InputLabel>
+          <Input
+            className="addition-input"
+            type="text"
+            name="stage"
+            value={stage}
+            onChange={handleChange}
+          />
+
+          <Box display="flex" justifyContent="space-evenly">
+            <Button variant="contained" size="large" type="submit">
+              Submit
+            </Button>
+            <Button type="reset" variant="contained" color="warning" onClick={clearInput}>
+              Clear
+            </Button>
+          </Box>
+
+          <Box display="flex" justifyContent="center">
+            <FormControlLabel
+              label="Overwrite"
+              control={
+                <Switch color="warning" onChange={switchOverwrite} />
+          }
+            />
+          </Box>
+
+        </Stack>
       </form>
-    </div>
+    </Container>
   );
 };
 

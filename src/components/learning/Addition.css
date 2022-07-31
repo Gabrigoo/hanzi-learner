@@ -1,120 +1,12 @@
-#addition-card {
-  margin-top: 15vh;
-  min-height: 530px;
-  height: auto;
-  width: 400px;
-  place-items: unset;
-  font-size: 17px;
-  gap: 0px;
-}
-.addition-label {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  width: 100%;
-  margin: 0px;
-  margin-left: 30px;
-  margin-top: 5px;
-}
 .addition-input {
   height: 18px;
   font-size: 20px;
   min-width: 240px;
-  width: 80%;
-  margin: auto;
 }
+
 .addition-input-short {
   height: 18px;
   font-size: 20px;
   min-width: 40px;
-  width: 16%;
-  margin: auto;
-  margin-left: 2px;
+  width: 20%;
 }
-#add-message {
-  height: 25px;
-  text-align: center;
-  color: red;
-}
-.hanzi-input-short {
-  margin-top: 5px;
-}
-
-/* The switch - the box around the slider */
-.switch {
-  position: relative;
-  margin-left: 5px;
-  margin-right: 25px;
-  display: inline-block;
-  width: 60px;
-  height: 28px;
-}
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 22px;
-  width: 22px;
-  left: 4px;
-  bottom: 3.5px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-input:checked + .slider {
-  background-color: red;
-}
-input:focus + .slider {
-  box-shadow: 0 0 1px red;
-}
-input:checked + .slider:before {
-  -webkit-transform: translateX(29px);
-  -ms-transform: translateX(29px);
-  transform: translateX(29px);
-}
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-.slider.round:before {
-  border-radius: 50%;
-}
-
-@media (max-width: 500px) { 
-  #addition-card {
-      width: 80vw;
-  }
-  .addition-label {
-    margin-left: 10px;
-  }
-}
-
-@media (max-width: 300px) { 
-  .addition-label {
-    margin-left: 0px;
-  }
-}
-
-@media (max-width: 330px) { 
-  .add-h1 {
-      font-size: 10vw;
-  }
-}
-

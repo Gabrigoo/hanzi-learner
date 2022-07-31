@@ -12,7 +12,6 @@ import {
 import { AxiosError } from 'axios';
 import { sendResetEmail } from '../../firebase';
 import getErrorMessage from './HandleErrorMessage';
-import './Authentication.css';
 import NavButton from '../partials/NavButton';
 
 const PasswordReset = (): ReactElement => {
