@@ -22,51 +22,51 @@ const SearchCont: React.FC<ReactProps> = (props): ReactElement => {
   }, [props.mainData]);
 
   const [searchResults, setSearchResults] = useState<string[]>([]);
+
   // handles search by input and refreshes search results
   const handleSearch = (
     event: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>,
     query: string,
-    main: MainInt,
   ) => {
     event.preventDefault();
 
-    if (query === '') {
+    if (query === '' || !mainData) {
       setSearchResults([]);
     } else {
       let resultList: string[] = [];
 
-      Object.keys(main.characters).forEach((item) => {
+      Object.keys(mainData.characters).forEach((item) => {
         switch (query) {
-          case main.characters[item].chineseTrad:
-          case main.characters[item].chineseSimp:
-          case main.characters[item].pinyin:
-          case toneChecker(main.characters[item].pinyin)[0]:
-          case main.characters[item].english[0]:
-          case main.characters[item].english[1]:
-          case main.characters[item].english[2]:
+          case mainData.characters[item].chineseTrad:
+          case mainData.characters[item].chineseSimp:
+          case mainData.characters[item].pinyin:
+          case toneChecker(mainData.characters[item].pinyin)[0]:
+          case mainData.characters[item].english[0]:
+          case mainData.characters[item].english[1]:
+          case mainData.characters[item].english[2]:
             resultList = resultList.concat(item);
             break;
           default:
             break;
         }
       });
-      Object.keys(main.words).forEach((item) => {
+      Object.keys(mainData.words).forEach((item) => {
         switch (query) {
-          case main.words[item].chineseTrad.join(''):
-          case main.words[item].chineseSimp.join(''):
-          case main.words[item].pinyin.join(''):
-          case main.words[item].english[0]:
-          case main.words[item].english[1]:
-          case main.words[item].english[2]:
+          case mainData.words[item].chineseTrad.join(''):
+          case mainData.words[item].chineseSimp.join(''):
+          case mainData.words[item].pinyin.join(''):
+          case mainData.words[item].english[0]:
+          case mainData.words[item].english[1]:
+          case mainData.words[item].english[2]:
             resultList = resultList.concat(item);
             break;
           default:
             break;
         }
-        if (main.words[item].chineseTrad.includes(query)
-        || main.words[item].chineseSimp.includes(query)
-        || main.words[item].pinyin.includes(query)
-        || toneChecker(main.words[item].pinyin)[0] === query) {
+        if (mainData.words[item].chineseTrad.includes(query)
+        || mainData.words[item].chineseSimp.includes(query)
+        || mainData.words[item].pinyin.includes(query)
+        || toneChecker(mainData.words[item].pinyin)[0] === query) {
           resultList = resultList.concat(item);
         }
       });

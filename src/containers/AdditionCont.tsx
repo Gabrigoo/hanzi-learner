@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { connect } from 'react-redux';
 
+import AxiosErrorObj from 'axios-error';
 import { addMainData } from '../redux/actions';
 import {
   MainInt, MainCharacterInt, MainWordInt, ReactFullState,
@@ -16,7 +17,7 @@ interface ReactProps {
   addMainData: (
     word: string,
     object: MainCharacterInt | MainWordInt,
-    ) => void,
+    ) => any,
 }
 
 const AdditionCont: React.FC<ReactProps> = (props): ReactElement => {
@@ -28,9 +29,10 @@ const AdditionCont: React.FC<ReactProps> = (props): ReactElement => {
   }, [props.mainData]);
 
   // Functions for data upload when next character is added to DB
-  const uploadNewWord = (word: string, object: MainCharacterInt | MainWordInt) => {
-    props.addMainData(word, object);
-  };
+  const uploadNewWord = (
+    word: string,
+    object: MainCharacterInt | MainWordInt,
+  ): AxiosErrorObj => props.addMainData(word, object);
 
   let content;
 

@@ -1,113 +1,73 @@
 import React, {
   useState, MouseEvent, FormEvent, ReactElement,
 } from 'react';
-import { Link } from 'react-router-dom';
 
 import {
   Button,
   TextField,
-  Grid,
+  Box,
+  Container,
 } from '@mui/material';
 
-import { MainCharacterInt, MainWordInt, MainInt } from '../../interfaces';
+import { MainInt } from '../../interfaces';
 import './Search.css';
+import SearchResultTable from './SearchResultTable';
 
 interface SearchProps {
-  mainData: {
-    characters: {
-      [key: string]: MainCharacterInt,
-    },
-    words: {
-      [key: string]: MainWordInt,
-    },
-  },
+  mainData: MainInt,
   searchResults: string[],
   handleSearch: (
     event: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement>,
     query: string,
-    main: MainInt
     ) => void,
 }
 
 const Search: React.FC<SearchProps> = (props): ReactElement => {
-  const searchResults = props.searchResults || [];
-
-  const mainData = props.mainData;
-  // query is the currently searched string by the user
   const [query, setQuery] = useState('');
 
   const clearInput = (event: MouseEvent<HTMLButtonElement>) => {
     setQuery('');
-    props.handleSearch(event, '', mainData);
+    props.handleSearch(event, '');
   };
 
-  // all search results mapped
-  const resultList = searchResults.map((item, index) => {
-    const data = Object.keys(mainData.characters).includes(item)
-      ? mainData.characters : mainData.words;
-    return (
-      <Link id="result-flex" key={item + index} to={`/info/${item}`}>
-        <div className="smallflex">
-          <p className="search-p">{data[item].chineseTrad}</p>
-          <p className="search-p">{data[item].chineseSimp}</p>
-          <p className="search-p">{data[item].pinyin}</p>
-        </div>
-        <div className="smallflex">
-          <p className="search-p">{data[item].english[0]}</p>
-          <p className="search-p">{data[item].english[1]}</p>
-          <p className="search-p">{data[item].english[2]}</p>
-        </div>
-      </Link>
-    );
-  });
-
   return (
-    <div id="search-card" className="card">
+    <Container maxWidth="sm" sx={{ mt: 6 }}>
       <form
-        id="search-form"
         autoComplete="off"
-        onSubmit={(event) => props.handleSearch(event, query, mainData)}
+        onSubmit={(event) => props.handleSearch(event, query)}
       >
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          spacing={1}
-        >
-          <Grid item xs={12} md={6}>
-            <TextField
-              type="text"
-              label="Search"
-              variant="outlined"
-              value={query}
-              InputLabelProps={{ required: false }}
-              required
-              fullWidth
-              onChange={(event) => setQuery(event.target.value)}
-            />
-          </Grid>
-          <Grid item container justifyContent="center" xs={6} md={3}>
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-            >
-              Search
-            </Button>
-          </Grid>
-          <Grid item container justifyContent="center" xs={6} md={3}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={clearInput}
-            >
-              Clear
-            </Button>
-          </Grid>
-        </Grid>
+        <Box display="flex" justifyContent="space-between" sx={{ mb: '20px' }}>
+          <TextField
+            type="text"
+            label="Search"
+            variant="outlined"
+            value={query}
+            autoFocus
+            sx={{ width: '50%' }}
+            InputLabelProps={{ required: false }}
+            required
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          <Button
+            variant="contained"
+            type="submit"
+            size="large"
+          >
+            Search
+          </Button>
+          <Button
+            variant="contained"
+            color="warning"
+            size="large"
+            onClick={clearInput}
+          >
+            Clear
+          </Button>
+        </Box>
       </form>
-      {resultList}
-    </div>
+
+      <SearchResultTable results={props.searchResults} mainData={props.mainData} />
+    </Container>
   );
 };
 

@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import LoopIcon from '@mui/icons-material/Loop';
 
+import AxiosErrorObj from 'axios-error';
 import { MainCharacterInt, MainWordInt } from '../../interfaces';
 import { TONES } from '../../assets/tones';
 import './Addition.css';
@@ -29,7 +30,7 @@ interface AdditionProps {
       [key: string]: MainWordInt,
     },
   },
-  uploadNewWord: (character: string, object: MainCharacterInt | MainWordInt) => void,
+  uploadNewWord: (character: string, object: MainCharacterInt | MainWordInt) => AxiosErrorObj,
 }
 
 const Addition: React.FC<AdditionProps> = (props): ReactElement => {
@@ -51,8 +52,8 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
   // set if already existing entry should be overwritten or not
   const [overwrite, setOverwrite] = useState(false);
 
-  // a message warning to the user if character is already in db
-  const [message, setMessage] = useState('');
+  // a warning to the user if character is already in db
+  const [error, setError] = useState('');
 
   // a variable to follow which input system to use
   const [multiChar, setMultiChar] = useState(false);
@@ -63,9 +64,9 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
   useEffect(() => {
     const currentString = chineseTrad.join('');
     if (dataKeys.includes(currentString) && chineseTrad[0] !== '') {
-      setMessage('Character is already in database!');
+      setError('Character is already in database!');
     } else {
-      setMessage('');
+      setError('');
     }
   }, [dataKeys, chineseTrad]);
 
@@ -185,8 +186,13 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
       };
 
       // This is important, this is where the upload happens!
-      props.uploadNewWord(chineseTrad[0], newObj);
-      clearInput();
+      const resultError = props.uploadNewWord(chineseTrad[0], newObj);
+
+      if (resultError) {
+        setError(resultError.message);
+      } else {
+        clearInput();
+      }
     } else {
       const newObj = {
         chineseTrad: chineseTrad.map((item) => item.trim()),
@@ -198,8 +204,13 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
       };
 
       // This is important, this is where the upload happens!
-      props.uploadNewWord(chineseTrad.join(''), newObj);
-      clearInput();
+      const resultError = props.uploadNewWord(chineseTrad.join(''), newObj);
+
+      if (resultError) {
+        setError(resultError.message);
+      } else {
+        clearInput();
+      }
     }
   };
 
@@ -225,7 +236,7 @@ const Addition: React.FC<AdditionProps> = (props): ReactElement => {
             </IconButton>
           </Box>
 
-          {message ? <Typography color="error">{message}</Typography> : null}
+          {error ? <Typography color="error">{error}</Typography> : null}
 
           <InputLabel>Traditional chinese:</InputLabel>
           {!multiChar ? (

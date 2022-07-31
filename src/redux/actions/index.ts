@@ -63,11 +63,14 @@ export const addMainData = (
   if (token) {
     const response = await addNewWord(word, object, token);
 
-    if (response instanceof AxiosErrorObj === false) {
+    if (response instanceof AxiosErrorObj) {
+      return response;
+    } else {
       const type = word.length > 1 ? 'words' : 'characters';
       dispatch({ type: ADD_MAIN_DATA, payload: [word, object, type] });
     }
   }
+  return null;
 };
 
 export const updateUserData = (

@@ -1,47 +1,9 @@
-#result-flex {
-    color: black;
-    font-size: 20px;
-    box-sizing: content-box;
-    width: 91%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 7px;
-    background-color: rgb(137, 205, 250);
-    text-decoration: none;
-}
-.smallflex {
-    height: 40px;
-    min-width: 80%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-}
-#search-card {
-    min-height: 60vh;
-}
-#search-form {
-    width: 90%;
-}
-#search-input {
-    margin-left: 5px;
-    width: 220px;
-}
-#search-label {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 20px;
-}
-#search-p {
-    margin: 0px;
-}
-
 @media (max-width: 375px) {
     #search-p {
         display: none;
     }
+
     #search-input {
         margin-left: 0px;
     }
- }
+}
