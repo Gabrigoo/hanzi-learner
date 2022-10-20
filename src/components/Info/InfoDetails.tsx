@@ -1,15 +1,20 @@
 import React, { useState, useEffect, ReactElement } from 'react';
-import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 
 import {
-  Button,
-  Grid,
+  Box,
+  Container,
   Typography,
   TextField,
+  Stack,
+  IconButton,
 } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
 import InfoTag from './InfoTag';
+import NavButton from '../partials/NavButton';
 import LEVELS from '../../assets/levels';
 import './InfoDetails.css';
 
@@ -71,210 +76,148 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
     setChangeMemonic(!changeMemonic);
   };
 
-  // convert numeric date into the displayed date
-  const dateToString = (numericDate: number) => {
-    const date = new Date(numericDate);
-    const year = date.getFullYear();
-    let currentMonth:string = (date.getMonth() + 1).toString();
-    let currentDay:string = (date.getDate()).toString();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    if (parseInt(currentMonth, 10) < 10) { currentMonth = `0${currentMonth}`; }
-    if (parseInt(currentDay, 10) < 10) { currentDay = `0${currentDay}`; }
+  const getLastPracticed = (): string => format(new Date(userData[current].lastPract), 'yyyy MMMM dd. H:mm');
 
-    return `${year}/${currentMonth}/${currentDay} ${hours}:${minutes}`;
+  const getNextPractice = (): string => {
+    if (userData[current].level > 8) {
+      return 'Congratulations! No need to practice this anymore!';
+    }
+    return format(new Date(userData[current].lastPract
+      + (LEVELS[userData[current].level][0] * (1000 * 60 * 60))), 'yyyy MMMM dd. H:mm');
   };
 
-  const isPresentInWords = (character: string): string[] => {
+  const mapComponents = () => current.split('').map((item, index) => (
+    <InfoTag
+      key={item + index}
+      mainData={props.mainData}
+      userData={props.userData}
+      word={item}
+    />
+  ));
+
+  const mapUsedIn = () => {
     const words = Object.keys(props.mainData.words).filter((word) => {
       let includes = false;
       word.split('').forEach((comp) => {
-        if (comp === character) {
+        if (comp === current) {
           includes = true;
         }
       });
       return includes;
     });
-    return words;
+    if (!words.length) {
+      return <Typography variant="h5">None</Typography>;
+    }
+    return words.map(((item, index) => (
+      <InfoTag
+        key={item + index}
+        mainData={props.mainData}
+        userData={props.userData}
+        word={item}
+      />
+    )));
   };
 
-  let userContent = <p>This character is not yet learned.</p>;
+  const displayPinyin = () => {
+    const pinyin = mainData[current].pinyin;
+    const tone = mainData[current].tone;
+    if (pinyin instanceof Array && tone instanceof Array) {
+      return `Reading: ${pinyin.filter((p) => !!p).join('')} (tone: ${tone.filter((t) => !!t).join('')})`;
+    } else {
+      return `Reading: ${pinyin} (tone: ${tone})`;
+    }
+  };
 
-  // From here it's rendering
-  const renderMemonic = () => (
-    <Grid item container spacing={3} justifyContent="space-evenly" alignItems="center">
-      <Grid item xs={12} sm={5}>
-        <TextField
-          type="text"
-          label="Meaning memonic"
-          variant="outlined"
-          multiline
-          fullWidth
-          disabled={!changeMemonic}
-          value={meaningMemonic}
-          onChange={(event) => setMeaningMemonic(event.target.value)}
-        />
-      </Grid>
-      <Grid item xs={12} sm={5}>
-        <TextField
-          type="text"
-          label="Reading memonic"
-          variant="outlined"
-          multiline
-          fullWidth
-          disabled={!changeMemonic}
-          value={readingMemonic}
-          onChange={(event) => setReadingMemonic(event.target.value)}
-        />
-      </Grid>
-      <Grid item xs={12} sm={2} container justifyContent="center">
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={switchChangeMemonics}
-        >
-          {changeMemonic ? 'Save' : 'Change'}
-        </Button>
-      </Grid>
-    </Grid>
-  );
+  let userContent = <Typography variant="h5">This character is not yet learned.</Typography>;
 
   const content = (
-    <>
-      <Grid item container direction="row" alignItems="flex-end" spacing={2}>
-        <Grid item xs={4} sm={2} md={2}>
-          <Typography variant="h2">{current}</Typography>
-        </Grid>
-        <Grid item xs={3} sm={2} md={1}>
-          <Typography variant="h5">{mainData[current].chineseSimp}</Typography>
-        </Grid>
-        <Grid item xs={5} sm={3} md={5} />
-        <Grid item xs={6} sm={3} md={2}>
-          <Typography variant="h5">
+    <Stack spacing={3} sx={{ mb: 4 }}>
+      <Box display="flex" justifyContent="space-between">
+        <Typography variant="h1">{current}</Typography>
+        <Box display="flex" flexDirection="column" justifyContent="space-between">
+          <Typography variant="h4">
             {`Stage: ${mainData[current].stage}`}
           </Typography>
-        </Grid>
-        <Grid item xs={6} sm={2} md={2}>
-          <Link className="no-underline" to="/stages">
-            <Button
-              variant="outlined"
-              color="primary"
-            >
-              Stages
-            </Button>
-          </Link>
-        </Grid>
-      </Grid>
+          <NavButton title="Stages" to="/stages" variant="outlined" />
+        </Box>
+      </Box>
 
-      <Grid item container direction="row" className="horiz-div" spacing={2}>
-        <Grid item>
-          <Typography>Meaning:</Typography>
-        </Grid>
-        {mainData[current].english.map((word, index) => (
-          <Grid item key={word + index}>
-            <Typography key={word + index}>{word}</Typography>
-          </Grid>
-        ))}
-      </Grid>
+      <Typography variant="h3">{mainData[current].chineseSimp}</Typography>
 
-      <Grid item container direction="row" className="horiz-div" spacing={2}>
-        <Grid item>
-          <Typography>Reading: </Typography>
-        </Grid>
-        <Grid item>
-          {type === 'character' ? mainData[current].pinyin : mainData[current].pinyin}
-        </Grid>
-        <Grid item>{mainData[current].tone}</Grid>
-      </Grid>
+      <Typography variant="h5">
+        Meaning:
+        {' '}
+        {mainData[current].english.filter((word) => !!word).map((word) => word).join(', ')}
+      </Typography>
 
-      {type === 'word' ? (
-        <Grid item container direction="row" alignItems="center" spacing={2}>
-          <Grid item>
-            <Typography>Components:</Typography>
-          </Grid>
-          {current.split('').map((item, index) => (
-            <Grid item key={item + index}>
-              <InfoTag
-                mainData={props.mainData}
-                userData={props.userData}
-                word={item}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )
-        : (
-          <Grid item container direction="row" spacing={2}>
-            <Grid item>
-              <Typography>
-                {isPresentInWords(current).length ? 'Found in' : null}
-              </Typography>
-            </Grid>
-            {isPresentInWords(current).map((item, index) => (
-              <Grid item key={item + index}>
-                <InfoTag
-                  mainData={props.mainData}
-                  userData={props.userData}
-                  word={item}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        )}
-    </>
-  ); // from here is only displayed if user already has relevant learning data
+      <Typography variant="h5">
+        {displayPinyin()}
+      </Typography>
+
+      <Box display="flex" justifyContent="start" alignItems="center" gap="10px">
+        <Typography variant="h5">{type === 'word' ? 'Components:' : 'Found in:'}</Typography>
+        {type === 'word' ? mapComponents() : mapUsedIn()}
+      </Box>
+    </Stack>
+  );
+  // from here is only displayed if user already has relevant learning data
   if (userData[current]) {
     userContent = (
-      <>
-        {renderMemonic()}
-        <Grid
-          item
-          container
-          direction="row"
-          justifyContent="flex-start"
-          spacing={2}
-        >
-          <Grid item container direction="column" alignItems="flex-start" spacing={1} xs={5} sm={4} md={3}>
-            <Grid item>
-              <Typography>Last practiced:</Typography>
-            </Grid>
-            <Grid item>
-              <Typography>Next practice:</Typography>
-            </Grid>
-            <Grid item>
-              <Typography>User level:</Typography>
-            </Grid>
-          </Grid>
+      <Stack spacing={3}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" gap="20px">
+          <TextField
+            label="Meaning memonic"
+            variant="outlined"
+            minRows="2"
+            multiline
+            fullWidth
+            disabled={!changeMemonic}
+            value={meaningMemonic}
+            onChange={(event) => setMeaningMemonic(event.target.value)}
+          />
+          <IconButton
+            onClick={switchChangeMemonics}
+            aria-label={changeMemonic ? 'save-memonics' : 'change-memonics'}
+            size="large"
+            color="primary"
+            sx={{ height: '60px' }}
+          >
+            {changeMemonic
+              ? <SaveIcon sx={{ fontSize: 40 }} />
+              : <EditIcon sx={{ fontSize: 40 }} />}
+          </IconButton>
+          <TextField
+            label="Reading memonic"
+            minRows="2"
+            variant="outlined"
+            multiline
+            fullWidth
+            disabled={!changeMemonic}
+            value={readingMemonic}
+            onChange={(event) => setReadingMemonic(event.target.value)}
+          />
+        </Box>
 
-          <Grid item container direction="column" alignItems="flex-start" spacing={1} xs={7} sm={5} md={4}>
-            <Grid item>
-              <Typography>{dateToString(userData[current].lastPract)}</Typography>
-            </Grid>
-            <Grid item>
-              <Typography>
-                {dateToString(userData[current].lastPract
-                  + (LEVELS[userData[current].level][0] * (1000 * 60 * 60)))}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography>
-                {`${userData[current].level} "${LEVELS[userData[current].level][1]}"`}
-              </Typography>
-            </Grid>
-          </Grid>
+        <Typography variant="h5">
+          {`Last practiced: ${getLastPracticed()}`}
+        </Typography>
 
-        </Grid>
-      </>
+        <Typography variant="h5">
+          {`Next practice: ${getNextPractice()}`}
+        </Typography>
+
+        <Typography variant="h5">
+          {`User level: ${`${userData[current].level} "${LEVELS[userData[current].level][1]}"`}`}
+        </Typography>
+      </Stack>
     );
   }
 
   return (
-    <div className="card" id="info-card">
-      <Grid container spacing={3}>
-        {content}
-        {userContent}
-      </Grid>
-    </div>
+    <Container maxWidth="lg" sx={{ mt: 5 }}>
+      {content}
+      {userContent}
+    </Container>
   );
 };
 

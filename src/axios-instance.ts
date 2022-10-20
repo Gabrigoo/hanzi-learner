@@ -114,7 +114,7 @@ const setUserLevel = async (
 ): Promise<AxiosResponse<any> | AxiosErrorObj> => {
   try {
     const response: AxiosResponse = await instance.put(`/${userId}/profileData/currentStage.json?auth=${token}`, newLevel);
-    console.log('PUT database overwritten');
+    console.log('PUT user level set to:' + newLevel);
     return response;
   } catch (error: any) {
     console.error(`Error uploading new user data: ${error}`);
