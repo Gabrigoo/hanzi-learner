@@ -13,7 +13,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
-import InfoTag from './InfoTag';
+import InfoTooltip from './InfoTooltip';
 import NavButton from '../partials/NavButton';
 import LEVELS from '../../assets/levels';
 import './InfoDetails.css';
@@ -87,10 +87,8 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
   };
 
   const mapComponents = () => current.split('').map((item, index) => (
-    <InfoTag
+    <InfoTooltip
       key={item + index}
-      mainData={props.mainData}
-      userData={props.userData}
       word={item}
     />
   ));
@@ -109,10 +107,8 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
       return <Typography variant="h5">None</Typography>;
     }
     return words.map(((item, index) => (
-      <InfoTag
+      <InfoTooltip
         key={item + index}
-        mainData={props.mainData}
-        userData={props.userData}
         word={item}
       />
     )));
