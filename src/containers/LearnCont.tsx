@@ -34,25 +34,25 @@ const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
   }, [props.userData, props.token]);
 
   // determines which items are to be learned by user level
-  const filterNewItems = (main: MainInt, user: UserInt) => {
-    // which level our user is on
-    const userStage = user.profileData.currentStage;
+  const filterNewItems = () => {
+    const { mainData, userData } = props;
+    const userStage = userData.profileData.currentStage;
 
     // characters that are right for the user's level
-    const dataCharKeys = Object.keys(main.characters)
-      .filter((char) => main.characters[char].stage <= userStage);
+    const dataCharKeys = Object.keys(mainData.characters)
+      .filter((char) => mainData.characters[char].stage <= userStage);
 
     // words that are right for the user's level
-    const dataWordKeys = Object.keys(main.words)
-      .filter((word) => main.words[word].stage <= userStage);
+    const dataWordKeys = Object.keys(mainData.words)
+      .filter((word) => mainData.words[word].stage <= userStage);
 
     // checks if all elements of the word are at least GURU level
     const dataWordKeysGuru = dataWordKeys.filter((item) => {
       let applicable = true;
       item.split('').forEach((comp) => {
-        if (!Object.keys(user.characters).includes(comp)) {
+        if (!Object.keys(userData.characters).includes(comp)) {
           applicable = false;
-        } else if (user.characters[comp].level < 5) {
+        } else if (userData.characters[comp].level < 5) {
           applicable = false;
         }
       });
@@ -60,7 +60,7 @@ const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
     });
 
     const dataKeys = dataCharKeys.concat(dataWordKeysGuru);
-    const userKeys = Object.keys(user.characters).concat(Object.keys(user.words));
+    const userKeys = Object.keys(userData.characters).concat(Object.keys(userData.words));
 
     return dataKeys.filter((char) => !userKeys.includes(char));
   };
@@ -74,14 +74,14 @@ const LearnCont: React.FC<ReactProps> = (props): ReactElement => {
   let content;
 
   if (props.mainData && props.userData) {
-    if (Object.keys(filterNewItems(props.mainData, props.userData)).length === 0) {
+    if (!filterNewItems().length) {
       content = <Strip message="No new characters to learn right now" backTrack="/main" timeout={4000} />;
     } else {
       content = (
         <Learning
           mainData={props.mainData}
           learnNewWord={learnNewWord}
-          newItemKeys={filterNewItems(props.mainData, props.userData)}
+          newItemKeys={filterNewItems()}
         />
       );
     }

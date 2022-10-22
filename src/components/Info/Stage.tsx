@@ -1,52 +1,57 @@
 import React, { ReactElement } from 'react';
+import { connect } from 'react-redux';
 
-import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
-import InfoTag from './InfoTag';
+import {
+  Box,
+  Typography,
+  Stack,
+} from '@mui/material';
+
+import {
+  UserInt, MainInt, ReactFullState,
+} from '../../interfaces';
+import InfoTooltip from './InfoTooltip';
 import './Stage.css';
 
-interface StageProps {
-  stageData: string[];
-  mainData: {
-    characters: {
-      [key: string]: MainCharacterInt,
-    },
-    words: {
-      [key: string]: MainWordInt,
-    },
-  },
-  userData: {
-    characters: {
-      [key: string]: UserCharacterInt,
-    },
-    words: {
-      [key: string]: UserCharacterInt,
-    },
-    profileData: {
-      currentStage: number
-    }
-  };
+interface ReactProps {
   level: number,
+  mainData: MainInt,
+  userData: UserInt,
 }
-// all the elements for the current stage mapped
-const Stage: React.FC<StageProps> = (props): ReactElement => (
-  <div className="justify-left">
-    <div>
-      <h1 className={`levels-h1 ${props.userData.profileData.currentStage >= props.level ? 'active' : ''}`}>
+
+const Stage: React.FC<ReactProps> = (props): ReactElement => {
+  const characters = Object.keys(props.mainData.characters)
+    .filter((item) => props.mainData.characters[item].stage === props.level);
+
+  const words = Object.keys(props.mainData.words)
+    .filter((item) => props.mainData.words[item].stage === props.level);
+
+  return (
+    <Stack spacing={1} sx={{ mb: 3 }}>
+      <Typography
+        variant="h4"
+        className={`levels-h1 ${props.userData.profileData.currentStage >= props.level ? 'active' : ''}`}
+      >
         {`Stage ${props.level}`}
-      </h1>
-    </div>
+      </Typography>
 
-    <div className="stage-flex">
-      {props.stageData.map((item, index) => (
-        <InfoTag
-          mainData={props.mainData}
-          userData={props.userData}
-          word={item}
-          key={item + index}
-        />
-      ))}
-    </div>
-  </div>
-);
+      <Box display="flex" flexWrap="wrap" gap="10px">
+        {characters.concat(words).map((item, index) => (
+          <InfoTooltip
+            word={item}
+            key={item + index}
+          />
+        ))}
+      </Box>
+    </Stack>
+  );
+};
 
-export default Stage;
+const mapStateToProps = (state: ReactFullState) => ({
+  mainData: state.data.mainData,
+  userData: state.data.userData,
+});
+
+export default connect(
+  mapStateToProps,
+)(Stage);

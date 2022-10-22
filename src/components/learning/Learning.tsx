@@ -6,23 +6,18 @@ import AxiosErrorObj from 'axios-error';
 import {
   Button,
   Typography,
-  Grid,
   TextField,
+  Stack,
+  Container,
 } from '@mui/material';
 
-import { MainCharacterInt, MainWordInt, UserCharacterInt } from '../../interfaces';
+import {
+  MainCharacterInt, MainInt, MainWordInt, UserCharacterInt,
+} from '../../interfaces';
 import Strip from '../Strip';
-import './Learning.css';
 
 interface LearningProps {
-  mainData: {
-    characters: {
-      [key: string]: MainCharacterInt,
-    },
-    words: {
-      [key: string]: MainWordInt,
-    },
-  },
+  mainData: MainInt,
   newItemKeys: string[],
   learnNewWord: (word: string, object: UserCharacterInt) => AxiosErrorObj,
 }
@@ -81,124 +76,71 @@ const Learning: React.FC<LearningProps> = (props): ReactElement => {
     );
   }
   return (
-    <div className="card">
-      <form
-        id="continue-button-form"
-        autoComplete="off"
-        onSubmit={handleContinue}
-      >
-        <Grid container direction="column" spacing={3}>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <form autoComplete="off" onSubmit={handleContinue}>
+        <Stack spacing={2}>
+          <Typography variant="h5">{`Remanining: ${remaningNum}`}</Typography>
 
-          <Grid item xs={12} sm={4}>
-            <Typography>
-              {`Remanining: ${remaningNum}`}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={10} sm={12}>
-            <Typography
-              variant="h2"
-              id="chinese-traditional"
-            >
-              {mainData[current].chineseTrad}
-            </Typography>
-          </Grid>
-
-          <Grid id="simply-label" item container direction="row" alignItems="center" spacing={2}>
-            <Grid item>
-              <Typography id="chinese-simplified-label">Simplified:</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5" id="chinese-simplified">{mainData[current].chineseSimp}</Typography>
-            </Grid>
-          </Grid>
-
-          <Grid item container direction="row" spacing={1} alignItems="flex-start">
-            <Grid item container direction="row" xs={6} alignItems="center" spacing={1}>
-              <Grid item>
-                <Typography>Meaning:</Typography>
-              </Grid>
-              <Grid item>
-                <Typography id="meaning-show">
-                  {mainData[current].english.filter(
-                    (x: string) => x.length > 0,
-                  )
-                    .join(', ')}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item container direction="row" xs={6} alignItems="center" spacing={1}>
-              <Grid item>
-                <Typography>Reading:</Typography>
-              </Grid>
-              <Grid item>
-                <Typography id="reading-show">
-                  {mainData[current].pinyin}
-                  &nbsp;
-                  (tone:
-                  &nbsp;
-                  {mainData[current].tone}
-                  )
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-evenly"
-            alignItems="center"
+          <Typography
+            variant="h2"
+            id="chinese-traditional"
           >
-            <Typography variant="h6" color="error">{error}</Typography>
-          </Grid>
+            {mainData[current].chineseTrad}
+          </Typography>
 
-          <Grid
-            className="margin-top-15"
-            item
-            container
-            justifyContent="center"
-            alignItems="center"
+          <Typography variant="h4">
+            Simplified:
+            {' '}
+            {mainData[current].chineseSimp}
+          </Typography>
+
+          <Typography variant="h5">
+            {`Meaning: ${mainData[current].english.filter((x) => x.length).join(', ')}`}
+          </Typography>
+
+          <Typography variant="h5">
+            Reading:
+            {' '}
+            {mainData[current].pinyin}
+            {' '}
+            (tone:
+            {mainData[current].tone}
+            )
+          </Typography>
+
+          <Typography variant="h5" align="center" color="error">{error}</Typography>
+
+          <TextField
+            label="Meaning memonic"
+            minRows="2"
+            variant="outlined"
+            multiline
+            fullWidth
+            value={meaningMemonic}
+            onChange={(event) => setMeaningMemonic(event.target.value)}
+          />
+          <TextField
+            label="Reading memonic"
+            minRows="2"
+            variant="outlined"
+            autoFocus
+            multiline
+            fullWidth
+            value={readingMemonic}
+            onChange={(event) => setReadingMemonic(event.target.value)}
+          />
+
+          <Button
+            autoFocus
+            variant="contained"
+            size="large"
+            type="submit"
           >
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              type="submit"
-              id="learn-continue-button"
-            >
-              Continue
-            </Button>
-          </Grid>
-
-          <Grid item container spacing={3} justifyContent="space-evenly" alignItems="center">
-            <Grid item xs={12} sm={6}>
-              <TextField
-                type="text"
-                label="Meaning memonic"
-                variant="outlined"
-                multiline
-                fullWidth
-                value={meaningMemonic}
-                onChange={(event) => setMeaningMemonic(event.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                type="text"
-                label="Reading memonic"
-                variant="outlined"
-                multiline
-                fullWidth
-                value={readingMemonic}
-                onChange={(event) => setReadingMemonic(event.target.value)}
-              />
-            </Grid>
-          </Grid>
-
-        </Grid>
+            Continue
+          </Button>
+        </Stack>
       </form>
-    </div>
+    </Container>
   );
 };
 

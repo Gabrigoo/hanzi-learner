@@ -1,12 +1,26 @@
 import React, {
-  useEffect, ReactElement,
+  useEffect, ReactElement, useState,
 } from 'react';
 import { connect } from 'react-redux';
 import { CancelTokenSource } from 'axios';
 
+import {
+  Container,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  OutlinedInput,
+  ListItemText,
+  Checkbox,
+  Button,
+  Box,
+} from '@mui/material';
+
 import { instance as axios } from '../axios-instance';
 import {
-  MainCharacterInt, MainInt, UserInt, ReactFullState,
+  MainInt, UserInt, ReactFullState,
 } from '../interfaces';
 import { loadUserData } from '../redux/actions';
 import Strip from '../components/Strip';
@@ -20,6 +34,8 @@ interface ReactProps {
 }
 
 const StagesCont: React.FC<ReactProps> = (props): ReactElement => {
+  const [selectedStages, setSelectedStages] = useState<string[]>([]);
+
   // Loading user data
   useEffect(() => {
     const source = axios.CancelToken.source();
@@ -32,46 +48,80 @@ const StagesCont: React.FC<ReactProps> = (props): ReactElement => {
   }, [props.userData, props.token]);
 
   // finds the highest stage level among all data
-  const findHighestStage = (data: {[key: string]: MainCharacterInt}) => {
+  const findHighestStage = () => {
     let highest = 0;
-    Object.keys(data).forEach((item) => {
-      if (data[item].stage > highest) {
-        highest = data[item].stage;
+    Object.keys(props.mainData.characters).forEach((item) => {
+      if (props.mainData.characters[item].stage > highest) {
+        highest = props.mainData.characters[item].stage;
       }
     });
     return highest;
   };
-  // only returns data that is the same as current stage
-  const sortDataToStage = (data: MainInt, currentStage: number) => {
-    const stageArray: string[] = [];
-    Object.keys(data.characters).forEach((item) => {
-      if (data.characters[item].stage === currentStage) {
-        stageArray.push(item);
-      }
-    });
-    Object.keys(data.words).forEach((item) => {
-      if (data.words[item].stage === currentStage) {
-        stageArray.push(item);
-      }
-    });
-    return stageArray;
-  };
-  // steps through the stages until the current highest
-  const mapAllStages = (highestStage: number, main: MainInt, user: UserInt) => {
+
+  const mapAllStages = () => {
+    const highestStage = findHighestStage();
     const items = [];
     for (let i = 1; i <= highestStage; i += 1) {
-      items.push(<Stage level={i} stageData={sortDataToStage(main, i)} mainData={main} userData={user} key={`stage${i}`} />);
+      if (!selectedStages.length || selectedStages.indexOf(i.toString()) > -1) {
+        items.push(<Stage level={i} key={`stage${i}`} />);
+      }
     }
     return items;
+  };
+
+  const mapStageSelection = () => {
+    const highestStage = findHighestStage();
+    const items = [];
+    for (let i = 1; i <= highestStage; i += 1) {
+      items.push(
+        <MenuItem value={i.toString()} key={`menu${i}`}>
+          <Checkbox checked={selectedStages.indexOf(i.toString()) > -1} />
+          <ListItemText primary={`Stage ${i}`} />
+        </MenuItem>,
+      );
+    }
+    return items;
+  };
+
+  const handleChange = (event: SelectChangeEvent) => {
+    const value = event.target.value;
+    setSelectedStages(typeof value === 'string' ? value.split(',') : value);
+  };
+
+  const clearFilter = () => {
+    setSelectedStages([]);
   };
 
   let content;
 
   if (props.mainData && props.userData) {
     content = (
-      <div className="card" id="stage-flex-card">
-        {mapAllStages(findHighestStage(props.mainData.characters), props.mainData, props.userData)}
-      </div>
+      <Container maxWidth="lg" sx={{ mt: 5 }}>
+        <Box display="flex" gap="20px" sx={{ height: '56px', mb: 2 }}>
+          <FormControl sx={{ width: '150px' }}>
+            <InputLabel id="filter-stage-label">Filter stages</InputLabel>
+            <Select
+              labelId="filter-stage-label"
+              id="filter-stage"
+              multiple
+              onChange={handleChange}
+              value={selectedStages as unknown as string}
+              input={<OutlinedInput label="Stage Filter" />}
+              renderValue={(selected) => (selected as unknown as string[]).join(', ')}
+            >
+              {mapStageSelection()}
+            </Select>
+          </FormControl>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={clearFilter}
+          >
+            Clear
+          </Button>
+        </Box>
+        {mapAllStages()}
+      </Container>
     );
   } else if (!props.token) {
     content = <Strip message="No user is signed in" timeout={4000} />;

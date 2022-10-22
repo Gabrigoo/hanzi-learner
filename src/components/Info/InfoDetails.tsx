@@ -114,16 +114,6 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
     )));
   };
 
-  const displayPinyin = () => {
-    const pinyin = mainData[current].pinyin;
-    const tone = mainData[current].tone;
-    if (pinyin instanceof Array && tone instanceof Array) {
-      return `Reading: ${pinyin.filter((p) => !!p).join('')} (tone: ${tone.filter((t) => !!t).join('')})`;
-    } else {
-      return `Reading: ${pinyin} (tone: ${tone})`;
-    }
-  };
-
   let userContent = <Typography variant="h5">This character is not yet learned.</Typography>;
 
   const content = (
@@ -147,7 +137,13 @@ const InfoDetails: React.FC<InfoDetailsProps> = (props): ReactElement => {
       </Typography>
 
       <Typography variant="h5">
-        {displayPinyin()}
+        Reading:
+        {' '}
+        {mainData[current].pinyin}
+        {' '}
+        (tone:
+        {mainData[current].tone}
+        )
       </Typography>
 
       <Box display="flex" justifyContent="start" alignItems="center" gap="10px">

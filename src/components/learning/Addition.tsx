@@ -17,19 +17,12 @@ import {
 import LoopIcon from '@mui/icons-material/Loop';
 
 import AxiosErrorObj from 'axios-error';
-import { MainCharacterInt, MainWordInt } from '../../interfaces';
+import { MainCharacterInt, MainInt, MainWordInt } from '../../interfaces';
 import { TONES } from '../../assets/tones';
 import './Addition.css';
 
 interface AdditionProps {
-  mainData: {
-    characters: {
-      [key: string]: MainCharacterInt,
-    },
-    words: {
-      [key: string]: MainWordInt,
-    },
-  },
+  mainData: MainInt,
   uploadNewWord: (character: string, object: MainCharacterInt | MainWordInt) => AxiosErrorObj,
 }
 
