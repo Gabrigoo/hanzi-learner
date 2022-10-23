@@ -1,33 +1,3 @@
-#submit-button-form {
-  width: 95%;
-}
-
-#memonics {
-  margin-top: 15px;
-}
-
-#new-level {
-  height: 30px;
-  margin-top: -10px;
-  margin-bottom: 10px;
-}
-
-#meaning-input,
-#reading-input {
-  font-size: 18px;
-}
-
-#meaning-label,
-#reading-label {
-  margin-top: 12px;
-  margin-right: 10px;
-}
-
-#meaning-solution,
-#reading-solution {
-  margin-top: 7px;
-}
-
 #chinese-traditional {
   text-align: center;
   font-size: 80px;
@@ -42,9 +12,6 @@
   font-family: 'Noto Sans SC', sans-serif;
 }
 
-.margin-top-15 {
-  margin-top: 20px;
-}
 
 @media (max-width: 400px) {
   #chinese-traditional {

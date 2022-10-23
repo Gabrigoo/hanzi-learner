@@ -7,11 +7,16 @@ import AxiosErrorObj from 'axios-error';
 import {
   Button,
   Typography,
-  Grid,
   Input,
   InputLabel,
   TextField,
+  Container,
+  Stack,
+  IconButton,
+  Box,
 } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
@@ -300,219 +305,173 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   };
 
   return (
-    <div className="card">
+    <Container maxWidth="md" sx={{ mt: 4 }}>
       <form
-        id="submit-button-form"
         autoComplete="off"
         onSubmit={solutionSubmitted ? handleContinue : handleSubmit}
       >
-        <Grid container direction="column" spacing={3}>
-          <Grid item container direction="row" justifyContent="space-around" spacing={1}>
-            <Grid item xs={12} sm={4}>
-              <Typography>
-                {`Remanining: ${remaningNum}`}
-              </Typography>
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <Typography>
-                {`Correct: ${correctNum} - `}
-                {correctNum + incorrectNum > 0
-                  ? Math.round((correctNum / (correctNum + incorrectNum)) * 100) : 0}
-                %
-              </Typography>
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <Typography>
-                {`Incorrect: ${incorrectNum} - `}
-                {correctNum + incorrectNum > 0
-                  ? Math.round((incorrectNum / (correctNum + incorrectNum)) * 100) : 0}
-                %
-              </Typography>
-            </Grid>
-          </Grid>
-
-          <Grid item xs={10} sm={12}>
-            <Typography
-              variant="h2"
-              id="chinese-traditional"
-            >
-              {mainData[current].chineseTrad}
+        <Stack spacing={3}>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h5">
+              {`Remanining: ${remaningNum}`}
             </Typography>
-          </Grid>
+            <Typography variant="h5">
+              {`Correct: ${correctNum} - `}
+              {correctNum + incorrectNum > 0
+                ? Math.round((correctNum / (correctNum + incorrectNum)) * 100) : 0}
+              %
+            </Typography>
+            <Typography variant="h5">
+              {`Incorrect: ${incorrectNum} - `}
+              {correctNum + incorrectNum > 0
+                ? Math.round((incorrectNum / (correctNum + incorrectNum)) * 100) : 0}
+              %
+            </Typography>
+          </Box>
 
-          <Grid id="simply-label" item container direction="row" alignItems="center" spacing={2}>
-            <Grid item>
-              <Typography id="chinese-simplified-label">Simplified:</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5" id="chinese-simplified">{mainData[current].chineseSimp}</Typography>
-            </Grid>
-          </Grid>
+          <Typography
+            variant="h2"
+            id="chinese-traditional"
+          >
+            {mainData[current].chineseTrad}
+          </Typography>
 
-          <Grid id="new-level" item container justifyContent="center">
-            {newLevel
-              ? (
-                <Grid item>
-                  <Typography
-                    variant="h6"
-                    style={solutionCorrect && savedTries === 1 ? { color: 'green' } : { color: 'red' }}
-                  >
-                    {LEVELS[newLevel][2]}
-                    {solutionCorrect && savedTries === 1
-                      ? <KeyboardArrowUpIcon />
-                      : <KeyboardArrowDownIcon />}
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h5">
+              Simplified:
+              {' '}
+              {mainData[current].chineseSimp}
+            </Typography>
+
+            {newLevel ? (
+              <Typography
+                sx={{ mr: 16 }}
+                variant="h6"
+                style={solutionCorrect && savedTries === 1 ? { color: 'green' } : { color: 'red' }}
+              >
+                {LEVELS[newLevel][2]}
+                {solutionCorrect && savedTries === 1
+                  ? <KeyboardArrowUpIcon />
+                  : <KeyboardArrowDownIcon />}
+              </Typography>
+            ) : null}
+          </Box>
+
+          <Box display="flex" justifyContent="space-between">
+            <Box sx={{ width: '45%' }}>
+              <InputLabel
+                sx={{ fontSize: '20px' }}
+                id="meaning-label"
+                htmlFor="meaning-input"
+              >
+                {`Meaning: `}
+              </InputLabel>
+              <Input
+                sx={{ fontSize: '20px' }}
+                ref={meanInputRef}
+                id="meaning-input"
+                name="meaning"
+                fullWidth
+                value={meanInput}
+                onChange={(event) => setMeaning(event.target.value)}
+              />
+              {solutionSubmitted
+                ? (
+                  <Typography sx={{ fontSize: '18px' }}>
+                    {mainData[current].english.filter((x) => typeof x === 'string' && x.length > 0).join(', ')}
                   </Typography>
-                </Grid>
-              )
-              : null}
-          </Grid>
+                ) : null}
+            </Box>
 
-          <Grid item container direction="row" spacing={1} alignItems="flex-start">
-            <Grid item container xs={6}>
-              <Grid item>
-                <InputLabel
-                  id="meaning-label"
-                  form="submit-button-form"
-                  htmlFor="meaning-input"
-                >
-                  {`Meaning: `}
-                </InputLabel>
-              </Grid>
-              <Grid item>
-                <Input
-                  ref={meanInputRef}
-                  id="meaning-input"
-                  type="text"
-                  name="meaning"
-                  value={meanInput}
-                  onChange={(event) => setMeaning(event.target.value)}
-                />
-                {solutionSubmitted
-                  ? (
-                    <Typography id="meaning-solution">
-                      {mainData[current].english.filter(
-                        (x) => typeof x === 'string' && x.length > 0,
-                      )
-                        .join(', ')}
-                    </Typography>
-                  )
-                  : null}
-              </Grid>
-            </Grid>
-
-            <Grid item container xs={6}>
-              <Grid item>
-                <InputLabel
-                  id="reading-label"
-                  form="submit-button-form"
-                  htmlFor="reading-input-box"
-                >
-                  {`Reading: `}
-                </InputLabel>
-              </Grid>
-              <Grid item>
-                <Input
-                  ref={readInputRef}
-                  id="reading-input"
-                  type="text"
-                  name="reading"
-                  value={readInput}
-                  onChange={(event) => setReading(event.target.value)}
-                />
-                {solutionSubmitted
-                  ? (
-                    <Typography id="reading-solution">
-                      {mainData[current].pinyin}
-                      &nbsp;
-                      (tone:
-                      {mainData[current].tone}
-                      )
-                    </Typography>
-                  )
-                  : null}
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-evenly"
-            alignItems="center"
-          >
-            <Typography variant="h6" color="error">{error}</Typography>
-          </Grid>
-
-          <Grid
-            className="margin-top-15"
-            container
-            direction="row"
-            justifyContent="space-evenly"
-            alignItems="center"
-          >
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                type="submit"
-                id="board-submit-button"
-                disabled={meanInput === '' || readInput === '' || changeMemonic}
+            <Box sx={{ width: '45%' }}>
+              <InputLabel
+                sx={{ fontSize: '20px' }}
+                id="reading-label"
+                htmlFor="reading-input-box"
               >
-                {!solutionSubmitted ? 'Submit' : solutionCorrect ? 'Continue' : 'Again'}
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
+                {`Reading: `}
+              </InputLabel>
+              <Input
+                sx={{ fontSize: '20px' }}
+                ref={readInputRef}
+                id="reading-input"
+                name="reading"
+                fullWidth
+                value={readInput}
+                onChange={(event) => setReading(event.target.value)}
+              />
+              {solutionSubmitted ? (
+                <Typography sx={{ fontSize: '18px' }}>
+                  {mainData[current].pinyin}
+                  {' '}
+                  (tone:
+                  {' '}
+                  {mainData[current].tone}
+                  )
+                </Typography>
+              ) : null}
+            </Box>
+          </Box>
+
+          <Typography variant="h5" align="center" color="error">{error}</Typography>
+
+          <Button
+            variant="contained"
+            size="large"
+            type="submit"
+            id="board-submit-button"
+            disabled={meanInput === '' || readInput === '' || changeMemonic}
+          >
+            {!solutionSubmitted ? 'Submit' : solutionCorrect ? 'Continue' : 'Again'}
+          </Button>
+
+          <Button
+            color="info"
+            variant="outlined"
+            onClick={props.switchSession}
+          >
+            Summary
+          </Button>
+
+          {solutionSubmitted ? (
+            <Box display="flex" justifyContent="space-between" alignItems="center" gap="10px">
+              <TextField
+                label="Meaning memonic"
                 variant="outlined"
+                multiline
+                minRows="2"
+                fullWidth
+                disabled={!changeMemonic}
+                value={meaningMemonic}
+                onChange={(event) => setMeaningMemonic(event.target.value)}
+              />
+              <IconButton
                 color="primary"
-                onClick={props.switchSession}
+                aria-label={changeMemonic ? 'save-memonics' : 'change-memonics'}
+                size="large"
+                sx={{ height: '60px' }}
+                onClick={switchChangeMemonics}
               >
-                Summary
-              </Button>
-            </Grid>
-          </Grid>
+                {changeMemonic
+                  ? <SaveIcon sx={{ fontSize: 40 }} />
+                  : <EditIcon sx={{ fontSize: 40 }} />}
+              </IconButton>
+              <TextField
+                label="Reading memonic"
+                variant="outlined"
+                multiline
+                minRows="2"
+                fullWidth
+                disabled={!changeMemonic}
+                value={readingMemonic}
+                onChange={(event) => setReadingMemonic(event.target.value)}
+              />
+            </Box>
+          ) : null}
 
-          {!solutionSubmitted ? null : (
-            <Grid id="memonics" item container spacing={3} justifyContent="space-evenly" alignItems="center">
-              <Grid item xs={12} sm={5}>
-                <TextField
-                  type="text"
-                  label="Meaning memonic"
-                  variant="outlined"
-                  multiline
-                  fullWidth
-                  disabled={!changeMemonic}
-                  value={meaningMemonic}
-                  onChange={(event) => setMeaningMemonic(event.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={5}>
-                <TextField
-                  type="text"
-                  label="Reading memonic"
-                  variant="outlined"
-                  multiline
-                  fullWidth
-                  disabled={!changeMemonic}
-                  value={readingMemonic}
-                  onChange={(event) => setReadingMemonic(event.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={2} container justifyContent="center">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={switchChangeMemonics}
-                >
-                  {changeMemonic ? 'Save' : 'Change'}
-                </Button>
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
+        </Stack>
       </form>
-    </div>
+    </Container>
   );
 };
 
