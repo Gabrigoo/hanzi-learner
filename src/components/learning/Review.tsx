@@ -27,6 +27,7 @@ import { similarity, editDistance } from '../../assets/levenshtein_distance';
 import { toneChecker } from '../../assets/tones';
 import LEVELS from '../../assets/levels';
 import './Review.css';
+import NavButton from '../partials/NavButton';
 
 interface ReviewProps {
   mainData: MainInt,
@@ -162,6 +163,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
         }
       }
     }
+    correct = (correct > 2) ? 2 : correct;
     return correct;
   };
 
@@ -425,14 +427,6 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
             {!solutionSubmitted ? 'Submit' : solutionCorrect ? 'Continue' : 'Again'}
           </Button>
 
-          <Button
-            color="info"
-            variant="outlined"
-            onClick={props.switchSession}
-          >
-            Summary
-          </Button>
-
           {solutionSubmitted ? (
             <Box display="flex" justifyContent="space-between" alignItems="center" gap="10px">
               <TextField
@@ -468,6 +462,15 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
               />
             </Box>
           ) : null}
+
+          <Box display="flex" justifyContent="end">
+            <NavButton
+              color="info"
+              variant="outlined"
+              title="Summary"
+              to="/summary"
+            />
+          </Box>
 
         </Stack>
       </form>

@@ -17,10 +17,9 @@ import {
   answerCorrect,
   answerIncorrect,
 } from '../redux/actions';
-import Summary from '../components/learning/Summary';
+import LearningService from '../services/Learning.service';
 import Review from '../components/learning/Review';
 import Strip from '../components/Strip';
-import levels from '../assets/levels';
 
 interface ReactProps {
   token: string,
@@ -75,38 +74,6 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
     object: UserCharacterInt,
   ): AxiosErrorObj => props.updateUserData(word, object);
 
-  // takes in user data and return the list of characters that need reviewing
-  const dataToReview = (data: UserInt): string[] => {
-    const review: string[] = [];
-    const currentDate = new Date().getTime();
-
-    Object.keys(data.characters).forEach((item) => {
-      const storedDate = data.characters[item].lastPract;
-      if (data.characters[item].level === 9) {
-        // Good job! No need to review this anymore
-      } else if (
-        // Item is not ready to be rewieved
-        Math.round((currentDate - storedDate) / (1000 * 60 * 60))
-          >= levels[data.characters[item].level][0]
-      ) {
-        review.push(item);
-      }
-    });
-    Object.keys(data.words).forEach((item) => {
-      const storedDate = data.words[item].lastPract;
-      if (data.words[item].level === 9) {
-        // Good job! No need to review this anymore
-      } else if (
-        // Item is not ready to be rewieved
-        Math.round((currentDate - storedDate) / (1000 * 60 * 60))
-          >= levels[data.words[item].level][0]
-      ) {
-        review.push(item);
-      }
-    });
-    return review;
-  };
-
   // As name suggests, uploads the results of the review
   const uploadReviewResults = (
     word: string,
@@ -127,41 +94,25 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
     if (sessionOn) {
       setSessionOn(false);
     } else {
-      props.startSession(dataToReview(props.userData));
+      props.startSession(LearningService.itemsToReview(props.userData));
       setSessionOn(true);
     }
   };
 
   if (props.mainData && props.userData) {
-    if (sessionOn) {
-      if (props.sessionData.sessionStart) {
-        content = (
-          <Review
-            mainData={props.mainData}
-            userData={props.userData}
-            reviewData={dataToReview(props.userData)}
-            sessionData={props.sessionData}
-            uploadReviewResults={uploadReviewResults}
-            checkForLevelAdvancement={checkForAdvancement}
-            switchSession={switchSession}
-            uploadAnswer={uploadAnswer}
-            updateMemonic={updateMemonic}
-          />
-        );
-      } else {
-        content = <Strip message="Loading..." />;
-      }
-    } else {
-      content = (
-        <Summary
-          mainData={props.mainData}
-          userData={props.userData}
-          reviewData={dataToReview(props.userData)}
-          sessionData={props.sessionData}
-          switchSession={switchSession}
-        />
-      );
-    }
+    content = (
+      <Review
+        mainData={props.mainData}
+        userData={props.userData}
+        reviewData={LearningService.itemsToReview(props.userData)}
+        sessionData={props.sessionData}
+        uploadReviewResults={uploadReviewResults}
+        checkForLevelAdvancement={checkForAdvancement}
+        switchSession={switchSession}
+        uploadAnswer={uploadAnswer}
+        updateMemonic={updateMemonic}
+      />
+    );
   } else if (!props.token) {
     content = <Strip message="No user is signed in" timeout={4000} />;
   } else {

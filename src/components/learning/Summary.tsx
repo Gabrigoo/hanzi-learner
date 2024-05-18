@@ -1,78 +1,119 @@
-import React, { ReactElement } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Grid, Typography } from '@mui/material';
-import { MainInt, SessionInt, UserInt } from '../../interfaces';
-import InfoTag from '../info/InfoTag';
+import React, { useEffect, ReactElement } from 'react';
+import { connect } from 'react-redux';
+import {
+  Typography,
+  Container,
+  Stack,
+  Box,
+  Divider,
+} from '@mui/material';
+import { CancelTokenSource } from 'axios';
+import { loadUserData } from '../../redux/actions';
+import { instance as axios } from '../../axios-instance';
+import {
+  MainInt, ReactFullState, SessionInt, UserInt,
+} from '../../interfaces';
+import LearningService from '../../services/Learning.service';
+import InfoTooltip from '../info/InfoTooltip';
+import NavButton from '../partials/NavButton';
 
-interface SummaryProps {
+interface ReactProps {
+  token: string,
+  loadUserData: (source: CancelTokenSource) => any,
   mainData: MainInt,
   userData: UserInt,
-  reviewData: string[],
   sessionData: SessionInt,
-  switchSession: () => void,
 }
 
-const Summary: React.FC<SummaryProps> = (props): ReactElement => {
-  const sessionDisabled = props.reviewData.length === 0;
+const Summary: React.FC<ReactProps> = (props): ReactElement => {
+  const numberOfItemsToReview = LearningService.itemsToReview(props.userData).length;
+  const numberOfItemsToLearn = LearningService.itemsToLearn(props.mainData, props.userData).length;
+
+  // Loading user data
+  useEffect(() => {
+    const source: CancelTokenSource = axios.CancelToken.source();
+    if (!props.userData && props.token) {
+      props.loadUserData(source);
+    }
+    return () => {
+      source.cancel('GET request cancelled');
+    };
+  }, [props.userData, props.token]);
+
+  const mapResults = (correct: boolean) => {
+    const list = correct ? 'correctList' : 'incorrectList';
+    return props.sessionData[list].map((item, index) => (
+      <InfoTooltip
+        word={item}
+        result
+        key={item + index}
+      />
+    ));
+  };
 
   return (
-    <div className="card">
-      <Grid container spacing={8}>
-        <Grid item>
+    <Container maxWidth="lg" sx={{ mt: 2 }}>
+      <Stack spacing={3}>
+
+        <Stack spacing={2}>
+          <Typography variant="h4">Last session</Typography>
           <Typography variant="h5">Correct:</Typography>
-        </Grid>
-        <Grid item container direction="row">
-          {props.sessionData.correctList.length === 0 ? 'No items'
-            : props.sessionData.correctList.map((item, index) => (
-              <InfoTag
-                mainData={props.mainData}
-                userData={props.userData}
-                word={item}
-                value="true"
-                key={item + index}
-              />
-            ))}
-        </Grid>
-        <Grid item>
+          {!props.sessionData.correctList.length
+            ? <Typography>No items</Typography>
+            : (
+              <Box display="flex" flexWrap="wrap" gap="10px">
+                {mapResults(true)}
+              </Box>
+            )}
           <Typography variant="h5">Incorrect:</Typography>
-        </Grid>
-        <Grid item container direction="row">
-          {props.sessionData.incorrectList.length === 0 ? 'No items'
-            : props.sessionData.incorrectList.map((item, index) => (
-              <InfoTag
-                mainData={props.mainData}
-                userData={props.userData}
-                word={item}
-                value="false"
-                key={item + index}
-              />
-            ))}
-        </Grid>
-        <Grid item container direction="row" spacing={2} justifyContent="space-evenly">
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={sessionDisabled}
-              onClick={props.switchSession}
-            >
-              Start Session
-            </Button>
-          </Grid>
-          <Grid item>
-            <Link className="no-underline" to="/main">
-              <Button
-                variant="outlined"
-                color="primary"
-              >
-                Back to Main
-              </Button>
-            </Link>
-          </Grid>
-        </Grid>
-      </Grid>
-    </div>
+          {!props.sessionData.incorrectList.length
+            ? <Typography>No items</Typography>
+            : (
+              <Box display="flex" flexWrap="wrap" gap="10px">
+                {mapResults(false)}
+              </Box>
+            )}
+        </Stack>
+
+        <Divider />
+
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Stack spacing={2}>
+            <Typography variant="h4">Review</Typography>
+            <Typography variant="h5">{`${numberOfItemsToReview} items to review`}</Typography>
+          </Stack>
+
+          {numberOfItemsToReview ? (
+            <NavButton title="Start Review" to="/review" />
+          ) : null}
+        </Box>
+
+        <Divider />
+
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Stack spacing={2}>
+            <Typography variant="h4">Learn</Typography>
+            <Typography variant="h5">{`${numberOfItemsToLearn} items to learn`}</Typography>
+          </Stack>
+
+          {numberOfItemsToLearn ? (
+            <NavButton title="Learn" to="/learn" />
+          ) : null}
+        </Box>
+
+      </Stack>
+    </Container>
   );
 };
 
-export default Summary;
+const mapStateToProps = (state: ReactFullState) => ({
+  token: state.auth.token,
+  mainData: state.data.mainData,
+  userData: state.data.userData,
+  sessionData: state.session,
+});
+
+export default connect(
+  mapStateToProps,
+  { loadUserData },
+)(Summary);

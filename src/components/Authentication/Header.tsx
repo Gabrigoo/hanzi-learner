@@ -30,6 +30,12 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props): ReactElement => {
+  const adminList = [
+    'AGBKwyOAwKhJyNenUVyE8GEIU8B2',
+  ];
+
+  const isAdmin = adminList.includes(props.user?.uid);
+
   useEffect(() => {
     const source = axios.CancelToken.source();
 
@@ -60,8 +66,8 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
         <Container maxWidth={false}>
           <Toolbar disableGutters>
 
-            <Link to="/main-menu">
-              <IconButton aria-label="main-menu" size="large" edge="start" sx={{ mr: 2 }}>
+            <Link to="/summary">
+              <IconButton aria-label="summary" size="large" edge="start" sx={{ mr: 2 }}>
                 <HomeIcon sx={{ fontSize: 40 }} />
               </IconButton>
             </Link>
@@ -74,7 +80,9 @@ const Header: React.FC<HeaderProps> = (props): ReactElement => {
 
             <NavButton title="Search" to="/search" />
 
-            <NavButton title="Addition" to="/add" />
+            {isAdmin
+              ? <NavButton title="Addition" to="/add" />
+              : null }
 
             <Box sx={{ flexGrow: 1 }} />
 
