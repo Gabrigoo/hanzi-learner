@@ -1,5 +1,5 @@
 import React, {
-  useState, FormEvent, ReactElement, useRef,
+  useState, FormEvent, ReactElement, useRef, useEffect,
 } from 'react';
 
 import AxiosErrorObj from 'axios-error';
@@ -37,11 +37,15 @@ interface ReviewProps {
   uploadReviewResults: (character: string, object: UserCharacterInt) => AxiosErrorObj,
   updateMemonic: (character: string, object: UserCharacterInt) => AxiosErrorObj,
   checkForLevelAdvancement: () => void,
-  switchSession: () => void,
+  beginSession: () => void,
   uploadAnswer: (word: string, correct: boolean) => any,
 }
 
 const Review: React.FC<ReviewProps> = (props): ReactElement => {
+  useEffect(() => {
+    props.beginSession();
+  }, []);
+
   // randomizes the sequence
   const shuffleArray = (sourceArray: string[]): string[] => {
     const newArray = [...sourceArray];
@@ -126,7 +130,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   const resetOnSolutionAccepted = () => {
     const next = shuffledDeck[shuffledDeck.indexOf(current) + 1];
     if (next === undefined) {
-      props.switchSession();
+      console.log('TODO: Should navigate back to summary if no next item');
     } else if (Object.keys(props.mainData.characters).includes(next)) {
       setMainData(props.mainData.characters);
       setUserData(props.userData.characters);

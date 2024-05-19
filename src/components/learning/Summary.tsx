@@ -16,7 +16,6 @@ import {
 import LearningService from '../../services/Learning.service';
 import InfoTooltip from '../info/InfoTooltip';
 import NavButton from '../partials/NavButton';
-import Strip from '../Strip';
 
 interface ReactProps {
   token: string,
@@ -52,7 +51,7 @@ const Summary: React.FC<ReactProps> = (props): ReactElement => {
         />
       ));
     } else {
-      return <Strip message="Loading..." />;
+      return null;
     }
   };
 

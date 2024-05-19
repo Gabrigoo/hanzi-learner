@@ -1,5 +1,5 @@
 import React, {
-  useEffect, ReactElement, useState,
+  useEffect, ReactElement,
 } from 'react';
 import { connect } from 'react-redux';
 import { CancelTokenSource } from 'axios';
@@ -35,7 +35,6 @@ interface ReactProps {
 }
 
 const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
-  const [sessionOn, setSessionOn] = useState(false);
   let content;
 
   // Loading user data
@@ -90,13 +89,8 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
   };
 
   // Starts or stops the current session
-  const switchSession = () => {
-    if (sessionOn) {
-      setSessionOn(false);
-    } else {
-      props.startSession(LearningService.itemsToReview(props.userData));
-      setSessionOn(true);
-    }
+  const beginSession = (): void => {
+    props.startSession(LearningService.itemsToReview(props.userData));
   };
 
   if (props.mainData && props.userData) {
@@ -108,7 +102,7 @@ const ReviewCont: React.FC<ReactProps> = (props): ReactElement => {
         sessionData={props.sessionData}
         uploadReviewResults={uploadReviewResults}
         checkForLevelAdvancement={checkForAdvancement}
-        switchSession={switchSession}
+        beginSession={beginSession}
         uploadAnswer={uploadAnswer}
         updateMemonic={updateMemonic}
       />
