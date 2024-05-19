@@ -44,6 +44,7 @@ module.exports = {
         depth: 25,
       },
     ],
+    "@typescript-eslint/no-explicit-any": "off",
     'react/jsx-filename-extension': 'off',
     'react/button-has-type': 'off',
     'react/destructuring-assignment': 'off',
@@ -67,6 +68,7 @@ module.exports = {
     'no-else-return': 'off',
     'react/function-component-definition': 'off',
     'default-param-last': 'off',
+    "react/react-in-jsx-scope": "off",
     quotes: [2, 'single', { allowTemplateLiterals: true }],
   },
 };
