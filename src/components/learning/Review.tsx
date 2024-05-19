@@ -1,6 +1,7 @@
 import React, {
   useState, FormEvent, ReactElement, useRef, useEffect,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import AxiosErrorObj from 'axios-error';
 
@@ -42,6 +43,8 @@ interface ReviewProps {
 }
 
 const Review: React.FC<ReviewProps> = (props): ReactElement => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     props.beginSession();
   }, []);
@@ -130,7 +133,7 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
   const resetOnSolutionAccepted = () => {
     const next = shuffledDeck[shuffledDeck.indexOf(current) + 1];
     if (next === undefined) {
-      console.log('TODO: Should navigate back to summary if no next item');
+      navigate('/summary');
     } else if (Object.keys(props.mainData.characters).includes(next)) {
       setMainData(props.mainData.characters);
       setUserData(props.userData.characters);

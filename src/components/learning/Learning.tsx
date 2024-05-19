@@ -1,6 +1,7 @@
 import React, {
   useState, FormEvent, ReactElement,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AxiosErrorObj from 'axios-error';
 
 import {
@@ -14,7 +15,6 @@ import {
 import {
   MainCharacterInt, MainInt, MainWordInt, UserCharacterInt,
 } from '../../interfaces';
-import Strip from '../Strip';
 
 interface LearningProps {
   mainData: MainInt,
@@ -23,6 +23,8 @@ interface LearningProps {
 }
 
 const Learning: React.FC<LearningProps> = (props): ReactElement => {
+  const navigate = useNavigate();
+
   // starts with first element of to-learn list
   const [current, setCurrent] = useState(props.newItemKeys[0]);
   const [mainData, setMainData] = useState<
@@ -67,14 +69,13 @@ const Learning: React.FC<LearningProps> = (props): ReactElement => {
       setMeaningMemonic('');
       setReadingMemonic('');
       setRemainingNum(remaningNum - 1);
+
+      if (remaningNum === 0) {
+        navigate('/summary');
+      }
     }
   };
 
-  if (remaningNum === 0) {
-    return (
-      <Strip message="No new characters to learn right now" timeout={4000} />
-    );
-  }
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <form autoComplete="off" onSubmit={handleContinue}>
