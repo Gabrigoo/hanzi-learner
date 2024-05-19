@@ -16,6 +16,7 @@ import {
 import LearningService from '../../services/Learning.service';
 import InfoTooltip from '../info/InfoTooltip';
 import NavButton from '../partials/NavButton';
+import Strip from '../Strip';
 
 interface ReactProps {
   token: string,
@@ -42,13 +43,17 @@ const Summary: React.FC<ReactProps> = (props): ReactElement => {
 
   const mapResults = (correct: boolean) => {
     const list = correct ? 'correctList' : 'incorrectList';
-    return props.sessionData[list].map((item, index) => (
-      <InfoTooltip
-        word={item}
-        result
-        key={item + index}
-      />
-    ));
+    if (props.mainData && props.userData) {
+      return props.sessionData[list].map((item, index) => (
+        <InfoTooltip
+          word={item}
+          result
+          key={item + index}
+        />
+      ));
+    } else {
+      return <Strip message="Loading..." />;
+    }
   };
 
   return (
