@@ -25,7 +25,7 @@ interface LearningProps {
 const Learning: React.FC<LearningProps> = (props): ReactElement => {
   const navigate = useNavigate();
 
-  // starts with first element of to-learn list
+  // starts with first element off to-learn list
   const [current, setCurrent] = useState(props.newItemKeys[0]);
   const [mainData, setMainData] = useState<
   {[key: string]: MainCharacterInt} | {[key: string]: MainWordInt}

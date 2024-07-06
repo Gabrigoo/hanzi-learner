@@ -81,6 +81,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@typescript-eslint/eslint-plugin": "^7.9.0",
     "@typescript-eslint/parser": "^7.9.0",
+    "@babel/plugin-proposal-private-property-in-object": "^1.22.22",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.8",
     "eslint": "^9.3.0",

@@ -46,7 +46,7 @@ const Summary: React.FC<ReactProps> = (props): ReactElement => {
       return props.sessionData[list].map((item, index) => (
         <InfoTooltip
           word={item}
-          result
+          result={correct}
           key={item + index}
         />
       ));

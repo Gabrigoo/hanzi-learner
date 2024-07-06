@@ -267,11 +267,13 @@ const Review: React.FC<ReviewProps> = (props): ReactElement => {
     } else {
       setError('');
       if (meaningCorrect > 0 && readingCorrect > 0) {
-        props.uploadAnswer(current, true);
+        if (savedTries === 0) {
+          props.uploadAnswer(current, true);
+        }
         setSolutionCorrect(true);
         // Then set new level to display
         setNewLevel(userCharObject.level);
-      } else {
+      } else if (savedTries === 0) {
         props.uploadAnswer(current, false);
       }
 
